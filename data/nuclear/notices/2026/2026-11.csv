@@ -6,3 +6,12 @@ The duration of the unavailability is a pre-defined 24 hours period, assessed on
 A new version will be published according to diagnostic and technical instruction."
 EDF-05470_EDF_T_00338776,2,2026-11-01T02:08Z,17W100P100P0109N,CHINON 4,905,UNPLANNED,FAILURE,ACTIVE,2026-11-01T01:12Z,2026-11-01T03:00Z,2026-11-01T01:12Z/2026-11-01T03:00Z/0/905,-
 EDF-05470_EDF_T_00338776,3,2026-11-01T03:24Z,17W100P100P0109N,CHINON 4,905,UNPLANNED,FAILURE,ACTIVE,2026-11-01T01:12Z,2026-11-01T06:00Z,2026-11-01T01:12Z/2026-11-01T06:00Z/0/905,-
+EC-EDF-05470-EDF-T-00104303,16,2026-11-01T04:20Z,17W100P100P0142P,PALUEL 4,1330,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-09-18T21:00Z,2026-11-03T22:00Z,2026-09-18T21:00Z/2026-11-03T22:00Z/0/1330,"Après son recouplage, la tranche remontera progressivement par palier de charge à sa pleine puissance
+La remontée durera au moins 48h
+Premier palier à atteindre : 540 MW
+Retour anticipé d'arrêt programmé, sous réserve d'accord du gestionnaire de réseau de transport
+-
+After its restart, the plant will gradually return by various load threshold to full power
+The ramp-up period will take at least 48 hours
+First threshold after restart : 540 MW
+Early restart, subject to TSO agreement."
