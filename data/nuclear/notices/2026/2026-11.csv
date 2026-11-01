@@ -22,3 +22,6 @@ EDF-05470_EDF_T_00334551,12,2026-11-01T06:10Z,17W100P100P0139E,PALUEL 1,1330,UNP
 EDF-05470_EDF_T_00338845,1,2026-11-01T06:36Z,17W100P100P0109N,CHINON 4,905,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-01T06:35Z,2026-11-01T10:00Z,2026-11-01T06:35Z/2026-11-01T10:00Z/230/675,"La remontée peut prendre plusieurs heures en fonction de l'évolution de paramètres techniques
 --------
 The ramp-up period may take several hours according to technical issues monitoring."
+EDF-05470_EDF_T_00338845,2,2026-11-01T06:59Z,17W100P100P0109N,CHINON 4,905,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-01T06:35Z,2026-11-01T07:45Z,2026-11-01T06:35Z/2026-11-01T07:45Z/230/675,"La remontée peut prendre plusieurs heures en fonction de l'évolution de paramètres techniques
+--------
+The ramp-up period may take several hours according to technical issues monitoring."
