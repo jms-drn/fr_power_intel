@@ -27,3 +27,12 @@ EDF-05470_EDF_T_00338845,2,2026-11-01T06:59Z,17W100P100P0109N,CHINON 4,905,PLANN
 The ramp-up period may take several hours according to technical issues monitoring."
 EDF-05470_EDF_T_00338817,1,2026-11-01T07:16Z,17W100P100P0148D,ST LAURENT 2,915,PLANNED,FORESEEN_MAINTENANCE,ACTIVE,2026-11-03T16:00Z,2026-11-03T18:00Z,2026-11-03T16:00Z/2026-11-03T18:00Z/800/115,-
 EDF-05470_EDF_T_00337540,3,2026-11-01T09:27Z,17W100P100P0143N,PENLY 1,1330,PLANNED,FORESEEN_MAINTENANCE,INACTIVE,2026-11-01T03:00Z,2026-11-01T09:26Z,2026-11-01T03:00Z/2026-11-01T09:26Z/768/562,-
+EC-EDF-05470-EDF-T-00077027,45,2026-11-01T09:45Z,17W100P100P0105V,CATTENOM 4,1300,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-01-30T23:00Z,2026-11-12T22:00Z,2026-01-30T23:00Z/2026-11-12T22:00Z/0/1300,"Après son recouplage, la tranche remontera progressivement par palier de charge à sa pleine puissance.
+La remontée durera au moins 48h.
+Premier palier à atteindre : 273 MW
+Arrêt susceptible d'être prolongé.
+-------------------------------------
+After its restart, the plant will gradually return by various load thresholds to full power.
+The ramp-up period will take at least 48 hours.
+First threshold after restart : 273 MW
+Stop likely to be extended."
