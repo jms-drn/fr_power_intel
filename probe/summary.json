@@ -1,0 +1,885 @@
+{
+ "token_set": true,
+ "price_FR_recent": {
+  "params": {
+   "documentType": "A44",
+   "in_Domain": "10YFR-RTE------C",
+   "out_Domain": "10YFR-RTE------C",
+   "periodStart": "202610282300",
+   "periodEnd": "202611032300"
+  },
+  "status": 200,
+  "seconds": 2.4,
+  "bytes": 84097,
+  "timeseries": 6,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 568,
+  "first_interval": [
+   "2026-10-28T23:00Z",
+   "2026-10-29T23:00Z"
+  ],
+  "last_interval": [
+   "2026-11-02T23:00Z",
+   "2026-11-03T23:00Z"
+  ]
+ },
+ "price_DE_LU_recent": {
+  "params": {
+   "documentType": "A44",
+   "in_Domain": "10Y1001A1001A82H",
+   "out_Domain": "10Y1001A1001A82H",
+   "periodStart": "202610282300",
+   "periodEnd": "202611032300"
+  },
+  "status": 200,
+  "seconds": 10.7,
+  "bytes": 155660,
+  "timeseries": 11,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [
+   "1",
+   "2"
+  ],
+  "points": 1047,
+  "first_interval": [
+   "2026-10-28T23:00Z",
+   "2026-10-29T23:00Z"
+  ],
+  "last_interval": [
+   "2026-11-02T23:00Z",
+   "2026-11-03T23:00Z"
+  ]
+ },
+ "price_BE_recent": {
+  "params": {
+   "documentType": "A44",
+   "in_Domain": "10YBE----------2",
+   "out_Domain": "10YBE----------2",
+   "periodStart": "202610282300",
+   "periodEnd": "202611032300"
+  },
+  "status": 200,
+  "seconds": 10.3,
+  "bytes": 84994,
+  "timeseries": 6,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 574,
+  "first_interval": [
+   "2026-10-28T23:00Z",
+   "2026-10-29T23:00Z"
+  ],
+  "last_interval": [
+   "2026-11-02T23:00Z",
+   "2026-11-03T23:00Z"
+  ]
+ },
+ "price_NL_recent": {
+  "params": {
+   "documentType": "A44",
+   "in_Domain": "10YNL----------L",
+   "out_Domain": "10YNL----------L",
+   "periodStart": "202610282300",
+   "periodEnd": "202611032300"
+  },
+  "status": 200,
+  "seconds": 4.2,
+  "bytes": 70765,
+  "timeseries": 5,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 477,
+  "first_interval": [
+   "2026-10-28T23:00Z",
+   "2026-10-29T23:00Z"
+  ],
+  "last_interval": [
+   "2026-11-01T23:00Z",
+   "2026-11-02T23:00Z"
+  ]
+ },
+ "price_CH_recent": {
+  "params": {
+   "documentType": "A44",
+   "in_Domain": "10YCH-SWISSGRIDZ",
+   "out_Domain": "10YCH-SWISSGRIDZ",
+   "periodStart": "202610282300",
+   "periodEnd": "202611032300"
+  },
+  "status": 200,
+  "seconds": 8.6,
+  "bytes": 25065,
+  "timeseries": 6,
+  "resolutions": [
+   "PT60M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 143,
+  "first_interval": [
+   "2026-10-28T23:00Z",
+   "2026-10-29T23:00Z"
+  ],
+  "last_interval": [
+   "2026-11-02T23:00Z",
+   "2026-11-03T23:00Z"
+  ]
+ },
+ "price_IT_NORD_recent": {
+  "params": {
+   "documentType": "A44",
+   "in_Domain": "10Y1001A1001A73I",
+   "out_Domain": "10Y1001A1001A73I",
+   "periodStart": "202610282300",
+   "periodEnd": "202611032300"
+  },
+  "status": 200,
+  "seconds": 8.5,
+  "bytes": 67729,
+  "timeseries": 5,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 456,
+  "first_interval": [
+   "2026-10-28T23:00Z",
+   "2026-10-29T23:00Z"
+  ],
+  "last_interval": [
+   "2026-11-01T23:00Z",
+   "2026-11-02T23:00Z"
+  ]
+ },
+ "price_ES_recent": {
+  "params": {
+   "documentType": "A44",
+   "in_Domain": "10YES-REE------0",
+   "out_Domain": "10YES-REE------0",
+   "periodStart": "202610282300",
+   "periodEnd": "202611032300"
+  },
+  "status": 200,
+  "seconds": 3.2,
+  "bytes": 247173,
+  "timeseries": 21,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [
+   "1",
+   "2",
+   "3"
+  ],
+  "points": 1654,
+  "first_interval": [
+   "2026-10-28T23:00Z",
+   "2026-10-29T23:00Z"
+  ],
+  "last_interval": [
+   "2026-11-02T23:00Z",
+   "2026-11-03T23:00Z"
+  ]
+ },
+ "price_PT_recent": {
+  "params": {
+   "documentType": "A44",
+   "in_Domain": "10YPT-REN------W",
+   "out_Domain": "10YPT-REN------W",
+   "periodStart": "202610282300",
+   "periodEnd": "202611032300"
+  },
+  "status": 200,
+  "seconds": 2.4,
+  "bytes": 74352,
+  "timeseries": 6,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 500,
+  "first_interval": [
+   "2026-10-28T23:00Z",
+   "2026-10-29T23:00Z"
+  ],
+  "last_interval": [
+   "2026-11-02T23:00Z",
+   "2026-11-03T23:00Z"
+  ]
+ },
+ "price_GB_recent": {
+  "params": {
+   "documentType": "A44",
+   "in_Domain": "10YGB----------A",
+   "out_Domain": "10YGB----------A",
+   "periodStart": "202610282300",
+   "periodEnd": "202611032300"
+  },
+  "status": 200,
+  "seconds": 8.5,
+  "bytes": 963,
+  "timeseries": 0,
+  "resolutions": [],
+  "curve_types": [],
+  "sequences": [],
+  "points": 0,
+  "first_interval": null,
+  "last_interval": null,
+  "reason": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Acknowledgement_MarketDocument xmlns=\"urn:iec62325.351:tc57wg16:451-1:acknowledgementdocument:7:0\"> <mRID>6055f505-2bcc-4</mRID> <createdDateTime>2026-11-02T13:56:30Z</createdDateTime> <sender_MarketParticipant.mRID codingScheme=\"A01\">10X1001A1001A450</sender_MarketParticipant.mRID> <sender_MarketParticipant.marketRole.type>A32</sender_MarketParticipant.marketRole.type> <receiver_MarketParticipant.mRID codingScheme=\"A01\">10X1001A1001A450</receiver_MarketParticipant.mRID> <receiver_MarketParticipant.marketRole.type>A39</receiver_MarketParticipant.marketRo"
+ },
+ "price_FR_2015": {
+  "params": {
+   "documentType": "A44",
+   "in_Domain": "10YFR-RTE------C",
+   "out_Domain": "10YFR-RTE------C",
+   "periodStart": "201412312300",
+   "periodEnd": "201501072300"
+  },
+  "status": 200,
+  "seconds": 7.7,
+  "bytes": 13004,
+  "timeseries": 3,
+  "resolutions": [
+   "PT60M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 72,
+  "first_interval": [
+   "2015-01-04T23:00Z",
+   "2015-01-05T23:00Z"
+  ],
+  "last_interval": [
+   "2015-01-06T23:00Z",
+   "2015-01-07T23:00Z"
+  ]
+ },
+ "price_DE_AT_LU_2015": {
+  "params": {
+   "documentType": "A44",
+   "in_Domain": "10Y1001A1001A63L",
+   "out_Domain": "10Y1001A1001A63L",
+   "periodStart": "201412312300",
+   "periodEnd": "201501072300"
+  },
+  "status": 200,
+  "seconds": 7.8,
+  "bytes": 13015,
+  "timeseries": 3,
+  "resolutions": [
+   "PT60M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 72,
+  "first_interval": [
+   "2015-01-04T23:00Z",
+   "2015-01-05T23:00Z"
+  ],
+  "last_interval": [
+   "2015-01-06T23:00Z",
+   "2015-01-07T23:00Z"
+  ]
+ },
+ "price_FR_year_2024": {
+  "params": {
+   "documentType": "A44",
+   "in_Domain": "10YFR-RTE------C",
+   "out_Domain": "10YFR-RTE------C",
+   "periodStart": "202312312300",
+   "periodEnd": "202412312300"
+  },
+  "status": 200,
+  "seconds": 8.5,
+  "bytes": 1466126,
+  "timeseries": 366,
+  "resolutions": [
+   "PT60M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 8655,
+  "first_interval": [
+   "2023-12-31T23:00Z",
+   "2024-01-01T23:00Z"
+  ],
+  "last_interval": [
+   "2024-12-30T23:00Z",
+   "2024-12-31T23:00Z"
+  ]
+ },
+ "price_FR_sep_oct_2025": {
+  "params": {
+   "documentType": "A44",
+   "in_Domain": "10YFR-RTE------C",
+   "out_Domain": "10YFR-RTE------C",
+   "periodStart": "202509272200",
+   "periodEnd": "202510042200"
+  },
+  "status": 200,
+  "seconds": 2.7,
+  "bytes": 65910,
+  "timeseries": 7,
+  "resolutions": [
+   "PT15M",
+   "PT60M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 435,
+  "first_interval": [
+   "2025-09-27T22:00Z",
+   "2025-09-28T22:00Z"
+  ],
+  "last_interval": [
+   "2025-10-03T22:00Z",
+   "2025-10-04T22:00Z"
+  ]
+ },
+ "flow_BE_to_FR": {
+  "params": {
+   "documentType": "A11",
+   "in_Domain": "10YFR-RTE------C",
+   "out_Domain": "10YBE----------2",
+   "periodStart": "202610302300",
+   "periodEnd": "202611022300"
+  },
+  "status": 200,
+  "seconds": 2.7,
+  "bytes": 9486,
+  "timeseries": 1,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 67,
+  "first_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:45Z"
+  ],
+  "last_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:45Z"
+  ]
+ },
+ "flow_FR_to_BE": {
+  "params": {
+   "documentType": "A11",
+   "in_Domain": "10YBE----------2",
+   "out_Domain": "10YFR-RTE------C",
+   "periodStart": "202610302300",
+   "periodEnd": "202611022300"
+  },
+  "status": 200,
+  "seconds": 7.4,
+  "bytes": 27836,
+  "timeseries": 1,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 216,
+  "first_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:45Z"
+  ],
+  "last_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:45Z"
+  ]
+ },
+ "flow_DE_LU_to_FR": {
+  "params": {
+   "documentType": "A11",
+   "in_Domain": "10YFR-RTE------C",
+   "out_Domain": "10Y1001A1001A82H",
+   "periodStart": "202610302300",
+   "periodEnd": "202611022300"
+  },
+  "status": 200,
+  "seconds": 3.8,
+  "bytes": 1509,
+  "timeseries": 1,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 1,
+  "first_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:30Z"
+  ],
+  "last_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:30Z"
+  ]
+ },
+ "flow_FR_to_DE_LU": {
+  "params": {
+   "documentType": "A11",
+   "in_Domain": "10Y1001A1001A82H",
+   "out_Domain": "10YFR-RTE------C",
+   "periodStart": "202610302300",
+   "periodEnd": "202611022300"
+  },
+  "status": 200,
+  "seconds": 8.1,
+  "bytes": 32733,
+  "timeseries": 1,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 250,
+  "first_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:30Z"
+  ],
+  "last_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:30Z"
+  ]
+ },
+ "flow_CH_to_FR": {
+  "params": {
+   "documentType": "A11",
+   "in_Domain": "10YFR-RTE------C",
+   "out_Domain": "10YCH-SWISSGRIDZ",
+   "periodStart": "202610302300",
+   "periodEnd": "202611022300"
+  },
+  "status": 200,
+  "seconds": 6.9,
+  "bytes": 1509,
+  "timeseries": 1,
+  "resolutions": [
+   "PT60M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 1,
+  "first_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:00Z"
+  ],
+  "last_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:00Z"
+  ]
+ },
+ "flow_FR_to_CH": {
+  "params": {
+   "documentType": "A11",
+   "in_Domain": "10YCH-SWISSGRIDZ",
+   "out_Domain": "10YFR-RTE------C",
+   "periodStart": "202610302300",
+   "periodEnd": "202611022300"
+  },
+  "status": 200,
+  "seconds": 8.0,
+  "bytes": 9031,
+  "timeseries": 1,
+  "resolutions": [
+   "PT60M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 62,
+  "first_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:00Z"
+  ],
+  "last_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:00Z"
+  ]
+ },
+ "flow_IT_NORD_to_FR": {
+  "params": {
+   "documentType": "A11",
+   "in_Domain": "10YFR-RTE------C",
+   "out_Domain": "10Y1001A1001A73I",
+   "periodStart": "202610302300",
+   "periodEnd": "202611022300"
+  },
+  "status": 200,
+  "seconds": 1.2,
+  "bytes": 1509,
+  "timeseries": 1,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 1,
+  "first_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:30Z"
+  ],
+  "last_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:30Z"
+  ]
+ },
+ "flow_FR_to_IT_NORD": {
+  "params": {
+   "documentType": "A11",
+   "in_Domain": "10Y1001A1001A73I",
+   "out_Domain": "10YFR-RTE------C",
+   "periodStart": "202610302300",
+   "periodEnd": "202611022300"
+  },
+  "status": 200,
+  "seconds": 1.0,
+  "bytes": 32006,
+  "timeseries": 1,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 250,
+  "first_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:30Z"
+  ],
+  "last_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:30Z"
+  ]
+ },
+ "flow_ES_to_FR": {
+  "params": {
+   "documentType": "A11",
+   "in_Domain": "10YFR-RTE------C",
+   "out_Domain": "10YES-REE------0",
+   "periodStart": "202610302300",
+   "periodEnd": "202611022300"
+  },
+  "status": 200,
+  "seconds": 6.2,
+  "bytes": 20860,
+  "timeseries": 1,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 160,
+  "first_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:45Z"
+  ],
+  "last_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:45Z"
+  ]
+ },
+ "flow_FR_to_ES": {
+  "params": {
+   "documentType": "A11",
+   "in_Domain": "10YES-REE------0",
+   "out_Domain": "10YFR-RTE------C",
+   "periodStart": "202610302300",
+   "periodEnd": "202611022300"
+  },
+  "status": 200,
+  "seconds": 5.9,
+  "bytes": 13429,
+  "timeseries": 1,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 99,
+  "first_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:45Z"
+  ],
+  "last_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:45Z"
+  ]
+ },
+ "flow_GB_to_FR": {
+  "params": {
+   "documentType": "A11",
+   "in_Domain": "10YFR-RTE------C",
+   "out_Domain": "10YGB----------A",
+   "periodStart": "202610302300",
+   "periodEnd": "202611022300"
+  },
+  "status": 200,
+  "seconds": 7.1,
+  "bytes": 3422,
+  "timeseries": 1,
+  "resolutions": [
+   "PT60M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 17,
+  "first_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:00Z"
+  ],
+  "last_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:00Z"
+  ]
+ },
+ "flow_FR_to_GB": {
+  "params": {
+   "documentType": "A11",
+   "in_Domain": "10YGB----------A",
+   "out_Domain": "10YFR-RTE------C",
+   "periodStart": "202610302300",
+   "periodEnd": "202611022300"
+  },
+  "status": 200,
+  "seconds": 5.8,
+  "bytes": 8614,
+  "timeseries": 1,
+  "resolutions": [
+   "PT60M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 59,
+  "first_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:00Z"
+  ],
+  "last_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T13:00Z"
+  ]
+ },
+ "flow_FR_to_DE_AT_LU_2015": {
+  "params": {
+   "documentType": "A11",
+   "in_Domain": "10Y1001A1001A63L",
+   "out_Domain": "10YFR-RTE------C",
+   "periodStart": "201412312300",
+   "periodEnd": "201501072300"
+  },
+  "status": 200,
+  "seconds": 2.0,
+  "bytes": 10955,
+  "timeseries": 1,
+  "resolutions": [
+   "PT60M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 81,
+  "first_interval": [
+   "2015-01-04T00:00Z",
+   "2015-01-07T23:00Z"
+  ],
+  "last_interval": [
+   "2015-01-04T00:00Z",
+   "2015-01-07T23:00Z"
+  ]
+ },
+ "flow_FR_to_GB_2019": {
+  "params": {
+   "documentType": "A11",
+   "in_Domain": "10YGB----------A",
+   "out_Domain": "10YFR-RTE------C",
+   "periodStart": "201901012300",
+   "periodEnd": "201901072300"
+  },
+  "status": 200,
+  "seconds": 6.1,
+  "bytes": 11867,
+  "timeseries": 1,
+  "resolutions": [
+   "PT60M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 88,
+  "first_interval": [
+   "2019-01-01T23:00Z",
+   "2019-01-07T23:00Z"
+  ],
+  "last_interval": [
+   "2019-01-01T23:00Z",
+   "2019-01-07T23:00Z"
+  ]
+ },
+ "sched_FR_to_ES": {
+  "params": {
+   "documentType": "A09",
+   "in_Domain": "10YES-REE------0",
+   "out_Domain": "10YFR-RTE------C",
+   "contract_MarketAgreement.Type": "A01",
+   "periodStart": "202610302300",
+   "periodEnd": "202611022300"
+  },
+  "status": 200,
+  "seconds": 1.4,
+  "bytes": 11331,
+  "timeseries": 1,
+  "resolutions": [
+   "PT15M"
+  ],
+  "curve_types": [
+   "A03"
+  ],
+  "sequences": [],
+  "points": 64,
+  "first_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T23:00Z"
+  ],
+  "last_interval": [
+   "2026-10-30T23:00Z",
+   "2026-11-02T23:00Z"
+  ]
+ },
+ "mix15_recent": {
+  "series": [
+   "BIOENERGY/BIOGAS",
+   "BIOENERGY/BIOMASS",
+   "BIOENERGY/TOTAL",
+   "BIOENERGY/WASTE",
+   "FOSSIL_GAS/FOSSIL_GAS_CCGT",
+   "FOSSIL_GAS/FOSSIL_GAS_CHP",
+   "FOSSIL_GAS/FOSSIL_GAS_CT",
+   "FOSSIL_GAS/FOSSIL_GAS_OTHER",
+   "FOSSIL_GAS/TOTAL",
+   "FOSSIL_HARD_COAL/TOTAL",
+   "FOSSIL_OIL/FOSSIL_OIL_CHP",
+   "FOSSIL_OIL/FOSSIL_OIL_CT",
+   "FOSSIL_OIL/FOSSIL_OIL_OTHER",
+   "FOSSIL_OIL/TOTAL",
+   "HYDRO/HYDRO_PUMPED_STORAGE",
+   "HYDRO/HYDRO_RUN_OF_RIVER_AND_POUNDAGE",
+   "HYDRO/HYDRO_WATER_RESERVOIR",
+   "HYDRO/TOTAL",
+   "NUCLEAR/TOTAL",
+   "PUMPING/TOTAL",
+   "SOLAR/TOTAL",
+   "WIND/TOTAL"
+  ],
+  "values_per_series": 288,
+  "first": {
+   "start_date": "2026-10-30T00:00:00+01:00",
+   "end_date": "2026-10-30T00:15:00+01:00",
+   "updated_date": "2026-10-30T23:59:25+01:00",
+   "value": 299
+  },
+  "last_updated": "2026-11-02T14:58:05+01:00"
+ },
+ "mix15_2017": {
+  "series": [
+   "BIOENERGY/TOTAL",
+   "EXCHANGE/TOTAL",
+   "FOSSIL_GAS/TOTAL",
+   "FOSSIL_HARD_COAL/TOTAL",
+   "FOSSIL_OIL/TOTAL",
+   "HYDRO/TOTAL",
+   "NUCLEAR/TOTAL",
+   "PUMPING/TOTAL",
+   "SOLAR/TOTAL",
+   "WIND/TOTAL"
+  ],
+  "values_per_series": 192,
+  "first": {
+   "start_date": "2017-01-01T00:00:00+01:00",
+   "end_date": "2017-01-01T00:15:00+01:00",
+   "updated_date": "2017-01-01T23:54:08+01:00",
+   "value": 766
+  },
+  "last_updated": "2017-01-02T23:54:10+01:00"
+ },
+ "per_type_2015": [
+  "BIOMASS",
+  "FOSSIL_GAS",
+  "FOSSIL_HARD_COAL",
+  "FOSSIL_OIL",
+  "HYDRO_PUMPED_STORAGE",
+  "HYDRO_RUN_OF_RIVER_AND_POUNDAGE",
+  "HYDRO_WATER_RESERVOIR",
+  "NUCLEAR",
+  "SOLAR",
+  "TOTAL",
+  "WASTE",
+  "WIND_ONSHORE"
+ ]
+}
