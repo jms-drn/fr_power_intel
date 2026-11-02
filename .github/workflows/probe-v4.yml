@@ -1,0 +1,35 @@
+name: Probe ENTSO-E and RTE generation (one-off)
+
+# Saves samples to the "probe" branch; the website is untouched.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Call the APIs
+        env:
+          ENTSOE_API_KEY: ${{ secrets.ENTSOE_API_KEY }}
+          RTE_GENERATION_CLIENT_ID: ${{ secrets.RTE_GENERATION_CLIENT_ID }}
+          RTE_GENERATION_CLIENT_SECRET: ${{ secrets.RTE_GENERATION_CLIENT_SECRET }}
+        run: python scripts/probe_v4.py
+      - name: Save samples to the probe branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan probe-v4
+          git rm -rq --cached .
+          git add probe
+          git commit -qm "v4 probe samples"
+          git push -f origin probe-v4
