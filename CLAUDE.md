@@ -464,9 +464,12 @@ Monday).
 
 ## 7. Future plans and ideas discussed
 
-1. **Per-reactor output history since 2015** (≈53 RTE calls a year, daily
-   averages for long views) — James said "not for now" and asked to be
-   reminded to run it later; needed for a per-reactor Nuclear Modulation.
+1. **Per-reactor output history since Dec 2014** — download started 2 Nov
+   2026 at James's go-ahead (`scripts/unit_backfill.py`, workflow
+   `backfill-units.yml`; writes `data/nuclear/unit_hourly/YYYY/YYYY-MM.csv`
+   wide by reactor EIC + `units.json`, and `data/nuclear/unit_output_daily/`).
+   Not yet used by the site: next step is a per-reactor Nuclear Modulation
+   view (needs per-reactor hourly availability from the notices too).
 2. **Interconnector capacity / utilisation (NTC, ENTSO-E)** — proposed in the
    v4 brainstorm, not built in v4.0.
 2b. Possible: commercial (scheduled) exchanges A09 alongside physical flows;
