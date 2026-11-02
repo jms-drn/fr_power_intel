@@ -468,6 +468,9 @@ Monday).
    2026 at James's go-ahead (`scripts/unit_backfill.py`, workflow
    `backfill-units.yml`; writes `data/nuclear/unit_hourly/YYYY/YYYY-MM.csv`
    wide by reactor EIC + `units.json`, and `data/nuclear/unit_output_daily/`).
+   Done 2 Nov (620 calls, 59 reactors, no failed weeks); reactor sums match
+   the fleet series within 0.4% a year, and cover RTE's 16 Sep–13 Oct 2024
+   fleet gap (37–39 GW then), so they could replace the fleet figure there.
    Not yet used by the site: next step is a per-reactor Nuclear Modulation
    view (needs per-reactor hourly availability from the notices too).
 2. **Interconnector capacity / utilisation (NTC, ENTSO-E)** — proposed in the
