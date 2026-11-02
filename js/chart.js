@@ -594,6 +594,11 @@ export class ChartPanel {
   }
 }
 
+/** Chart panels inside an element that are shown and have data (for the Excel download). */
+export function panelsWithin(root) {
+  return [...panels].filter(p => p.spec && root.contains(p.root) && !p.root.hidden && p.root.offsetParent !== null);
+}
+
 export function refreshAllCharts() {
   for (const panel of panels) panel.refreshTheme();
 }

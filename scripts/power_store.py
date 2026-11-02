@@ -240,7 +240,35 @@ def fetch_unit_output(client, start, end):
     return units
 
 
+UNIT_HOURLY_DIR = NUCLEAR_DIR / "unit_hourly"
+
+
+def store_unit_hourly(units):
+    """Merge per-reactor hourly output into data/nuclear/unit_hourly/YYYY/YYYY-MM.csv (wide, by EIC)."""
+    by_month = {}
+    for eic, entry in units.items():
+        for t, v in entry["values"].items():
+            month = parse_ts(t).astimezone(PARIS).strftime("%Y-%m")
+            by_month.setdefault(month, {}).setdefault(t, {})[eic] = v
+    for month, rows in by_month.items():
+        path = UNIT_HOURLY_DIR / month[:4] / f"{month}.csv"
+        stored = {}
+        for r in read_csv(path):
+            stored[r["start_utc"]] = {k: v for k, v in r.items() if k != "start_utc" and v != ""}
+        for t, vals in rows.items():
+            stored.setdefault(t, {}).update({k: str(v) for k, v in vals.items()})
+        eics = sorted({e for vals in stored.values() for e in vals})
+        write_csv(path, ["start_utc", *eics], [{"start_utc": t, **stored[t]} for t in sorted(stored)])
+    names_file = UNIT_HOURLY_DIR / "units.json"
+    names = json.loads(names_file.read_text()) if names_file.exists() else {}
+    names.update({eic: e["name"] for eic, e in units.items()})
+    names_file.parent.mkdir(parents=True, exist_ok=True)
+    names_file.write_text(json.dumps(names, indent=1, sort_keys=True))
+    return len(by_month)
+
+
 def merge_unit_output(units, keep_days=8):
+    store_unit_hourly(units)
     stored = json.loads(UNIT_OUTPUT_FILE.read_text()) if UNIT_OUTPUT_FILE.exists() else {"units": {}}
     cutoff = fmt_utc(datetime.now(UTC) - timedelta(days=keep_days))
     for eic, entry in units.items():

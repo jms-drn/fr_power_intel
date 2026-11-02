@@ -6,6 +6,7 @@ import { ChartPanel } from "./chart.js";
 import {
   ENTSOE, NEIGHBOURS, ZONES, fmtEur, fmtEurDelta, fmtHours, getPriceDaily, getPrices, isPeak, toQuarters
 } from "./market-data.js";
+import { flag } from "./flags.js";
 import { meanOf } from "./time-explorer.js";
 import {
   QUARTER, addDays, copyText, dateKey, fmtDateTime, fmtLongDate, fmtNumber, fmtTime, heroHtml, parisMidnight, todayParis,
@@ -37,7 +38,7 @@ export class PriceShort {
     root.innerHTML = `
       ${heroHtml("Day-ahead prices,", "today and tomorrow.", "The French day-ahead price for today and, once the auction has published (about 13:00 Paris time), tomorrow, set against recent days, last year and a neighbouring market. 15-minute prices since 30 Sep 2025.")}
       <div class="toolbar" role="group" aria-label="Settings"><div class="toolbar-row">
-        <label class="field"><span>Neighbour</span><select data-nb>${NEIGHBOURS.map(z => `<option value="${z}">${ZONES[z].name}</option>`).join("")}</select></label>
+        <div class="field"><span>Compare with</span><div class="flag-pick" role="radiogroup" aria-label="Neighbouring market" data-nb>${NEIGHBOURS.map(z => `<button type="button" role="radio" data-z="${z}">${flag(z, ZONES[z].name)}<span>${ZONES[z].name}</span></button>`).join("")}</div></div>
         <p class="hint" style="margin:0 0 6px">The neighbour sets the parity and spread tiles and the second line on the chart.</p>
       </div></div>
       <div class="headline"><p data-headline>Loading…</p><button class="btn ghost small" type="button" data-copy>Copy</button></div>
@@ -51,7 +52,7 @@ export class PriceShort {
       <div data-zones></div>`;
     this.headline = root.querySelector("[data-headline]");
     root.querySelector("[data-copy]").addEventListener("click", () => copyText(this.headline.textContent));
-    root.querySelector("[data-nb]").addEventListener("change", e => { this.state.nb = e.target.value; this.update(); });
+    root.querySelector("[data-nb]").addEventListener("click", e => { const b = e.target.closest("[data-z]"); if (b) { this.state.nb = b.dataset.z; this.update(); } });
     this.panel = new ChartPanel(root.querySelector("[data-chart]"), { title: "Day-ahead prices", size: "tall", source: ENTSOE });
     this.zonePanel = new ChartPanel(root.querySelector("[data-zones]"), { title: "Baseload by country", size: "short", source: ENTSOE });
   }
@@ -62,7 +63,7 @@ export class PriceShort {
 
   async update() {
     const nb = this.state.nb;
-    this.root.querySelector("[data-nb]").value = nb;
+    this.root.querySelectorAll("[data-nb] [data-z]").forEach(b => b.setAttribute("aria-checked", b.dataset.z === nb));
     writeHash("prices/short", { nb });
     try {
       const today = todayParis();
@@ -116,7 +117,7 @@ export class PriceShort {
         card(`Negative prices ${label}`, fmtHours(negHours), negQ ? `${negQ} quarter-hours below zero` : "None")
       ].join("");
       this.root.querySelector("[data-cards-c]").innerHTML = [
-        card(`${nbName} baseload`, fmtEur(nbBase), ""),
+        card(`${flag(nb)} ${nbName} baseload`, fmtEur(nbBase), ""),
         card(`France minus ${nbName}`, spread != null ? fmtEurDelta(spread) : "–", spread == null ? "" : spread > 0 ? "France dearer" : spread < 0 ? "France cheaper" : "Same price"),
         card(`Price parity with ${nbName}`, parity != null ? `${fmtNumber(parity, 0)}%` : "–", parity != null ? `Share of ${quarters ? "quarter-hours" : "hours"} at the same price` : "")
       ].join("");

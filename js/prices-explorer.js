@@ -2,6 +2,7 @@
 // time explorer with its own data description, plus a few extra panels.
 
 import { ChartPanel } from "./chart.js";
+import { marketEventsBetween } from "./events.js";
 import {
   ENTSOE, PRICE_FIRST, QH_SWITCH, ZONES, fmtByUnit, fmtEur, fmtMw, getCaptureDaily, getMarketDaily,
   getMarketHourly, getMix, getPriceDaily, getPrices, isPeak
@@ -36,7 +37,7 @@ export function priceExplorer(root) {
     subjects: zoneSubjects, subjectLabel: "Bidding zone", compareSubjects: true, compareLabel: "Another zone…",
     measures: PRICE_MEASURES,
     defaults: { measure: "base", subject: "FR", preset: "last30", res: "1d" },
-    loadDaily: getPriceDaily,
+    loadDaily: getPriceDaily, events: marketEventsBetween,
     loadRaw: async (z, from, to) => (await getPrices(z, from, to)).map(p => ({ t: p.t, v: p.eur, min: p.min })),
     isPeak, hasQuarters: t => t >= QH_SWITCH, step: true,
     quarterNote: "Day-ahead prices were hourly until 30 Sep 2025; earlier hourly prices are repeated across their four quarter-hours.",
@@ -93,6 +94,8 @@ export class CapturePrices {
 
   setParams(p) { this.explorer.setParams(p); }
 
+  applyPeriod(p) { this.explorer.applyPeriod(p); }
+
   async activate() {
     await this.explorer.update();
     await this.renderHours();
@@ -147,7 +150,7 @@ export class ResidualDemand {
     root.append(top, extra);
     this.explorer = new TimeExplorer(top, {
       key: "prices/residual",
-      hero: ["Demand left for", "the rest of the fleet.", "Residual demand is French demand minus wind and solar output: what nuclear, hydro, gas and imports have to cover. It drives prices more closely than demand itself. Hourly, from RTE data."],
+      hero: ["Demand left for", "the rest of the fleet.", "Residual demand is French demand minus wind and solar output: what nuclear, hydro, gas and imports have to cover. Hourly, from RTE data."],
       firstDate: "2015-01-01", source: "RTE (demand and generation) and ENTSO-E (prices)", fine: "1h",
       subjects: RESIDUAL_SUBJECTS, subjectLabel: "Series", compareSubjects: true, compareLabel: "Another series…",
       resolutions: ["1h", "1d", "1w", "1M", "1y"],
@@ -167,6 +170,8 @@ export class ResidualDemand {
   }
 
   setParams(p) { this.explorer.setParams(p); }
+
+  applyPeriod(p) { this.explorer.applyPeriod(p); }
 
   async activate() {
     await this.explorer.update();

@@ -284,14 +284,61 @@ class Grid:
 MIN_PLAUSIBLE_OUTPUT_MW = 15000
 
 
+UNIT_HOURLY_DIR = NUCLEAR_DIR / "unit_hourly"
+UNIT_AVAIL_DIR = NUCLEAR_DIR / "unit_avail"
+
+
+def load_unit_sums():
+    """Hourly sum of per-reactor output (MW), for hours where most reactors reported."""
+    sums = {}
+    for path in sorted(UNIT_HOURLY_DIR.glob("*/*.csv")):
+        for row in read_csv(path):
+            vals = [int(float(v)) for k, v in row.items() if k != "start_utc" and v != ""]
+            if len(vals) >= 40:
+                sums[row["start_utc"]] = sum(vals)
+    return sums
+
+
 def load_output():
+    """Fleet output per hour. Where RTE's fleet figure is missing or implausible
+    (e.g. 16 Sep - 13 Oct 2024), the sum of the per-reactor output is used."""
     out = {}
     for path in sorted(OUTPUT_DIR.glob("*/*.csv")):
         for row in read_csv(path):
             mw = int(row["mw"])
             if mw >= MIN_PLAUSIBLE_OUTPUT_MW:
                 out[row["start_utc"]] = mw
+    filled = 0
+    for key, mw in load_unit_sums().items():
+        if key not in out and mw >= MIN_PLAUSIBLE_OUTPUT_MW and key >= fmt_utc(paris_midnight(HISTORY_START)):
+            out[key] = mw
+            filled += 1
+    if filled:
+        print(f"Nuclear output: {filled} hours filled from per-reactor output")
     return out
+
+
+def write_unit_avail(fleet, avail, now):
+    """Hourly available MW per reactor (wide by EIC), from the start of history to now."""
+    hours_n = avail.shape[1] // 4
+    first_hour = paris_midnight(HISTORY_START)
+    k0 = int((first_hour - T0).total_seconds() // 3600)
+    k1 = min(hours_n, int((now.replace(minute=0, second=0, microsecond=0) - T0).total_seconds() // 3600) + 1)
+    hourly = avail[:, k0 * 4:k1 * 4].reshape(len(fleet), k1 - k0, 4).mean(axis=2)
+    eics = [u.get("eic") or u["name"] for u in fleet]
+    live_from = [None if not u["from_utc"] else parse_ts(u["from_utc"]) for u in fleet]
+    live_to = [None if not u["to_utc"] else parse_ts(u["to_utc"]) for u in fleet]
+    files = defaultdict(list)
+    for k in range(k1 - k0):
+        t = T0 + timedelta(hours=k0 + k)
+        row = {"start_utc": fmt_utc(t)}
+        for j, e in enumerate(eics):
+            if (live_from[j] and t < live_from[j]) or (live_to[j] and t >= live_to[j]):
+                continue
+            row[e] = int(round(hourly[j, k]))
+        files[paris_month_key(t)].append(row)
+    for month, rows in files.items():
+        write_csv(UNIT_AVAIL_DIR / month[:4] / f"{month}.csv", ["start_utc", *eics], rows)
 
 
 def paris_month_key(dt):
@@ -727,6 +774,7 @@ def main(full=False, now=None):
 
     grid, cap, avail, planned, unplanned = history(fleet, by_id, now)
     months, daily = build_history_files(fleet, grid, cap, avail, planned, unplanned, now)
+    write_unit_avail(fleet, avail, now)
     outlook_now, outlook_months = build_outlooks(fleet, by_id, now, full)
     outage_years = build_outages(fleet, by_id)
     live = build_live(fleet, by_id, grid, cap, avail, planned, unplanned, now, outlook_now)

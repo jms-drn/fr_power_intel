@@ -276,7 +276,14 @@ export function readHash() {
   return { page: page || "overview", tab: tab || "", params: new URLSearchParams(query) };
 }
 
+/** The last period chosen on each page (preset/from/to), so tabs of one page can share it. */
+const lastPeriods = {};
+export function lastPeriod(page) {
+  return lastPeriods[page] || null;
+}
+
 export function writeHash(path, params) {
+  if (params && params.from && params.to) lastPeriods[path.split("/")[0]] = { preset: params.preset || "custom", from: params.from, to: params.to };
   const query = new URLSearchParams(params || {}).toString();
   const hash = `#${path}${query ? `?${query}` : ""}`;
   if (location.hash !== hash) history.replaceState(null, "", hash);

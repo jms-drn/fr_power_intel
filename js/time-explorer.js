@@ -113,7 +113,7 @@ export class TimeExplorer {
     return {
       preset: "last30", from: "", to: "", res: "1d", measure: Object.keys(this.cfg.measures)[0],
       subject: this.cfg.subjects[0].value, cmp: "", ly: "1", avg: "1", band: "0", n: "5", yr: "", align: "auto",
-      view: "series", split: "all", diff: "0", ref: "ly", ...this.cfg.defaults
+      view: "series", split: "all", diff: "0", ref: "ly", subjects: "", stack: "0", gap: "0", hs: "0", ev: "0", ...this.cfg.defaults
     };
   }
 
@@ -122,6 +122,14 @@ export class TimeExplorer {
     for (const key of Object.keys(state)) if (params.has(key)) state[key] = params.get(key);
     this.state = state;
     if (state.preset !== "custom" || !state.from) this.applyPreset();
+    this.syncControls();
+  }
+
+  /** Take a period chosen on another tab of the same page. */
+  applyPeriod(p) {
+    if (!p || (p.preset === this.state.preset && p.from === this.state.from && p.to === this.state.to)) return;
+    Object.assign(this.state, { preset: p.preset, from: p.from, to: p.to });
+    if (p.preset !== "custom") this.applyPreset();
     this.syncControls();
   }
 
@@ -153,8 +161,17 @@ export class TimeExplorer {
       ${heroHtml(...c.hero)}
       ${c.intro || ""}
       <div class="toolbar" role="group" aria-label="Explorer settings">
+        ${c.multi ? `<div class="toolbar-row"><div class="field field-wide"><span>${c.subjectLabel} <em class="field-note">tick one or more</em></span><div class="chips" data-subjects>
+          ${c.subjects.filter(x => !x.sub).map(x => this.subjChip(x)).join("")}
+          <span class="chips" data-subs>${c.subjects.filter(x => x.sub).map(x => this.subjChip(x)).join("")}</span>
+          <span class="chip-actions"><button type="button" class="link" data-all>${c.allLabel || "All"}</button><button type="button" class="link" data-none>Clear</button></span>
+          ${c.splitLabel ? `<label class="check"><input type="checkbox" data-hs> ${c.splitLabel}</label>` : ""}
+        </div></div>
+        <div class="field" data-multi-only><span>Lines</span>${switchHtml("data-stack", "Separate", "Stacked")}</div>
+        <div class="field" data-gap-field><span>Two selected</span><label class="check"><input type="checkbox" data-gap> Show gap over time</label></div>
+        </div>` : ""}
         <div class="toolbar-row">
-          <label class="field"><span>${c.subjectLabel}</span><select data-k="subject">${c.subjects.map(s => `<option value="${s.value}">${s.label}</option>`).join("")}</select></label>
+          ${c.multi ? "" : `<label class="field"><span>${c.subjectLabel}</span><select data-k="subject">${c.subjects.map(s => `<option value="${s.value}">${s.label}</option>`).join("")}</select></label>`}
           <label class="field"><span>Measure</span><select data-k="measure">${Object.entries(c.measures).map(([k, m]) => `<option value="${k}">${m.label}</option>`).join("")}</select></label>
           <label class="field"><span>Period</span><select data-k="preset">${PRESETS.map(([k, l]) => `<option value="${k}">${l}</option>`).join("")}</select></label>
           <label class="field"><span>From</span><input type="date" data-k="from" min="${c.firstDate}"></label>
@@ -162,9 +179,10 @@ export class TimeExplorer {
           <label class="field"><span>Resolution</span>
             <select data-k="res">${(c.resolutions || ["15m", "1h", "1d", "1w", "1M", "1y"]).map(r => `<option value="${r}">${r === "15m" ? "15 minutes" : RES_LABEL[r][0].toUpperCase() + RES_LABEL[r].slice(1)}</option>`).join("")}</select>
           </label>
-          <label class="field"><span>View</span>
-            <select data-k="view"><option value="series">Over time</option><option value="profile">Daily profile</option><option value="duration">Duration curve</option></select>
-          </label>
+          <div class="field"><span>View</span><div class="chips">
+            <label class="check"><input type="checkbox" data-view="profile"> Show daily profile</label>
+            <label class="check"><input type="checkbox" data-view="duration"> Duration curve</label>
+          </div></div>
           <label class="field" data-split-field><span>Days</span>
             <select data-k="split"><option value="all">All days</option><option value="wd">Weekdays</option><option value="we">Weekends</option><option value="both">Weekdays and weekends</option></select>
           </label>
@@ -177,7 +195,8 @@ export class TimeExplorer {
               <select data-k="n" aria-label="Number of previous years" class="compact">${[2, 3, 5, 8, 10].map(n => `<option value="${n}">${n} years</option>`).join("")}</select>
               ${this.chip("band", "Min–max range", "--s-avg")}
               <select data-k="yr" aria-label="A chosen year" class="compact"><option value="">A chosen year…</option>${years.map(y => `<option value="${y}">${y}</option>`).join("")}</select>
-              ${c.compareSubjects ? `<select data-k="cmp" aria-label="Second ${c.subjectLabel.toLowerCase()}" class="compact"><option value="">${c.compareLabel || "Another series…"}</option>${c.subjects.map(s => `<option value="${s.value}">${s.label}</option>`).join("")}</select>` : ""}
+              ${c.events ? this.chip("ev", "Events", "--muted") : ""}
+              ${c.compareSubjects && !c.multi ? `<select data-k="cmp" aria-label="Second ${c.subjectLabel.toLowerCase()}" class="compact"><option value="">${c.compareLabel || "Another series…"}</option>${c.subjects.map(s => `<option value="${s.value}">${s.label}</option>`).join("")}</select>` : ""}
             </div>
           </div>
           <div class="field"><span>Align earlier years by</span>${switchHtml("data-align", "Weekday", "Calendar date")}</div>
@@ -191,9 +210,11 @@ export class TimeExplorer {
       <div class="headline"><p data-headline>Loading…</p><button class="btn ghost small" type="button" data-copy title="Copy this sentence">Copy</button></div>
       <div class="cards" data-cards>${'<div class="card skeleton"></div>'.repeat(5)}</div>
       <div data-chart></div>
+      <div data-mtable></div>
       <div data-rank></div>`;
     this.headline = this.root.querySelector("[data-headline]");
     this.cards = this.root.querySelector("[data-cards]");
+    this.mtable = this.root.querySelector("[data-mtable]");
     this.panel = new ChartPanel(this.root.querySelector("[data-chart]"), { title: "", size: "tall", overview: true, source: c.source });
     this.rankPanel = new ChartPanel(this.root.querySelector("[data-rank]"), { title: "The same period in every year", size: "short", source: c.source });
     this.root.querySelector("[data-copy]").addEventListener("click", () => copyText(this.headline.textContent));
@@ -218,6 +239,29 @@ export class TimeExplorer {
       this.syncControls();
       this.update();
     });
+    this.root.querySelectorAll("[data-view]").forEach(box => box.addEventListener("change", () => {
+      this.state.view = box.checked ? box.dataset.view : "series";
+      this.syncControls();
+      this.update();
+    }));
+    if (c.multi) {
+      this.root.querySelectorAll("[data-subj]").forEach(chip => chip.addEventListener("click", () => {
+        const list = this.subjects();
+        const v = chip.dataset.subj;
+        const next = list.includes(v) ? list.filter(x => x !== v) : [...list, v];
+        this.setSubjects(next.length ? next : [v]);
+      }));
+      this.root.querySelector("[data-all]").addEventListener("click", () => this.setSubjects(this.allSubjects()));
+      this.root.querySelector("[data-none]").addEventListener("click", () => this.setSubjects([this.subjects()[0]]));
+      this.root.querySelector("[data-hs]")?.addEventListener("change", e => {
+        this.state.hs = e.target.checked ? "1" : "0";
+        const list = this.subjects();
+        const [grp, parts] = [c.splitOf, c.subjects.filter(x => x.sub).map(x => x.value)];
+        this.setSubjects(this.state.hs === "1" ? list.flatMap(x => (x === grp ? parts : [x])) : [...new Set(list.map(x => (parts.includes(x) ? grp : x)))]);
+      });
+      this.root.querySelector("[data-stack]").addEventListener("click", () => { this.state.stack = this.state.stack === "1" ? "0" : "1"; this.syncControls(); this.update(); });
+      this.root.querySelector("[data-gap]").addEventListener("change", e => { this.state.gap = e.target.checked ? "1" : "0"; this.update(); });
+    }
     this.root.querySelector("[data-diff]").addEventListener("click", () => {
       this.state.diff = this.state.diff === "1" ? "0" : "1";
       this.syncControls();
@@ -242,9 +286,27 @@ export class TimeExplorer {
     const diff = s.diff === "1";
     this.root.querySelector("[data-ref-field]").classList.toggle("hidden", !diff);
     this.root.querySelector("[data-split-field]").classList.toggle("hidden", s.view !== "profile");
+    this.root.querySelectorAll("[data-view]").forEach(box => { box.checked = s.view === box.dataset.view; });
+    if (this.cfg.multi) {
+      const list = this.subjects();
+      this.root.querySelectorAll("[data-subj]").forEach(chip => chip.setAttribute("aria-pressed", list.includes(chip.dataset.subj)));
+      const split = s.hs === "1";
+      this.root.querySelector("[data-subs]").hidden = !split;
+      const grpChip = this.root.querySelector(`[data-subj="${this.cfg.splitOf}"]`);
+      if (grpChip) grpChip.hidden = split;
+      const hs = this.root.querySelector("[data-hs]");
+      if (hs) hs.checked = split;
+      const multi = list.length > 1;
+      this.root.querySelector("[data-multi-only]").classList.toggle("hidden", !multi);
+      this.root.querySelector("[data-gap-field]").classList.toggle("hidden", list.length !== 2 || s.view !== "series");
+      this.root.querySelector("[data-gap]").checked = s.gap === "1";
+      setSwitch(this.root.querySelector("[data-stack]"), s.stack === "1");
+      this.root.querySelectorAll('[data-chip="ly"], [data-chip="avg"], [data-chip="band"], [data-k="yr"]').forEach(x => { x.disabled = multi && (x.dataset.chip === "band" || x.dataset.k === "yr"); });
+      this.root.querySelector("[data-diff]").disabled = multi || s.view !== "series";
+    }
     this.root.querySelector('[data-k="res"]').disabled = s.view !== "series";
     this.root.querySelector('[data-chip="band"]').disabled = diff || s.view === "duration";
-    this.root.querySelector("[data-diff]").disabled = s.view !== "series";
+    if (!this.cfg.multi) this.root.querySelector("[data-diff]").disabled = s.view !== "series";
     const m = this.cfg.measures[s.measure];
     this.root.querySelector("[data-hint]").textContent = s.view === "profile"
       ? "Daily profile: the average for each time of day over the period, Paris time."
@@ -258,6 +320,30 @@ export class TimeExplorer {
 
   measure() {
     return this.cfg.measures[this.state.measure];
+  }
+
+  subjChip(x) {
+    return `<button class="chip" type="button" data-subj="${x.value}" style="color:var(${x.colour || "--s-actual"})"><span class="swatch"></span><span class="chip-label">${x.label}</span></button>`;
+  }
+
+  /** Ticked subjects (multi mode), falling back to the single subject. */
+  subjects() {
+    const valid = new Set(this.cfg.subjects.map(x => x.value));
+    const list = (this.state.subjects || "").split(",").filter(v => valid.has(v));
+    return list.length ? list : [this.state.subject];
+  }
+
+  allSubjects() {
+    const split = this.state.hs === "1";
+    return this.cfg.subjects.filter(x => (x.inAll ?? true) && (split ? x.value !== this.cfg.splitOf : !x.sub)).map(x => x.value);
+  }
+
+  setSubjects(list) {
+    this.state.subjects = list.join(",");
+    this.state.subject = list[0];
+    if (list.length !== 2) this.state.gap = "0";
+    this.syncControls();
+    this.update();
   }
 
   subjectLabel(v) {
@@ -306,7 +392,9 @@ export class TimeExplorer {
       if (to < s.to) notes.push(`Data runs to ${fmtLongDate(to)}.`);
       if (from > to) throw new Error("no data for this period");
       let result;
-      if (s.view === "profile" || s.view === "duration") result = await this.buildShape(from, to, notes);
+      const multi = this.cfg.multi && this.subjects().length > 1;
+      if (multi) result = await this.buildMulti(from, to, notes);
+      else if (s.view === "profile" || s.view === "duration") result = await this.buildShape(from, to, notes);
       else {
         const days = daysBetween(from, to) + 1;
         let res = s.res;
@@ -323,8 +411,15 @@ export class TimeExplorer {
       for (const n of this.cfg.notes?.(s, from, to) || []) notes.push(n);
       this.panel.setTitle(result.title, result.subtitle);
       this.panel.render(result.spec);
-      this.renderSummary(result.summary, from, to);
-      if (s.view === "series") await this.renderRanking(from, to, id); else this.rankPanel.show(false);
+      this.mtable.innerHTML = "";
+      if (multi) {
+        this.renderMultiSummary(result.summary, from, to);
+        this.rankPanel.show(false);
+      } else {
+        this.cards.hidden = false;
+        this.renderSummary(result.summary, from, to);
+        if (s.view === "series") await this.renderRanking(from, to, id); else this.rankPanel.show(false);
+      }
     } catch (error) {
       console.error(error);
       if (id === this.renderId) {
@@ -503,6 +598,7 @@ export class TimeExplorer {
         xType: "time", xLabel, csvLabel: daily ? csvDate : csvDateTime, axisLabel: res === "1M" ? x => fmtMonth(x) : res === "1y" ? x => dateKey(x).slice(0, 4) : undefined,
         xHeader: daily ? (res === "1M" ? "Month" : res === "1w" ? "Week starting" : res === "1y" ? "Year" : "Date") : "Time (Europe/Paris)",
         yName, series, zeroLine: diff || m.zeroLine, yFormat: v => fmtNumber(v, Number.isInteger(v) ? 0 : 1), notes,
+        events: s.ev === "1" && this.cfg.events ? this.cfg.events(from, to) : [],
         yMin: m.yMin
       },
       summary: { actual: byDay(actual), perYear: new Map([...perYear].map(([k, mp]) => [k, byDay(mp)])), cmp: cmp ? byDay(cmp) : null, raw: daily ? null : actual, agg }
@@ -738,6 +834,205 @@ export class TimeExplorer {
     });
   }
 
+
+  // ---------- Several subjects at once ----------
+
+  /** One subject's values for the period (k years back, aligned), at the given resolution, keyed like the chart. */
+  async seriesFor(subject, from, to, res, k, table) {
+    const align = this.align();
+    const m = this.measure();
+    if (!["15m", "1h"].includes(res)) {
+      const map = new Map();
+      for (const d of dateRange(from, to)) {
+        const src = k ? shiftD(d, k, align) : d;
+        const v = src ? this.dailyValue(table, src, subject) : null;
+        if (v != null) map.set(d, v);
+      }
+      return this.group(map, res, m.agg || "mean");
+    }
+    if (!k) return this.raw(subject, from, to, res);
+    const src = await this.raw(subject, shiftD(from, k, align) || shiftD(addDays(from, 1), k, align), shiftD(to, k, align) || shiftD(addDays(to, -1), k, align), res);
+    const map = new Map();
+    const step = res === "15m" ? QUARTER : HOUR;
+    for (let t = parisMidnight(from); t < parisMidnight(addDays(to, 1)); t += step) {
+      const st = shiftT(t, k, align);
+      const v = st != null ? src.get(st) : null;
+      if (v != null) map.set(t, v);
+    }
+    return map;
+  }
+
+  async buildMulti(from, to, notes) {
+    const s = this.state;
+    const m = this.measure();
+    const sc = m.scale || 1;
+    const unit = m.unit;
+    const decimals = m.decimals ?? 1;
+    const list = this.subjects();
+    const colourOf = v => this.cfg.subjects.find(x => x.value === v)?.colour || "--s-actual";
+    const table = await this.cfg.loadDaily();
+    const n = Number(s.n);
+    const agg = m.agg || "mean";
+    const stacked = s.stack === "1";
+
+    if (s.view === "profile" || s.view === "duration") {
+      if (m.intraday === false) throw new Error(`${m.label} has no time-of-day detail`);
+      let f = from;
+      if (daysBetween(f, to) + 1 > PROFILE_LIMIT) { f = addDays(to, -(PROFILE_LIMIT - 1)); notes.push(`Profiles and duration curves use at most ${PROFILE_LIMIT} days.`); }
+      const quarters = this.cfg.hasQuarters?.(parisMidnight(f)) && daysBetween(f, to) <= 120;
+      const res = quarters ? "15m" : "1h";
+      const series = [];
+      const rows = [];
+      for (const subj of list) {
+        const map = await this.raw(subj, f, to, res);
+        let data;
+        if (s.view === "profile") {
+          const acc = new Map();
+          const isWe = t => weekdayIndex(dateKey(t)) >= 5;
+          for (const [t, v] of map) {
+            if ((s.split === "wd" && isWe(t)) || (s.split === "we" && !isWe(t))) continue;
+            const w = new Date(toWall(t));
+            const slot = Math.floor((w.getUTCHours() * 60 + w.getUTCMinutes()) / (quarters ? 15 : 60)) * (quarters ? 15 : 60);
+            const a = acc.get(slot) || [0, 0];
+            a[0] += v; a[1] += 1;
+            acc.set(slot, a);
+          }
+          data = [...acc].sort((a, b) => a[0] - b[0]).map(([k, [sum, c]]) => [k, sum / c / sc]);
+        } else {
+          const vs = [...map.values()].sort((a, b) => b - a);
+          const step = Math.max(1, Math.floor(vs.length / 1500));
+          data = [];
+          for (let i = 0; i < vs.length; i += step) data.push([(100 * i) / Math.max(1, vs.length - 1), vs[i] / sc]);
+        }
+        series.push({ name: this.subjectLabel(subj), colour: colourOf(subj), type: "line", data, unit, decimals, width: 2, stack: stacked && s.view === "profile" ? "multi" : undefined, areaOpacity: 0.8, symbols: false });
+        rows.push({ subj, cur: meanOf([...map.values()]) });
+      }
+      const hhmm = k => `${String(Math.floor(k / 60)).padStart(2, "0")}:${String(k % 60).padStart(2, "0")}`;
+      const profile = s.view === "profile";
+      return {
+        title: `${m.label}: ${profile ? "daily profile" : "duration curve"}`,
+        subtitle: `${fmtPeriod(f, to)} · ${unit}${stacked && profile ? ", stacked" : ""}`,
+        spec: profile
+          ? { xType: "value", xMin: 0, xMax: 1440 - (quarters ? 15 : 60), xLabel: hhmm, axisLabel: hhmm, xHeader: "Time of day (Paris)", yName: unit, series, notes: [...notes, "Average for each time of day, Paris time."], yMin: m.yMin, xInterval: 180 }
+          : { xType: "value", xMin: 0, xMax: 100, xLabel: x => `${fmtNumber(x, 1)}% of the time`, axisLabel: x => `${x}%`, xHeader: "Share of the time (%)", yName: unit, series, notes: [...notes, "Each line sorts every period from highest to lowest."], yMin: m.yMin },
+        summary: { multi: true, rows: rows.map(r => ({ ...r, ly: null, avg: null })), from: f, to, list }
+      };
+    }
+
+    // Over time.
+    const days = daysBetween(from, to) + 1;
+    let res = s.res;
+    if ((res === "15m" || res === "1h") && m.intraday === false) res = "1d";
+    if (LIMIT[res] && days > LIMIT[res]) { res = res === "15m" && days <= LIMIT["1h"] ? "1h" : "1d"; notes.push(`This period is shown ${RES_LABEL[res]}.`); }
+    const daily = !["15m", "1h"].includes(res);
+    const keyX = daily ? k => parisMidnight(k) : k => k;
+    const pts = map => [...map].sort(([a], [b]) => (a < b ? -1 : 1)).map(([k, v]) => [keyX(k), v / sc]);
+    const wantLy = s.ly === "1" || s.gap === "1";
+    const wantAvg = s.avg === "1";
+    const rows = [];
+    const cur = {};
+    const lyMaps = {};
+    for (const subj of list) {
+      const A = await this.seriesFor(subj, from, to, res, 0, table);
+      cur[subj] = A;
+      const L = wantLy && addDays(from, -365) >= addDays(this.cfg.firstDate, -1) ? await this.seriesFor(subj, from, to, res, 1, table) : null;
+      lyMaps[subj] = L;
+      const avgMaps = [];
+      if (wantAvg) for (let k = 1; k <= n; k++) if (addDays(from, -365 * k) >= addDays(this.cfg.firstDate, -1)) avgMaps.push(await this.seriesFor(subj, from, to, res, k, table));
+      // Like-for-like: only keys present in both.
+      const like = maps => {
+        const a = []; const b = [];
+        for (const [key, v] of A) {
+          const vals = maps.map(mp => mp.get(key)).filter(x => x != null);
+          if (vals.length) { a.push(v); b.push(meanOf(vals)); }
+        }
+        return a.length ? { cur: aggregate(a, agg), ref: aggregate(b, agg) } : null;
+      };
+      rows.push({ subj, cur: aggregate([...A.values()], agg), ly: L ? like([L]) : null, avg: avgMaps.length ? like(avgMaps) : null, years: avgMaps.length });
+    }
+    const series = [];
+    if (s.gap === "1" && list.length === 2) {
+      const [a, b] = list;
+      const gapOf = (x, y) => new Map([...x].filter(([k]) => y.has(k)).map(([k, v]) => [k, v - y.get(k)]));
+      const name = `${this.subjectLabel(a)} minus ${this.subjectLabel(b)}`;
+      if (lyMaps[a] && lyMaps[b]) series.push({ name: `${name}, last year`, colour: "--s-ly", type: "line", data: pts(gapOf(lyMaps[a], lyMaps[b])), width: 1.5, unit, decimals, symbols: daily && res !== "1d" ? true : undefined });
+      series.push({ name, colour: "--s-actual", type: "line", data: pts(gapOf(cur[a], cur[b])), width: 2.4, unit, decimals, z: 20, symbols: daily && res !== "1d" ? true : undefined });
+      notes.push("Above zero: the first fuel produced more than the second.");
+    } else {
+      for (const subj of stacked ? list : [...list].reverse()) series.push({ name: this.subjectLabel(subj), colour: colourOf(subj), type: "line", data: pts(cur[subj]), width: stacked ? 0.6 : 2, unit, decimals, stack: stacked ? "multi" : undefined, areaOpacity: 0.85, symbols: stacked ? false : daily && res !== "1d" ? true : undefined });
+    }
+    const xLabel = !daily ? x => fmtDateTime(x) : res === "1M" ? x => fmtMonth(x) : res === "1y" ? x => dateKey(x).slice(0, 4) : res === "1w" ? x => `Week of ${fmtDate(x)}` : x => fmtDate(x);
+    if (wantLy || wantAvg) notes.push(`Changes in the table compare like-for-like ${this.align() === "wd" ? "weekdays" : "dates"} in earlier years.`);
+    return {
+      title: s.gap === "1" && list.length === 2 ? `${this.subjectLabel(list[0])} minus ${this.subjectLabel(list[1])}, ${RES_LABEL[res]}` : `${m.label}: ${list.length} ${this.cfg.subjectPlural || "series"}, ${RES_LABEL[res]}`,
+      subtitle: `${fmtPeriod(from, to)} · ${unit}${stacked && s.gap !== "1" ? ", stacked" : ""}`,
+      spec: {
+        xType: "time", xLabel, csvLabel: daily ? csvDate : csvDateTime, axisLabel: res === "1M" ? x => fmtMonth(x) : res === "1y" ? x => dateKey(x).slice(0, 4) : undefined,
+        xHeader: daily ? "Date" : "Time (Europe/Paris)", yName: unit, series, notes, zeroLine: s.gap === "1", yMin: s.gap === "1" ? undefined : m.yMin,
+        yFormat: v => fmtNumber(v, Number.isInteger(v) ? 0 : 1), events: s.ev === "1" && this.cfg.events ? this.cfg.events(from, to) : []
+      },
+      summary: { multi: true, rows, from, to, list, gap: list.length === 2 }
+    };
+  }
+
+  renderMultiSummary(sum, from, to) {
+    const s = this.state;
+    const m = this.measure();
+    const f = v => this.cfg.fmt(v, m);
+    const abs = v => this.cfg.fmt(Math.abs(v), m);
+    const signed = d => (d == null ? "–" : `${d >= 0 ? "+" : "−"}${abs(d)}`);
+    const pct = r => (r && r.ref ? 100 * (r.cur / r.ref - 1) : null);
+    const pctTxt = v => (v == null ? "–" : `${v >= 0 ? "+" : "−"}${fmtNumber(Math.abs(v), 1)}%`);
+    const cls = v => (v == null ? "" : v >= 0 ? "up" : "down");
+    const rows = sum.rows;
+    const yrs = rows.find(r => r.years)?.years || Number(s.n);
+    const avgLabel = `${yrs}-yr avg`;
+    const label = v => this.subjectLabel(v).replace(/ \(.*\)/, "");
+    // Share of the total of the selected fuels (only meaningful for output-type measures).
+    const total = rows.reduce((a, r) => a + (r.cur || 0), 0);
+    const showShare = m.unit === "GW" || m.unit === "GWh";
+    const head = `<tr><th>${this.cfg.subjectLabel}</th><th>${m.agg === "sum" ? "Total" : "Average"}</th><th>vs last year</th><th>%</th><th>vs ${avgLabel}</th><th>%</th>${showShare ? "<th>Share of selected</th>" : ""}</tr>`;
+    const body = rows.map(r => {
+      const dl = r.ly ? r.ly.cur - r.ly.ref : null;
+      const da = r.avg ? r.avg.cur - r.avg.ref : null;
+      return `<tr><td><span class="dot" style="background:var(${this.cfg.subjects.find(x => x.value === r.subj)?.colour || "--s-actual"})"></span>${label(r.subj)}</td><td>${f(r.cur)}</td>
+        <td class="${cls(dl)}">${signed(dl)}</td><td class="${cls(pct(r.ly))}">${pctTxt(pct(r.ly))}</td>
+        <td class="${cls(da)}">${signed(da)}</td><td class="${cls(pct(r.avg))}">${pctTxt(pct(r.avg))}</td>${showShare ? `<td>${total ? `${fmtNumber(100 * r.cur / total, 1)}%` : "–"}</td>` : ""}</tr>`;
+    }).join("");
+    let gapRow = "";
+    let gapText = "";
+    if (rows.length === 2 && rows[0].ly && rows[1].ly) {
+      const [a, b] = rows;
+      const g = a.cur - b.cur;
+      const gl = a.ly.ref - b.ly.ref;
+      const ga = a.avg && b.avg ? a.avg.ref - b.avg.ref : null;
+      gapRow = `<tr class="gap-row"><td>${label(a.subj)} minus ${label(b.subj)}</td><td>${signed(g)}</td><td class="${cls(g - gl)}">${signed(g - gl)}</td><td></td><td class="${ga == null ? "" : cls(g - ga)}">${ga == null ? "–" : signed(g - ga)}</td><td></td>${showShare ? "<td></td>" : ""}</tr>`;
+      const lead = g >= 0 ? [a, b] : [b, a];
+      const was = g >= 0 ? gl : -gl;
+      gapText = ` ${label(lead[0].subj)} ${m.agg === "sum" ? "exceeded" : "exceeded"} ${label(lead[1].subj).toLowerCase()} by ${abs(g)}, ${was >= 0 ? `${Math.abs(g) >= was ? "up" : "down"} from ${abs(was)}` : `reversing a gap of ${abs(was)} the other way`} a year earlier.`;
+    }
+    this.mtable.innerHTML = `<div class="mtable-wrap"><table class="mtable"><thead>${head}</thead><tbody>${body}${gapRow}</tbody></table></div>`;
+    this.cards.hidden = true;
+    this.cards.innerHTML = "";
+    // Headline: each fuel's change on last year when two or three are ticked, otherwise the biggest movers.
+    const span = fmtFromTo(sum.from, sum.to);
+    const withLy = rows.filter(r => r.ly && r.ly.ref && r.subj !== "hydro_other" && (m.unit !== "GW" || r.cur >= 500));
+    let text;
+    const one = r => `${label(r.subj).toLowerCase()} ${f(r.cur)}${r.ly && r.ly.ref ? ` (${pctTxt(pct(r.ly))} on last year)` : ""}`;
+    if (rows.length <= 3) {
+      const [first, ...rest] = rows;
+      const pc = r => (r.ly && r.ly.ref ? ` (${pctTxt(pct(r.ly))}${r === first ? " on last year" : ""})` : "");
+      const restTxt = rest.map(r => `${label(r.subj).toLowerCase()} ${f(r.cur)}${pc(r)}`).join(", ").replace(/, ([^,]*)$/, " and $1");
+      text = `${span[0].toUpperCase() + span.slice(1)}, French ${label(first.subj).toLowerCase()} ${m.short} averaged ${f(first.cur)}${pc(first)}${rest.length ? ` and ${restTxt}` : ""}.`;
+    }
+    else if (withLy.length) {
+      const up = [...withLy].sort((x, y) => pct(y.ly) - pct(x.ly))[0];
+      const down = [...withLy].sort((x, y) => pct(x.ly) - pct(y.ly))[0];
+      text = `${span[0].toUpperCase() + span.slice(1)}, ${label(up.subj).toLowerCase()} rose most on last year among the selected fuels (${pctTxt(pct(up.ly))} to ${f(up.cur)}) and ${label(down.subj).toLowerCase()} ${pct(down.ly) < 0 ? "fell most" : "rose least"} (${pctTxt(pct(down.ly))} to ${f(down.cur)}).`;
+    } else text = `${span[0].toUpperCase() + span.slice(1)}: ${rows.map(one).join(", ")}.`;
+    if (m.agg === "sum") text = text.replace(" averaged ", " totalled ");
+    this.headline.textContent = text + gapText;
+  }
   refreshTheme() {
     this.panel.refreshTheme();
     this.rankPanel.refreshTheme();

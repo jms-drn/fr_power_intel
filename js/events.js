@@ -24,3 +24,21 @@ export const EVENTS = [
 export function eventsBetween(from, to) {
   return EVENTS.filter(e => (e.to || e.from) >= from && e.from <= to);
 }
+
+// Market events, shown on price, generation and flow charts together with the
+// events above. Dates checked 2 Nov 2026: bidding-zone split (DE-LU from
+// 1 Oct 2018), Iberian gas price cap (15 Jun 2022 – 31 Dec 2023), German
+// nuclear exit (last three reactors off 15 Apr 2023), Flamanville 3 first grid
+// connection (21 Dec 2024, RTE notices), 15-minute day-ahead prices (first
+// delivery day in the ENTSO-E data: 30 Sep 2025).
+export const MARKET_EVENTS = [
+  { from: "2018-10-01", label: "DE-AT split", detail: "Germany-Luxembourg and Austria become separate bidding zones" },
+  { from: "2022-06-15", to: "2023-12-31", label: "Iberian gas cap", detail: "Spain and Portugal cap the gas price used in power generation" },
+  { from: "2023-04-15", label: "German nuclear exit", detail: "Germany's last three reactors shut down" },
+  { from: "2024-12-21", label: "Flamanville 3", detail: "Flamanville 3 first connected to the grid" },
+  { from: "2025-09-30", label: "15-min day-ahead", detail: "Day-ahead market moves from hourly to 15-minute prices" }
+];
+
+export function marketEventsBetween(from, to) {
+  return [...EVENTS, ...MARKET_EVENTS].filter(e => (e.to || e.from) >= from && e.from <= to);
+}

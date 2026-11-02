@@ -185,14 +185,21 @@ IT_NORD, ES — neighbours only, James's choice; €/MWh; peak = Mon–Fri
   for weekly+), capture rate, discount; "when it earns" by hour.
 - *Residual Demand:* TimeExplorer (demand − wind − solar) + price by band.
 - *Nuclear Modulation:* fleet unused available capacity (available − output)
-  in negative / low (≤ threshold, default €20) / normal price hours, with a
-  caveat that it is not all price-led. Per-reactor version is pending.
+  in negative / low (under threshold €10–50, default €20) / normal price
+  hours, with a caveat that it is not all price-led; then "Reactor by
+  reactor" (v4.1): sortable ranking, map, reactor × month heat map, by
+  series, one-reactor hourly chart; modulating cut-off menu 70/80/90/95%
+  (James: 80% default) from `data/nuclear/modulation/`.
 
 **Generation** (RTE: hourly per-type 2015–16, 15-minute mix from 2017)
 - *Today:* 15-min stacked mix, fuel tiles vs same hours on the same weekday
   last year, shares; headline picks the most notable change.
-- *Explorer:* TimeExplorer by fuel / total / low-carbon / renewables / wind
-  and solar; output, share, energy, highest/lowest daily average.
+- *Explorer:* TimeExplorer in multi mode: tick fuels (All fuels / Clear,
+  Split hydro), side by side or stacked; one fuel keeps the comparisons;
+  several fuels get a minimal table (avg, vs last year GW and %, vs N-yr avg
+  GW and %, share) and, for two, a gap row + "Show gap over time" (GW only,
+  James's choice). Hydro split = run-of-river, reservoir, pumped storage,
+  unassigned (on Today too).
 - *Records:* all-time highs/lows (records.json), each linking to the data.
 
 **Flows** (ENTSO-E physical flows A11, both directions; borders BE, DE, CH,
@@ -203,6 +210,15 @@ IT_NORD, ES, GB — GB flows do exist; captioned "latest from ENTSO-E")
 - *Flows and prices:* average flow by price-gap band, scatter, share of
   hours flowing from the dearer to the cheaper market (GB left out: no
   price).
+
+**v4.1 interface:** "Show daily profile" / "Duration curve" tick boxes swap
+the chart (James: swap, not add below); page bar under the tabs with a
+minimal freshness line, "Same period on every tab" (Prices only), Pin
+(localStorage, per browser) and Excel (all charts on the tab, js/xlsx.js);
+Link button by every headline; flags (js/flags.js, inline SVG — emoji flags
+fail on Windows); no sidebar section labels; toolbars fold behind
+"Settings" on phones; shimmer while loading; market event markers
+(`MARKET_EVENTS` in js/events.js).
 
 **Notification bell:** count + soft glow (no sound, no pop-up); panel lists
 the past 4 days of `data/alerts.json` with click-through; seen ids in
@@ -392,7 +408,9 @@ Monday).
   and site coordinates (Wikipedia "List of power stations in France") are
   hard-coded.
 - **Output filter:** fleet output below 15,000 MW is treated as missing —
-  RTE's per-type data is near zero on most days of 16 Sep–13 Oct 2024.
+  RTE's per-type data is near zero on most days of 16 Sep–13 Oct 2024; since
+  v4.1 those hours are filled from the sum of per-reactor output (≥ 40
+  reactors reporting), so 2024 = 360.1 TWh.
 - In parts of 2016–17 output exceeds notice-implied availability by up to
   2.5 GW (notices overstated outages): flagged in the Explorer.
 - Offline < 10% of capacity available; partially available 10–90%;
@@ -454,6 +472,10 @@ Monday).
   Delays only), hydro fill level in pp + trend sentence, Colourblind-friendly
   rename, Prices "coming soon", knob-centred switches, repo renamed to
   `fr_power_intel`.
+- **v4.1** (2 Nov 2026) — per-reactor modulation, multi-fuel generation
+  explorer with change table and gap, hydro split, profile tick box, page
+  bar (freshness, shared period, pin, Excel), Link buttons, flags, bell
+  filters/mute, phone settings fold, market events, 2024 output gap filled.
 - **v4.0** (2 Nov 2026) — Prices (8 tabs), Generation, Flows, notification
   bell, Overview "Today's market" + explainers, shared TimeExplorer engine,
   ENTSO-E pipeline; v3.1 tweaks: CET/CEST in the status pill and the Outages
@@ -471,8 +493,17 @@ Monday).
    Done 2 Nov (620 calls, 59 reactors, no failed weeks); reactor sums match
    the fleet series within 0.4% a year, and cover RTE's 16 Sep–13 Oct 2024
    fleet gap (37–39 GW then), so they could replace the fleet figure there.
-   Not yet used by the site: next step is a per-reactor Nuclear Modulation
-   view (needs per-reactor hourly availability from the notices too).
+   Used since v4.1 (Nuclear Modulation, reactor by reactor); kept up to date
+   by every update run (`store_unit_hourly` in power_store.py).
+1b. **Logins for team members** — parked by James (2 Nov). Plan if revived:
+   Cloudflare Pages + Cloudflare Access (free to 50 users), site/code
+   private, data in a separate public repo (private-repo Actions minutes —
+   2,000/month free — would not cover ~6,000–8,000 a month of updates).
+1c. **v5: Spain and Germany** — one site with a country switch (agreed
+   direction); stages: probe, country-aware groundwork (parallel updates,
+   incremental summaries, history off the main repo), Spain, Germany,
+   Compare page. Open questions to James: Portugal with Spain, ESIOS token,
+   Germany's plant-availability and gas-storage pages.
 2. **Interconnector capacity / utilisation (NTC, ENTSO-E)** — proposed in the
    v4 brainstorm, not built in v4.0.
 2b. Possible: commercial (scheduled) exchanges A09 alongside physical flows;

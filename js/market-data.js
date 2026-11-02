@@ -122,6 +122,43 @@ export const getGenDaily = () => dailyTable("gen-daily", "data/generation/daily.
 export const getFlowDaily = () => dailyTable("flow-daily", "data/flows/daily.csv");
 export const getCaptureDaily = () => dailyTable("capture-daily", "data/market/capture.csv");
 export const getMarketDaily = () => dailyTable("market-daily", "data/market/daily.csv");
+/** Per-reactor modulation summaries for a range of years: [{month, eic, band, hours, unused_mwh, m70..m95}]. */
+export function getModulation(y0, y1) {
+  return cached(`mod-${y0}-${y1}`, async () => {
+    const out = [];
+    for (let y = Number(y0); y <= Number(y1); y++) {
+      const text = await fetchText(`data/nuclear/modulation/${y}.csv`, { optional: true });
+      const { header, rows } = csvRows(text || "month");
+      for (const r of rows) {
+        const o = {};
+        header.forEach((h, i) => { o[h] = ["month", "eic", "band"].includes(h) ? r[i] : Number(r[i]); });
+        out.push(o);
+      }
+    }
+    return out;
+  });
+}
+
+/** Hourly per-reactor files (wide by EIC): kind "unit_hourly" (output) or "unit_avail" (available). */
+export const getUnitHourly = (kind, from, to) => cached(`${kind}-${from}-${to}`, async () => {
+  const lo = parisMidnight(from);
+  const hi = parisMidnight(addDays(to, 1));
+  const out = [];
+  for (const ym of monthsOf(from, to)) {
+    const text = await monthText(`data/nuclear/${kind}/${ym.slice(0, 4)}/${ym}.csv`, ym);
+    if (!text) continue;
+    const { header, rows } = csvRows(text);
+    for (const r of rows) {
+      const t = parseUtc(r[0]);
+      if (t < lo || t >= hi) continue;
+      const o = { t };
+      for (let i = 1; i < header.length; i++) o[header[i]] = num(r[i]);
+      out.push(o);
+    }
+  }
+  return out;
+});
+
 export const getRecords = () => cached("records", async () => JSON.parse((await fetchText("data/records.json", { optional: true })) || "{\"records\":[]}"));
 export const getAlerts = () => cached("alerts", async () => JSON.parse((await fetchText("data/alerts.json", { optional: true })) || "{\"alerts\":[]}"));
 

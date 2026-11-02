@@ -81,6 +81,9 @@ All times are stored in UTC (`2026-10-23T22:00Z`). Files are split by month in P
 | `data/generation/daily.csv` | Daily mean MW by fuel, total, low-carbon/renewable shares and share by fuel |
 | `data/market/hourly/YYYY/YYYY-MM.csv` | Hourly table joining FR price, demand, residual demand, nuclear output and availability (and unused available capacity), output by fuel and net exports |
 | `data/market/daily.csv`, `data/market/capture.csv` | Daily residual demand, nuclear headroom, net exports; daily capture prices and energy by technology |
+| `data/nuclear/unit_hourly/YYYY/YYYY-MM.csv` | Hourly output per reactor (MW), wide by reactor EIC, since Dec 2014; `units.json` maps EIC to name |
+| `data/nuclear/unit_avail/YYYY/YYYY-MM.csv` | Hourly available capacity per reactor from the notices (MW), wide by EIC, since 2015 |
+| `data/nuclear/modulation/YYYY.csv` | Per reactor, month and price band (<0, 0–10 … 40–50, 50+ €/MWh): running hours, unused MWh, hours below 70/80/90/95% of available |
 | `data/records.json`, `data/alerts.json`, `data/market/index.json` | Records, notable events for the bell, and the list of monthly market files |
 
 ## Methodology notes
@@ -112,5 +115,8 @@ All times are stored in UTC (`2026-10-23T22:00Z`). Files are split by month in P
 - **Capture price** = Σ(price × output) / Σ output on a 15-minute grid, per day; longer periods are output-weighted.
 - **Generation mix** periods where all fuels add up to less than 20 GW are treated as missing (RTE's mix has a few broken periods, e.g. 14 Apr 2024).
 - **Unused available nuclear capacity** = available capacity (notices) − output, floored at zero, hourly.
+- **Per-reactor modulation**: an hour counts when the reactor is running (output and availability both ≥ 10% of capacity); modulating = output below 70/80/90/95% of available; unused = available − output in those hours. Built by `scripts/modulation.py` (recent two months each run).
+- **Fleet nuclear output gaps** (e.g. 16 Sep–13 Oct 2024) are filled with the sum of per-reactor output where at least 40 reactors reported.
+- **Hydro split**: RTE subtypes (run-of-river, reservoir, pumped storage); "unassigned" = hydro total − subtypes (up to ~15% since 2023). Subtypes are only kept on days they fully cover; 2015–16 pumped storage is net of pumping.
 - **Flows** are ENTSO-E physical flows (document A11) in both directions per border; net = France→neighbour minus neighbour→France.
 - **Alerts**: records over the whole history, month records, and "highest/lowest since" with a minimum gap of 7 days (prices) or 30 days (generation, flows, demand); new unplanned nuclear outages ≥ 1 GW and return dates pushed back ≥ 7 days in the past 24 hours; negative French prices today or tomorrow.

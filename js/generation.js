@@ -2,6 +2,7 @@
 // a records list.
 
 import { ChartPanel } from "./chart.js";
+import { marketEventsBetween } from "./events.js";
 import { FUELS, FUEL_ORDER, MIX_FIRST, fmtByUnit, getGenDaily, getMix, getRecords } from "./market-data.js";
 import { card } from "./market-common.js";
 import { TimeExplorer, meanOf } from "./time-explorer.js";
@@ -20,11 +21,12 @@ export class GenToday {
   constructor(root) {
     this.root = root;
     this.writesHash = true;
-    this.state = { days: "2" };
+    this.state = { days: "2", hs: "0" };
     root.innerHTML = `
       ${heroHtml("French generation,", "right now.", "Output by fuel every 15 minutes from RTE, today so far against the same hours on the same weekday last year. RTE publishes the mix within about an hour.")}
       <div class="toolbar"><div class="toolbar-row">
         <label class="field"><span>Chart shows</span><select data-days><option value="1">Today</option><option value="2">Yesterday and today</option><option value="7">Last 7 days</option></select></label>
+        <div class="field"><span>Hydro</span><label class="check"><input type="checkbox" data-hs> Split hydro</label></div>
       </div></div>
       <div class="headline"><p data-headline>Loading…</p><button class="btn ghost small" type="button" data-copy>Copy</button></div>
       <div class="card-row-label">Today so far, against the same hours last year</div>
@@ -35,6 +37,7 @@ export class GenToday {
     this.headline = root.querySelector("[data-headline]");
     root.querySelector("[data-copy]").addEventListener("click", () => copyText(this.headline.textContent));
     root.querySelector("[data-days]").addEventListener("change", e => { this.state.days = e.target.value; this.update(); });
+    root.querySelector("[data-hs]").addEventListener("change", e => { this.state.hs = e.target.checked ? "1" : "0"; this.update(); });
     this.panel = new ChartPanel(root.querySelector("[data-chart]"), { title: "Generation mix", size: "tall", source: RTE });
     this.sharePanel = new ChartPanel(root.querySelector("[data-share]"), { title: "Shares", size: "short", source: RTE });
   }
@@ -45,6 +48,7 @@ export class GenToday {
   async update() {
     writeHash("generation/today", this.state);
     this.root.querySelector("[data-days]").value = this.state.days;
+    this.root.querySelector("[data-hs]").checked = this.state.hs === "1";
     try {
       const today = todayParis();
       const lyDay = addDays(today, -364);
@@ -98,12 +102,17 @@ export class GenToday {
       this.headline.textContent = text.trim();
 
       // Stacked mix chart.
-      const fuels = FUEL_ORDER.filter(f => mix.some(r => r[f] > 0));
+      const split = this.state.hs === "1";
+      const PARTS = HYDRO_PARTS.map(x => x.value);
+      const fuels = FUEL_ORDER.flatMap(f => (split && f === "hydro" ? PARTS : [f])).filter(f => mix.some(r => (f === "hydro_other" ? hydroOther(r) : r[f]) > 0));
+      const nameOf = f => FUELS[f]?.name || HYDRO_PARTS.find(x => x.value === f).label;
+      const colourOf = f => FUELS[f]?.colour || HYDRO_PARTS.find(x => x.value === f).colour;
+      const val = (r, f) => (f === "hydro_other" ? hydroOther(r) : r[f]);
       const all = mix.filter(r => r.nuclear != null);
       this.panel.setTitle("Generation by fuel, every 15 minutes", `${fmtLongDate(dateKey(all[0]?.t ?? Date.now()))} – ${fmtLongDate(day)} · GW, stacked`);
       this.panel.render({
         xType: "time", xLabel: fmtDateTime, yName: "GW", yMin: 0, source: RTE,
-        series: fuels.map(f => ({ name: FUELS[f].name, colour: FUELS[f].colour, type: "line", stack: "mix", data: all.map(r => [r.t, r[f] == null ? null : Math.max(0, r[f]) / 1000]), unit: "GW", decimals: 2, width: 0.6, areaOpacity: 0.85, symbols: false })),
+        series: fuels.map(f => ({ name: nameOf(f), colour: colourOf(f), type: "line", stack: "mix", data: all.map(r => [r.t, val(r, f) == null ? null : Math.max(0, val(r, f)) / 1000]), unit: "GW", decimals: 2, width: 0.6, areaOpacity: 0.85, symbols: false })),
         markAreas: [{ from: parisMidnight(today), to: parisMidnight(addDays(today, 1)), label: "Today", colour: "--today" }],
         notes: ["Pumped-storage consumption is not shown. Hydro includes run-of-river, reservoirs and pumped-storage generation."]
       });
@@ -126,20 +135,31 @@ export class GenToday {
 
 // ---------- Explorer ----------
 
+const HYDRO_PARTS = [
+  { value: "hydro_ror", label: "Run-of-river", colour: "--f-hydro-ror", sub: true },
+  { value: "hydro_res", label: "Reservoir", colour: "--f-hydro-res", sub: true },
+  { value: "hydro_pump", label: "Pumped storage", colour: "--f-hydro-pump", sub: true },
+  { value: "hydro_other", label: "Hydro, unassigned", colour: "--f-hydro-other", sub: true }
+];
 const GEN_SUBJECTS = [
-  ...FUEL_ORDER.map(f => ({ value: f, label: FUELS[f].name })),
-  { value: "total", label: "Total generation" }, { value: "lowc", label: "Low-carbon (nuclear, hydro, wind, solar, bio)" }, { value: "ren", label: "Renewables (hydro, wind, solar, bio)" }, { value: "vre", label: "Wind and solar" }
+  ...FUEL_ORDER.map(f => ({ value: f, label: FUELS[f].name, colour: FUELS[f].colour })),
+  ...HYDRO_PARTS,
+  { value: "total", label: "Total", colour: "--s-avg", inAll: false },
+  { value: "lowc", label: "Low-carbon", colour: "--s-actual", inAll: false },
+  { value: "ren", label: "Renewables", colour: "--s-ly", inAll: false },
+  { value: "vre", label: "Wind + solar", colour: "--s-id", inAll: false }
 ];
 const GROUPS = { total: FUEL_ORDER, lowc: LOW, ren: REN, vre: ["wind", "solar"] };
-const valueOf = (r, k) => (GROUPS[k] ? (GROUPS[k].some(f => r[f] != null) ? GROUPS[k].reduce((a, f) => a + Math.max(0, r[f] || 0), 0) : null) : r[k]);
+const hydroOther = r => (r.hydro != null && r.hydro_ror != null && r.hydro_res != null && r.hydro_pump != null ? r.hydro - r.hydro_ror - r.hydro_res - r.hydro_pump : null);
+const valueOf = (r, k) => (k === "hydro_other" ? r.hydro_other ?? hydroOther(r) : GROUPS[k] ? (GROUPS[k].some(f => r[f] != null) ? GROUPS[k].reduce((a, f) => a + Math.max(0, r[f] || 0), 0) : null) : r[k]);
 const dailyTotal = r => (r.total != null ? r.total : FUEL_ORDER.reduce((a, f) => a + Math.max(0, r[f] || 0), 0));
 
 export function genExplorer(root) {
   return new TimeExplorer(root, {
     key: "generation/explorer",
-    hero: ["Explore French generation,", "since 2015.", "Output by fuel from RTE, from 15-minute detail (since 2017; hourly in 2015–16) to yearly averages, against last year, the average and range of earlier years, a chosen year or another fuel. Switch to a daily profile or a duration curve."],
+    hero: ["Explore French generation,", "since 2015.", "Output by fuel from RTE, from 15-minute detail (since 2017; hourly in 2015–16) to yearly averages. One fuel: against last year, the average and range of earlier years or a chosen year. Several fuels: side by side or stacked, with the change on last year and the gap between two."],
     firstDate: MIX_FIRST, source: RTE, fine: "15m",
-    subjects: GEN_SUBJECTS, subjectLabel: "Fuel", compareSubjects: true, compareLabel: "Another fuel…",
+    subjects: GEN_SUBJECTS, subjectLabel: "Fuels", multi: true, allLabel: "All fuels", splitOf: "hydro", splitLabel: "Split hydro", subjectPlural: "fuels", events: marketEventsBetween,
     measures: {
       output: { label: "Output (average GW)", short: "output", unit: "GW", scale: 1000, decimals: 2, agg: "mean", yMin: 0, daily: (r, k) => valueOf(r, k) },
       share: { label: "Share of generation (%)", short: "share of generation", unit: "%", decimals: 1, agg: "mean", daily: (r, k) => { const v = valueOf(r, k); const t = dailyTotal(r); return v != null && t ? 100 * v / t : null; } },
@@ -147,7 +167,7 @@ export function genExplorer(root) {
       max: { label: "Highest daily average", short: "highest daily average", unit: "GW", scale: 1000, decimals: 2, agg: "max", intraday: false, daily: (r, k) => valueOf(r, k) },
       min: { label: "Lowest daily average", short: "lowest daily average", unit: "GW", scale: 1000, decimals: 2, agg: "min", intraday: false, daily: (r, k) => valueOf(r, k) }
     },
-    defaults: { measure: "output", subject: "solar", preset: "last90", res: "1d" },
+    defaults: { measure: "output", subject: "solar", subjects: "solar", preset: "last90", res: "1d" },
     loadDaily: getGenDaily,
     loadRaw: async (k, from, to, measure) => (await getMix(from, to)).map(r => {
       const v = valueOf(r, k);
@@ -158,7 +178,7 @@ export function genExplorer(root) {
     quarterNote: "In 2015–16 RTE's mix is hourly; each hourly value is repeated across its four quarter-hours.",
     fmt: (v, m) => fmtByUnit(v, m),
     sentenceSubject: (m, subj) => `French ${subj.toLowerCase().replace(/ \(.*\)/, "")} ${m.short}`,
-    notes: s => [s.subject === "hydro" ? "Hydro includes run-of-river, reservoirs and pumped-storage generation (not pumping consumption)." : "", s.subject === "wind" ? "Wind is onshore plus offshore (offshore from 2022)." : ""].filter(Boolean)
+    notes: s => [(s.subjects || "").includes("hydro_") ? "Hydro split: run-of-river, reservoir and pumped storage as RTE reports them; \"unassigned\" is the part of RTE's hydro total not given a type (up to about 15% in recent years). In 2015–16 pumped storage is net of pumping and can be negative; the split is missing for the first half of 2017." : "", s.subject === "hydro" ? "Hydro includes run-of-river, reservoirs and pumped-storage generation (not pumping consumption)." : "", s.subject === "wind" ? "Wind is onshore plus offshore (offshore from 2022)." : ""].filter(Boolean)
   });
 }
 

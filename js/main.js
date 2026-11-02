@@ -6,7 +6,8 @@ import { refreshAllCharts, setExportBrand } from "./chart.js";
 import { CONFIG } from "./config.js";
 import { dataVersion, getStatus, parseUtc, setDataVersion, setLiveOverride } from "./data.js";
 import { PALETTES, apply, settings, updateSettings } from "./settings.js";
-import { el, fmtDateTime, fmtTime, parisOffset, readHash, toast, writeHash } from "./util.js";
+import { copyText, dateKey, el, fmtDateTime, fmtLongDate, fmtTime, lastPeriod, parisOffset, readHash, toast, writeHash } from "./util.js";
+import { panelsWithin } from "./chart.js";
 
 apply();
 
@@ -39,7 +40,7 @@ const PAGES = {
     tabs: { main: { label: "Reservoirs", load: async root => new (await import("./hydro.js")).Hydro(root) } }
   },
   prices: {
-    accent: "Price Intelligence", doc: "France Power Price Intelligence", stepper: true,
+    accent: "Price Intelligence", doc: "France Power Price Intelligence", stepper: true, sharePeriod: true,
     tabs: {
       short: { label: "Short term", load: async root => new (await import("./prices-short.js")).PriceShort(root) },
       explorer: { label: "Explorer", load: async root => (await import("./prices-explorer.js")).priceExplorer(root) },
@@ -74,6 +75,8 @@ const footer = viewsRoot.querySelector("footer");
 const tabsEl = document.getElementById("tabs");
 const titleEl = document.getElementById("page-title");
 const views = {};
+const pageBar = el("div", { class: "page-bar", id: "page-bar" });
+viewsRoot.insertBefore(pageBar, viewsRoot.firstChild);
 let current = null; // "page/tab"
 let status = null;
 
@@ -131,10 +134,140 @@ async function navigate(page, tab, params) {
   if (pageChanged) window.scrollTo({ top: 0 });
   const view = await getView(key);
   if (current !== key) return;
-  if (params && [...params.keys()].length && view.setParams) view.setParams(params);
+  const hasParams = params && [...params.keys()].length;
+  if (hasParams && view.setParams) view.setParams(params);
+  else if (!pageChanged && PAGES[page].sharePeriod && keepPeriod() && view.applyPeriod) view.applyPeriod(lastPeriod(page));
   if (!view.writesHash) writeHash(tabs.length > 1 ? key : page, params);
-  view.activate();
+  await view.activate();
+  if (current !== key) return;
+  decorate(sectionFor(page, tab));
+  renderPageBar(page, tab);
   requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+}
+
+// ---------- Page bar: data freshness, shared period, pin, Excel ----------
+
+function keepPeriod() {
+  try { return localStorage.getItem("keepPeriod") !== "0"; } catch (error) { return true; }
+}
+
+async function freshness(page) {
+  const t = text => (text ? fmtTime(parseUtc(text)) : "–");
+  const day = text => (text ? fmtLongDate(dateKey(parseUtc(text))).replace(/ \d{4}$/, "") : "–");
+  try {
+    if (page === "demand") return status?.series?.realised?.last_utc ? `Actual demand to ${fmtTime(parseUtc(status.series.realised.last_utc) + 900000)}` : "";
+    if (["prices", "generation", "flows"].includes(page)) {
+      const { getMarketIndex } = await import("./market-data.js");
+      const ix = await getMarketIndex();
+      const flows = Object.values(ix.latest_flow_utc || {}).filter(Boolean).sort();
+      const mix = ix.latest_mix_utc ? `mix to ${fmtTime(parseUtc(ix.latest_mix_utc) + 900000)}` : "";
+      const price = ix.latest_price_utc ? `prices to ${day(ix.latest_price_utc)}` : "";
+      const flow = flows.length ? `flows to ${fmtTime(parseUtc(flows[0]) + 3600000)}` : "";
+      const parts = page === "prices" ? [price, mix] : page === "generation" ? [mix] : [flow, price];
+      const text = parts.filter(Boolean).join(" · ");
+      return text ? text[0].toUpperCase() + text.slice(1) : "";
+    }
+    if (page === "nuclear") {
+      const { getLive } = await import("./power-data.js");
+      const live = await getLive();
+      return `Notices checked ${t(live.generated_utc)}`;
+    }
+  } catch (error) { console.error(error); }
+  return "";
+}
+
+function pins() {
+  try { return JSON.parse(localStorage.getItem("pins") || "[]"); } catch (error) { return []; }
+}
+
+function savePins(list) {
+  try { localStorage.setItem("pins", JSON.stringify(list.slice(0, 30))); } catch (error) { /* private mode */ }
+  renderPins();
+}
+
+function renderPins() {
+  const box = document.getElementById("side-pins");
+  const list = pins();
+  box.hidden = !list.length;
+  box.innerHTML = list.length ? `<div class="side-label pins-label">Pinned</div>${list.map((p, i) => `<div class="pin-row"><a class="side-link pin" href="${p.hash}" title="${p.title}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.9Z"/></svg><span>${p.title}</span></a><button class="pin-x" type="button" data-unpin="${i}" title="Remove this pin" aria-label="Remove pin">×</button></div>`).join("")}` : "";
+}
+
+document.getElementById("side-pins").addEventListener("click", e => {
+  const x = e.target.closest("[data-unpin]");
+  if (!x) return;
+  const list = pins();
+  list.splice(Number(x.dataset.unpin), 1);
+  savePins(list);
+});
+
+function viewTitle(section) {
+  const panel = panelsWithin(section)[0];
+  const page = current.split("/")[0];
+  const tab = PAGES[page].tabs[current.split("/")[1]].label;
+  const base = Object.keys(PAGES[page].tabs).length > 1 ? `${PAGES[page].accent.replace(" Intelligence", "")} · ${tab}` : PAGES[page].accent.replace(" Intelligence", "");
+  return panel?.title ? `${base}: ${panel.title}` : base;
+}
+
+async function renderPageBar(page, tab) {
+  if (page === "overview") { pageBar.hidden = true; return; }
+  pageBar.hidden = false;
+  const pinned = pins().some(p => p.hash === location.hash);
+  pageBar.innerHTML = `<span class="fresh" data-fresh></span><span class="bar-actions">
+      ${PAGES[page].sharePeriod ? `<label class="check small" title="When on, choosing a period on one ${PAGES[page].accent.replace(" Intelligence", "")} tab applies it to the others"><input type="checkbox" data-keep ${keepPeriod() ? "checked" : ""}> Same period on every tab</label>` : ""}
+      <button class="btn ghost small" type="button" data-pin aria-pressed="${pinned}" title="Pin this view to the sidebar (saved in this browser)">${pinned ? "★ Pinned" : "☆ Pin"}</button>
+      <button class="btn ghost small" type="button" data-xlsx title="Download the data of every chart on this tab as one Excel file">Excel</button>
+    </span>`;
+  const text = await freshness(page);
+  const f = pageBar.querySelector("[data-fresh]");
+  if (f) f.textContent = text;
+}
+
+pageBar.addEventListener("change", e => {
+  if (!e.target.matches("[data-keep]")) return;
+  try { localStorage.setItem("keepPeriod", e.target.checked ? "1" : "0"); } catch (error) { /* private mode */ }
+  toast(e.target.checked ? "Tabs on this page now share the period you pick" : "Each tab keeps its own period");
+});
+
+pageBar.addEventListener("click", async e => {
+  const section = document.querySelector("[data-view]:not(.hidden)");
+  if (e.target.closest("[data-pin]")) {
+    const list = pins();
+    const i = list.findIndex(p => p.hash === location.hash);
+    if (i >= 0) list.splice(i, 1); else list.unshift({ hash: location.hash, title: viewTitle(section) });
+    savePins(list);
+    renderPageBar(...current.split("/"));
+    toast(i >= 0 ? "Pin removed" : "Pinned to the sidebar");
+  }
+  if (e.target.closest("[data-xlsx]")) {
+    const shown = panelsWithin(section);
+    if (!shown.length) { toast("There is no chart data on this tab yet.", { error: true }); return; }
+    const { workbook } = await import("./xlsx.js");
+    const sheets = shown.map(p => ({ name: p.title, ...p.tableData() })).filter(x => x.headers.length);
+    const blob = workbook(sheets);
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${document.title.replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-").toLowerCase()}.xlsx`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+});
+
+/** Copy-link buttons next to headlines, and a "Settings" fold for toolbars on phones. */
+function decorate(section) {
+  section.querySelectorAll(".headline").forEach(h => {
+    if (h.querySelector("[data-link]")) return;
+    const b = el("button", { class: "btn ghost small", type: "button", "data-link": "", title: "Copy a link to exactly this view" }, "Link");
+    b.addEventListener("click", () => copyText(location.href));
+    h.appendChild(b);
+  });
+  section.querySelectorAll(".toolbar").forEach(t => {
+    if (t.previousElementSibling?.classList.contains("toolbar-toggle")) return;
+    const b = el("button", { class: "btn ghost toolbar-toggle", type: "button", "aria-expanded": "false" }, "Settings <span aria-hidden=\"true\">▾</span>");
+    b.addEventListener("click", () => { const open = t.classList.toggle("open"); b.setAttribute("aria-expanded", open); });
+    t.parentNode.insertBefore(b, t);
+  });
 }
 
 /** "Previous / next tab" links at the foot of pages with many tabs, so no tab gets lost. */
@@ -285,9 +418,18 @@ function seenAlerts() {
   try { return new Set(JSON.parse(localStorage.getItem("seenAlerts") || "[]")); } catch (error) { return new Set(); }
 }
 
-function recentAlerts() {
+const TOPICS = { prices: "Prices", generation: "Generation", nuclear: "Nuclear", flows: "Flows", demand: "Demand" };
+let bellTopic = "all";
+const topicOf = a => a.link.split(/[/?]/)[0];
+
+function muted() {
+  try { return new Set(JSON.parse(localStorage.getItem("mutedTopics") || "[]")); } catch (error) { return new Set(); }
+}
+
+function recentAlerts({ includeMuted = false } = {}) {
   const cutoff = new Date(Date.now() - 4 * 86400000).toISOString().slice(0, 10);
-  return alerts.filter(a => a.date >= cutoff);
+  const off = muted();
+  return alerts.filter(a => a.date >= cutoff && (includeMuted || !off.has(topicOf(a))));
 }
 
 function renderBell() {
@@ -312,8 +454,14 @@ async function loadBell() {
 const LEVEL = { record: "Record", month: "Month record", since: "Highest/lowest since", event: "Event" };
 function renderBellPanel() {
   const seen = seenAlerts();
-  const list = recentAlerts();
+  const off = muted();
+  const all = recentAlerts({ includeMuted: true });
+  const topics = [...new Set(all.map(topicOf))].filter(t => TOPICS[t]);
+  const list = all.filter(a => (bellTopic === "all" ? !off.has(topicOf(a)) : topicOf(a) === bellTopic));
+  const isMuted = bellTopic !== "all" && off.has(bellTopic);
   bellPanel.innerHTML = `<div class="bell-head"><b>Notable events</b><span class="muted">Past 4 days</span></div>
+    ${topics.length > 1 || off.size ? `<div class="bell-filters">${["all", ...topics].map(t => `<button type="button" data-topic="${t}" aria-pressed="${bellTopic === t}">${t === "all" ? "All" : TOPICS[t]}${off.has(t) ? " (muted)" : ""}</button>`).join("")}
+      ${bellTopic !== "all" ? `<button type="button" class="bell-mute" data-mute="${bellTopic}">${isMuted ? "Unmute" : "Mute"} ${TOPICS[bellTopic]}</button>` : ""}</div>` : ""}
     ${list.length ? `<ul class="bell-list">${list.map(a => `<li><a href="#${a.link}" class="${seen.has(a.id) ? "" : "unseen"}"><span class="bell-level ${a.level}">${LEVEL[a.level] || ""}</span><b>${a.title}</b><span>${a.detail}</span><span class="muted">${fmtDateShortIso(a.date)} · open the data →</span></a></li>`).join("")}</ul>`
       : `<p class="muted bell-empty">Nothing notable in the past four days.</p>`}
     <p class="bell-foot muted">Records, the highest or lowest values for a while (at least a week for prices, a month for generation), new unplanned nuclear outages and negative prices.</p>`;
@@ -337,6 +485,17 @@ function toggleBell(open) {
 bellButton.addEventListener("click", event => { event.stopPropagation(); toggleMenu(false); toggleBell(); });
 bellPanel.addEventListener("click", event => {
   event.stopPropagation();
+  const topic = event.target.closest("[data-topic]");
+  if (topic) { bellTopic = topic.dataset.topic; renderBellPanel(); return; }
+  const mute = event.target.closest("[data-mute]");
+  if (mute) {
+    const off = muted();
+    if (off.has(mute.dataset.mute)) off.delete(mute.dataset.mute); else off.add(mute.dataset.mute);
+    try { localStorage.setItem("mutedTopics", JSON.stringify([...off])); } catch (error) { /* private mode */ }
+    renderBellPanel();
+    renderBell();
+    return;
+  }
   if (event.target.closest("a")) toggleBell(false);
 });
 document.addEventListener("click", () => { if (!bellPanel.hidden) toggleBell(false); });
@@ -492,6 +651,7 @@ function aboutHtml() {
       ${term("Volatility", "Standard deviation of the prices within each day.")}
       ${term("Capture price", "Average French price weighted by a technology's output: what a megawatt-hour of solar, wind or nuclear sold for on average. Capture rate: capture price divided by baseload.")}
       ${term("Residual demand", "French demand minus wind and solar output: what the rest of the fleet and imports have to cover.")}
+      ${term("Modulating reactor (Nuclear Modulation)", "In an hour when the reactor is running (output and availability both at least 10% of its capacity), output below the chosen share (70, 80, 90 or 95%) of its available capacity. Per-reactor output comes from RTE's actual generation per unit, hourly since Dec 2014.")}
       ${term("Unused available nuclear capacity", "Available capacity in the outage notices minus measured nuclear output, never below zero. It includes modulation to follow prices and demand, but also frequency reserves, end-of-cycle coast-downs, ramp limits and undeclared outages.")}
       ${term("Duration curve", "Every period sorted from highest to lowest, so you can read the share of time a level was reached.")}
     </dl>
@@ -543,6 +703,7 @@ document.addEventListener("keydown", event => {
 // ---------- Start ----------
 
 (async () => {
+  renderPins();
   await checkForNewData({ rerender: false });
   if (!dataVersion()) setDataVersion(String(Date.now()));
   const { page, tab, params } = readHash();

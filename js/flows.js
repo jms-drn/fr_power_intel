@@ -2,6 +2,8 @@
 // an explorer, and flows against price spreads.
 
 import { ChartPanel } from "./chart.js";
+import { marketEventsBetween } from "./events.js";
+import { flag } from "./flags.js";
 import { BORDERS, ENTSOE, ZONES, fmtEur, getFlowDaily, getFlows, getMarketHourly, getPrices, toHours } from "./market-data.js";
 import { bindPeriod, card, periodHtml, readParams } from "./market-common.js";
 import { loadMap } from "./nuclear-today.js";
@@ -66,12 +68,12 @@ export class FlowsMap {
       const exportsTo = sorted.filter(([, v]) => v.net > 50);
       const importsFrom = sorted.filter(([, v]) => v.net < -50).reverse();
       const hour = `${fmtTime(t)}–${fmtTime(t + HOUR)}`;
-      const list = arr => arr.slice(0, 3).map(([b, v]) => `${BORDERS[b].name} (${gw(v.net)})`).join(", ");
-      this.headline.textContent = `France was ${net >= 0 ? "exporting" : "importing"} a net ${gw(net)} between ${hour} on ${fmtLongDate(dateKey(t))}${exportsTo.length ? `, sending power to ${list(exportsTo)}` : ""}${importsFrom.length ? `${exportsTo.length ? " and" : ","} taking it from ${list(importsFrom)}` : ""}.`;
+      const list = arr => arr.slice(0, 3).map(([b, v]) => `${BORDERS[b].name} (${gw(v.net)})`).join(", ").replace(/, ([^,]*)$/, " and $1");
+      this.headline.textContent = `France was ${net >= 0 ? "exporting" : "importing"} a net ${gw(net)} between ${hour} on ${fmtLongDate(dateKey(t))}${exportsTo.length ? `, sending power to ${list(exportsTo)}` : ""}${importsFrom.length ? `${exportsTo.length ? ", while" : ","} taking it from ${list(importsFrom)}` : ""}.`;
       this.root.querySelector("[data-cards]").innerHTML = [
         card(net >= 0 ? "Net exports, latest hour" : "Net imports, latest hour", gw(net), `${hour} · ${recent.length} of ${ORDER.length} borders`, " accent"),
         card(todayNet != null && todayNet >= 0 ? "Net exports today so far" : "Net imports today so far", todayNet != null ? gw(todayNet) : "–", "Average of complete hours"),
-        ...ORDER.map(b => { const v = now.get(b); return card(BORDERS[b].name, v ? `${v.net >= 0 ? "→" : "←"} ${gw(v.net)}` : "–", v ? `${v.net >= 0 ? "Export" : "Import"} · out ${gw(v.exp)}, in ${gw(v.imp)}` : "No recent data"); })
+        ...ORDER.map(b => { const v = now.get(b); return card(`${flag(b)} ${BORDERS[b].name}`, v ? `${v.net >= 0 ? "→" : "←"} ${gw(v.net)}` : "–", v ? `${v.net >= 0 ? "Export" : "Import"} · out ${gw(v.exp)}, in ${gw(v.imp)}` : "No recent data"); })
       ].join("");
       this.renderMap(now, t);
       // Past week.
@@ -147,7 +149,7 @@ export function flowsExplorer(root) {
       imp: { label: "Imports into France", short: "imports", unit: "GW", scale: 1000, decimals: 2, agg: "mean", yMin: 0, daily: (r, b) => (b === "net" ? sumOf(r, "imp") : r[`${b}_imp`]) }
     },
     defaults: { measure: "net", subject: "net", preset: "last90", res: "1d" },
-    loadDaily: getFlowDaily,
+    loadDaily: getFlowDaily, events: marketEventsBetween,
     loadRaw: async (b, from, to, measure) => {
       const list = b === "net" ? ORDER : [b];
       const maps = await Promise.all(list.map(async x => {
@@ -183,7 +185,7 @@ export class FlowsPrices {
     this.state = { preset: "last90", from: "", to: "", border: "ES" };
     const opts = ORDER.filter(b => b !== "GB").map(b => `<option value="${b}">${BORDERS[b].name}</option>`).join("");
     root.innerHTML = `
-      ${heroHtml("Flows and", "price gaps.", "Power should flow from the cheaper market to the dearer one. This sets the hourly flow on each border against the price gap (France minus neighbour), and counts the hours when it ran the other way. Great Britain has no day-ahead price on ENTSO-E, so it is left out here.")}
+      ${heroHtml("Flows and", "price gaps.", "Hourly physical flow on each border against the day-ahead price gap (France minus neighbour): average flow by price-gap band, every hour as a point, and the share of hours flowing from the dearer to the cheaper market. Borders with Belgium, Germany, Switzerland, Italy North and Spain; Great Britain is excluded (no ENTSO-E day-ahead price).")}
       <div class="toolbar"><div class="toolbar-row">${periodHtml("2015-01-05")}
         <label class="field"><span>Border</span><select data-k="border">${opts}</select></label>
       </div></div>

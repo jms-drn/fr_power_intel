@@ -1,8 +1,46 @@
 // Version history shown in the "What's new" panel. Newest first.
 
-export const VERSION = "4.0";
+export const VERSION = "4.1";
 
 export const CHANGELOG = [
+  {
+    version: "4.1",
+    date: "2 Nov 2026",
+    title: "Reactor-by-reactor modulation, several fuels at once, and polish",
+    sections: [
+      {
+        heading: "Prices: Nuclear Modulation, reactor by reactor",
+        items: [
+          "New hourly output history for every reactor since Dec 2014, set against each reactor's availability from the notices and the French price.",
+          "A ranking of reactors by how often they modulated in negative, low or normal price hours (click a heading to sort), a map coloured the same way, a reactor-by-month heat map, a comparison by reactor series, and an hourly chart of any reactor's output, availability and price.",
+          "Choose what counts as modulating: below 70%, 80% (default), 90% or 95% of available capacity. The low-price threshold is now chosen from €10 to €50/MWh."
+        ]
+      },
+      {
+        heading: "Generation",
+        items: [
+          "Hydro can be split into run-of-river, reservoir and pumped storage (plus the part RTE does not assign), on Today and in the Explorer.",
+          "The Explorer takes several fuels at once: tick them, or use All fuels. Show them side by side or stacked; a table gives each fuel's change on last year and on the earlier-years average, in GW and %, and the gap between two fuels now and a year ago. Tick “Show gap over time” to chart that gap.",
+          "Daily profile is now a tick box (“Show daily profile”) on every explorer, as is the duration curve."
+        ]
+      },
+      {
+        heading: "Across the site",
+        items: [
+          "A small line under the tabs shows how recent the data is (e.g. “Prices to 3 Nov · mix to 19:45”).",
+          "Link button next to every headline: copies the address of exactly that view.",
+          "Prices tabs share the period you pick, with a “Same period on every tab” switch to turn it off.",
+          "Pin any view to the sidebar (saved in your browser), and download every chart on a tab as one Excel file.",
+          "Market event markers on the price, generation and flow explorers (bidding-zone split, Iberian gas cap, German nuclear exit, Flamanville 3, 15-minute day-ahead).",
+          "Small flags for each country, including a flag picker for the neighbouring market on Short term.",
+          "The bell can be filtered by topic, and a topic can be muted.",
+          "On phones, settings fold away behind a Settings button so charts come first; charts show a soft placeholder while loading.",
+          "Nuclear output: RTE's missing fleet figures for 16 Sep–13 Oct 2024 are now filled from the per-reactor data, so 2024 no longer looks low.",
+          "Sidebar section labels removed; shorter page descriptions on Spreads, Residual Demand and Flows and prices."
+        ]
+      }
+    ]
+  },
   {
     version: "4.0",
     date: "2 Nov 2026",

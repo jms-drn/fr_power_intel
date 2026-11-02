@@ -198,6 +198,12 @@ def gen_daily(mix):
         for c in MIX_COLUMNS:
             if a.get(f"_{c}_h"):
                 row[c] = round(a[c] / a[f"_{c}_h"])
+        subs = ("hydro_ror", "hydro_res", "hydro_pump")
+        if "hydro" in row and any(a.get(f"_{k}_h", 0) < 0.95 * a.get("_hydro_h", 0) for k in subs):
+            for k in subs:  # subtypes only where they cover the whole day
+                row.pop(k, None)
+        if all(k in row for k in ("hydro", *subs)):
+            row["hydro_other"] = row["hydro"] - row["hydro_ror"] - row["hydro_res"] - row["hydro_pump"]
         total = sum(row.get(f, 0) for f in GEN_FUELS)
         if total > 0:
             row["total"] = round(total)
@@ -208,7 +214,7 @@ def gen_daily(mix):
                     row[f"{f}_pct"] = round(100 * row[f] / total, 2)
         row["hours"] = round(hours[d], 2)
         rows.append(row)
-    fields = ["date", *MIX_COLUMNS, "total", "low_carbon_pct", "renewable_pct", *[f"{f}_pct" for f in GEN_FUELS], "hours"]
+    fields = ["date", *MIX_COLUMNS, "hydro_other", "total", "low_carbon_pct", "renewable_pct", *[f"{f}_pct" for f in GEN_FUELS], "hours"]
     write_rows(DATA_DIR / "generation" / "daily.csv", fields, rows)
     return rows
 
@@ -549,6 +555,11 @@ def main(now=None):
     flow_rows = flows_daily(flows) if any(flows.values()) else []
     months = build_hourly(prices, mix, flows) if prices.get("FR") or mix else []
     capture_daily(prices, mix) if prices.get("FR") and mix else None
+    try:
+        import modulation
+        modulation.main()
+    except Exception as error:  # never block the rest of the market files
+        print(f"Modulation summary failed: {error}")
 
     tables = {
         "gen": [{k: v for k, v in r.items()} for r in read_table(DATA_DIR / "generation" / "daily.csv")],

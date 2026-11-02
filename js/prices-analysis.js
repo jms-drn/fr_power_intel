@@ -4,9 +4,12 @@ import { ChartPanel } from "./chart.js";
 import { setSwitch, switchHtml } from "./nuclear-common.js";
 import {
   ENTSOE, FUELS, FUEL_ORDER, NEIGHBOURS, PRICE_FIRST, ZONES, fmtEur, fmtEurDelta, fmtHours, fmtMw, getMarketHourly, getMix,
-  getPriceDaily, getPrices, toQuarters
+  getModulation, getPriceDaily, getPrices, getUnitHourly, toHours, toQuarters
 } from "./market-data.js";
 import { bindPeriod, card, periodHtml, readParams } from "./market-common.js";
+import { getFleet } from "./power-data.js";
+import { flag } from "./flags.js";
+import { loadMap } from "./nuclear-today.js";
 import { meanOf } from "./time-explorer.js";
 import {
   DAY, HOUR, addDays, copyText, cssVar, dateKey, dateRange, daysBetween, fmtDate, fmtDateTime, fmtFromTo, fmtLongDate, fmtMonth,
@@ -49,6 +52,12 @@ class Base {
 
   activate() { this.update(); }
 
+  applyPeriod(p) {
+    if (!p || !("preset" in this.state) || this.key === "prices/negative") return;
+    Object.assign(this.state, { preset: p.preset, from: p.from, to: p.to });
+    if (p.preset !== "custom") this.period.apply();
+  }
+
   async update() {
     const id = ++this.renderId;
     writeHash(this.key, this.state);
@@ -70,7 +79,7 @@ export class PriceSpreads extends Base {
   constructor(root) {
     super(root, "prices/spreads", { preset: "last90", res: "1d", measure: "base" });
     root.innerHTML = `
-      ${heroHtml("France against", "its neighbours.", "The gap between the French day-ahead price and each neighbour (France minus neighbour, so a positive spread means France was dearer), and how often prices were identical, which happens when interconnectors are not congested and markets clear together.")}
+      ${heroHtml("France against", "its neighbours.", "The gap between the French day-ahead price and each neighbour (France minus neighbour, so a positive spread means France was dearer), and how often prices were identical.")}
       <div class="toolbar"><div class="toolbar-row">${periodHtml(PRICE_FIRST)}
         <label class="field"><span>Resolution</span><select data-k="res"><option value="1d">Daily</option><option value="1w">Weekly</option><option value="1M">Monthly</option></select></label>
         <label class="field"><span>Price</span><select data-k="measure"><option value="base">Baseload</option><option value="peak">Peak</option><option value="off">Off-peak</option></select></label>
@@ -118,7 +127,7 @@ export class PriceSpreads extends Base {
     const span = fmtFromTo(dates[0], dates.at(-1));
     const typical = Math.abs(divergent.abs - Math.abs(divergent.spread)) > 0.1 * divergent.abs ? ` (${amt(divergent.abs)}/MWh apart on a typical day, in either direction)` : "";
     this.headline.textContent = `${span[0].toUpperCase() + span.slice(1)}, French ${label} prices were furthest from ${ZONES[divergent.z].name}'s, ${amt(divergent.spread)}/MWh ${divergent.spread >= 0 ? "above" : "below"} on average${typical}${closest ? `, and most often identical to ${ZONES[closest.z].name}'s (${fmtNumber(closest.parity, 0)}% of the time)` : ""}.`;
-    this.root.querySelector("[data-cards]").innerHTML = valid.map(x => card(`France minus ${ZONES[x.z].name}`, fmtEurDelta(x.spread), `${x.parity != null ? `${fmtNumber(x.parity, 0)}% at parity · ` : ""}avg gap ${amt(x.abs)}`, x === divergent ? " accent" : "")).join("");
+    this.root.querySelector("[data-cards]").innerHTML = valid.map(x => card(`${flag(x.z)} France minus ${ZONES[x.z].name}`, fmtEurDelta(x.spread), `${x.parity != null ? `${fmtNumber(x.parity, 0)}% at parity · ` : ""}avg gap ${amt(x.abs)}`, x === divergent ? " accent" : "")).join("");
     this.spreadPanel.setTitle(`France minus each neighbour, ${label} price`, `${fmtPeriod(dates[0], dates.at(-1))} · €/MWh · positive = France dearer`);
     this.spreadPanel.render({
       xType: "time", xLabel: s.res === "1M" ? fmtMonth : s.res === "1w" ? x => `Week of ${fmtDate(x)}` : fmtDate, axisLabel: s.res === "1M" ? fmtMonth : undefined,
@@ -403,20 +412,38 @@ export class NegativePrices extends Base {
 
 export class NuclearModulation extends Base {
   constructor(root) {
-    super(root, "prices/modulation", { preset: "last365", low: "20" });
+    super(root, "prices/modulation", { preset: "last365", low: "20", cut: "80", pb: "neg", unit: "", sort: "share" });
     root.innerHTML = `
       ${heroHtml("Nuclear capacity", "held back.", "Unused available nuclear capacity: what EDF's notices say was available minus what the fleet actually produced, hour by hour, compared across negative, low and normal price hours. When prices drop, reactors modulate down; this shows by how much.")}
       <div class="toolbar"><div class="toolbar-row">${periodHtml("2015-01-05")}
-        <label class="field"><span>“Low” price up to (€/MWh)</span><input type="number" step="1" min="1" data-k="low" style="width:96px"></label>
-      </div><p class="hint">Negative: below €0/MWh. Low: from €0 up to the threshold. Normal: above it. Fleet-level hourly data; a per-reactor breakdown is planned.</p></div>
+        <label class="field"><span>“Low” price: under</span><select data-k="low">${[10, 20, 30, 40, 50].map(v => `<option value="${v}">€${v}/MWh</option>`).join("")}</select></label>
+        <label class="field"><span>Reactor modulating below</span><select data-k="cut">${[70, 80, 90, 95].map(v => `<option value="${v}">${v}% of available</option>`).join("")}</select></label>
+        <label class="field"><span>Reactors: price hours</span><select data-k="pb"><option value="neg">Negative</option><option value="low">Low (€0 to threshold)</option><option value="both">Negative or low</option><option value="norm">Normal (above threshold)</option></select></label>
+      </div><p class="hint">Negative: below €0/MWh. Low: from €0 to under the threshold. Normal: the threshold and above. A reactor counts as modulating in an hour when it is running (output and availability both at least 10% of its capacity) but produces less than the chosen share of its available capacity.</p></div>
       ${headlineHtml}
       <div class="cards" data-cards></div>
-      <div data-a></div><div class="grid-2"><div data-b></div><div data-c></div></div>`;
+      <div data-a></div><div class="grid-2"><div data-b></div><div data-c></div></div>
+      <h2 class="section-title">Reactor by reactor</h2>
+      <div class="headline"><p data-rhead>Loading…</p><button class="btn ghost small" type="button" data-rcopy title="Copy this sentence">Copy</button></div>
+      <div class="grid-map2"><div data-rmap></div><div data-rlist></div></div>
+      <div data-rheat></div>
+      <div class="grid-2"><div data-rseries></div><div data-rone></div></div>`;
     this.wire();
     this.dailyPanel = new ChartPanel(root.querySelector("[data-a]"), { title: "Unused available capacity", size: "tall", overview: true, source: "RTE and ENTSO-E" });
     this.monthPanel = new ChartPanel(root.querySelector("[data-b]"), { title: "By price band", size: "short", source: "RTE and ENTSO-E" });
     this.hourPanel = new ChartPanel(root.querySelector("[data-c]"), { title: "By hour of day", size: "short", source: "RTE and ENTSO-E" });
-    this.panels = [this.dailyPanel, this.monthPanel, this.hourPanel];
+    this.mapPanel = new ChartPanel(root.querySelector("[data-rmap]"), { title: "Map", size: "map", source: "RTE and ENTSO-E" });
+    this.heatPanel = new ChartPanel(root.querySelector("[data-rheat]"), { title: "By month", size: "xtall", source: "RTE and ENTSO-E" });
+    this.seriesPanel = new ChartPanel(root.querySelector("[data-rseries]"), { title: "By series", size: "short", source: "RTE and ENTSO-E" });
+    this.onePanel = new ChartPanel(root.querySelector("[data-rone]"), { title: "One reactor", size: "short", source: "RTE and ENTSO-E" });
+    this.panels = [this.dailyPanel, this.monthPanel, this.hourPanel, this.mapPanel, this.heatPanel, this.seriesPanel, this.onePanel];
+    root.querySelector("[data-rcopy]").addEventListener("click", () => copyText(root.querySelector("[data-rhead]").textContent));
+    root.querySelector("[data-rlist]").addEventListener("click", e => {
+      const th = e.target.closest("th[data-sort]");
+      if (th) { this.state.sort = th.dataset.sort; this.update(); return; }
+      const tr = e.target.closest("tr[data-eic]");
+      if (tr) { this.state.unit = tr.dataset.eic; this.update(); }
+    });
   }
 
   async render(id) {
@@ -427,8 +454,8 @@ export class NuclearModulation extends Base {
     const rows = (await getMarketHourly(from, to)).filter(r => r.nuc_unused != null && r.price != null);
     if (id !== this.renderId) return;
     if (!rows.length) throw new Error("no hours with nuclear output, availability and a price in this period");
-    const band = p => (p < 0 ? "neg" : p <= low ? "low" : "norm");
-    const NAMES = { neg: "Negative prices", low: `Low prices (€0–${low})`, norm: `Normal prices (above €${low})` };
+    const band = p => (p < 0 ? "neg" : p < low ? "low" : "norm");
+    const NAMES = { neg: "Negative prices", low: `Low prices (€0 to under €${low})`, norm: `Normal prices (€${low} and above)` };
     const COL = { neg: "--neg", low: "--s-d1", norm: "--s-avg" };
     const acc = { neg: [], low: [], norm: [] };
     for (const r of rows) acc[band(r.price)].push(r);
@@ -436,7 +463,7 @@ export class NuclearModulation extends Base {
     const share = list => meanOf(list.filter(r => r.nuc_avail > 0).map(r => 100 * r.nuc_unused / r.nuc_avail));
     const st = Object.fromEntries(Object.entries(acc).map(([k, l]) => [k, { hours: l.length, u: avgU(l), pct: share(l), gwh: l.reduce((a, r) => a + r.nuc_unused, 0) / 1000 }]));
     const extra = st.neg.u != null && st.norm.u != null ? st.neg.u - st.norm.u : null;
-    this.headline.textContent = !st.neg.hours ? `There were no hours of negative French prices ${fmtFromTo(from, to)}. ${st.low.hours ? `The nuclear fleet left an average of ${fmtMw(st.low.u)} of available capacity unused in ${fmtNumber(st.low.hours, 0)} hours priced from €0 to €${low}/MWh, against ${fmtMw(st.norm.u)} at higher prices.` : `The nuclear fleet left an average of ${fmtMw(st.norm.u)} of available capacity unused.`}` : `${fmtFromTo(from, to).replace(/^f/, "F")}, the French nuclear fleet left an average of ${fmtMw(st.neg.u)} of available capacity unused in ${fmtNumber(st.neg.hours, 0)} hours of negative prices, against ${fmtMw(st.norm.u)} when prices were above €${low}/MWh${extra != null ? `, ${fmtMw(Math.abs(extra))} ${extra >= 0 ? "more" : "less"}` : ""}.`;
+    this.headline.textContent = !st.neg.hours ? `There were no hours of negative French prices ${fmtFromTo(from, to)}. ${st.low.hours ? `The nuclear fleet left an average of ${fmtMw(st.low.u)} of available capacity unused in ${fmtNumber(st.low.hours, 0)} hours priced from €0 to €${low}/MWh, against ${fmtMw(st.norm.u)} at €${low}/MWh or more.` : `The nuclear fleet left an average of ${fmtMw(st.norm.u)} of available capacity unused.`}` : `${fmtFromTo(from, to).replace(/^f/, "F")}, the French nuclear fleet left an average of ${fmtMw(st.neg.u)} of available capacity unused in ${fmtNumber(st.neg.hours, 0)} hours of negative prices, against ${fmtMw(st.norm.u)} when prices were €${low}/MWh or more${extra != null ? `, ${fmtMw(Math.abs(extra))} ${extra >= 0 ? "more" : "less"}` : ""}.`;
     this.root.querySelector("[data-cards]").innerHTML = ["neg", "low", "norm"].map(k => card(NAMES[k], fmtMw(st[k].u), `${fmtNumber(st[k].hours, 0)} hours · ${st[k].pct != null ? `${fmtNumber(st[k].pct, 1)}% of available` : "–"}`, k === "neg" ? " accent" : "")).join("")
       + card("Unused energy in negative hours", st.neg.gwh >= 1000 ? `${fmtNumber(st.neg.gwh / 1000, 2)} TWh` : `${fmtNumber(st.neg.gwh, 0)} GWh`, "Available but not produced");
 
@@ -475,7 +502,136 @@ export class NuclearModulation extends Base {
         { name: "Unused available capacity", colour: "--f-nuclear", type: "bar", data: hours.map((h, i) => [i, meanOf(h.u) / 1000]), unit: "GW", decimals: 2, barWidth: 12 },
         { name: "Average price", colour: "--s-actual", type: "line", data: hours.map((h, i) => [i, meanOf(h.p)]), yAxis: 1, unit: "€/MWh", decimals: 2 }
       ] });
+    await this.renderReactors(id, from, to, low);
   }
+
+  // ---------- Reactor by reactor ----------
+
+  async renderReactors(id, from, to, low) {
+    const s = this.state;
+    const cut = Number(s.cut) || 80;
+    const [fleet, mod] = await Promise.all([getFleet(), getModulation(from.slice(0, 4), to.slice(0, 4))]);
+    if (id !== this.renderId) return;
+    const lowBands = ["0-10", "10-20", "20-30", "30-40", "40-50"].slice(0, low / 10);
+    const wanted = s.pb === "neg" ? ["neg"] : s.pb === "low" ? lowBands : s.pb === "both" ? ["neg", ...lowBands] : ["0-10", "10-20", "20-30", "30-40", "40-50", "50+"].slice(low / 10);
+    const m0 = from.slice(0, 7);
+    const m1 = to.slice(0, 7);
+    const rows = mod.filter(r => r.month >= m0 && r.month <= m1 && wanted.includes(r.band));
+    const byEic = new Map(fleet.reactors.filter(r => r.eic).map(r => [r.eic, r]));
+    const acc = new Map();
+    for (const r of rows) {
+      const a = acc.get(r.eic) || { hours: 0, mod: 0, unused: 0 };
+      a.hours += r.hours; a.mod += r[`m${cut}`]; a.unused += r.unused_mwh;
+      acc.set(r.eic, a);
+    }
+    const bandName = { neg: "negative-price hours", low: `hours priced €0 to under €${low}`, both: `hours priced under €${low} (including negative)`, norm: `hours priced €${low} or more` }[s.pb];
+    const list = [...acc].map(([eic, a]) => ({ eic, r: byEic.get(eic), ...a, share: a.hours ? 100 * a.mod / a.hours : null, avgU: a.hours ? a.unused / a.hours : null }))
+      .filter(x => x.r && x.hours >= 5);
+    const sorters = { share: (a, b) => b.share - a.share, gwh: (a, b) => b.unused - a.unused, hours: (a, b) => b.hours - a.hours, name: (a, b) => a.r.label.localeCompare(b.r.label, "en", { numeric: true }) };
+    list.sort(sorters[s.sort] || sorters.share);
+    const head = this.root.querySelector("[data-rhead]");
+    if (!list.length) {
+      head.textContent = `No reactor ran for at least 5 ${bandName} in this period.`;
+      this.root.querySelector("[data-rlist]").innerHTML = "";
+      [this.mapPanel, this.heatPanel, this.seriesPanel, this.onePanel].forEach(p => p.show(false));
+      return;
+    }
+    [this.mapPanel, this.heatPanel, this.seriesPanel, this.onePanel].forEach(p => p.show(true));
+    const byShare = [...list].sort(sorters.share);
+    const top = byShare.slice(0, 3);
+    const fleetShare = 100 * list.reduce((a, x) => a + x.mod, 0) / list.reduce((a, x) => a + x.hours, 0);
+    head.textContent = `${fmtFromTo(from, to).replace(/^f/, "F")}, French reactors produced below ${cut}% of their available capacity in ${fmtNumber(fleetShare, 0)}% of the ${bandName} they were running. ${top.map(x => `${x.r.label} (${fmtNumber(x.share, 0)}%)`).join(", ").replace(/, ([^,]*)$/, " and $1")} modulated most often.`;
+    // Ranking table.
+    const arrow = k => (s.sort === k ? " ▾" : "");
+    this.root.querySelector("[data-rlist]").innerHTML = `<div class="mtable-wrap rlist"><table class="mtable"><thead><tr>
+        <th data-sort="name">Reactor${arrow("name")}</th><th data-sort="share" title="Share of the running hours with output below ${cut}% of available">Modulating${arrow("share")}</th>
+        <th data-sort="hours">Hours${arrow("hours")}</th><th data-sort="gwh">Unused${arrow("gwh")}</th></tr></thead><tbody>
+        ${list.map(x => `<tr data-eic="${x.eic}" class="clickable${x.eic === s.unit ? " selected" : ""}"><td>${x.r.label}<small>${x.r.series.replace(/ \(.*\)/, "")}</small></td><td><span class="bar" style="--w:${Math.min(100, x.share).toFixed(0)}%"></span>${fmtNumber(x.share, 0)}%</td><td>${fmtNumber(x.hours, 0)}</td><td>${x.unused >= 1e6 ? `${fmtNumber(x.unused / 1e6, 2)} TWh` : `${fmtNumber(x.unused / 1000, 0)} GWh`}</td></tr>`).join("")}
+      </tbody></table></div><p class="hint">Click a reactor for its hourly chart; click a column heading to sort. “Unused” is available minus output in those hours while running.</p>`;
+
+    // Map: reactors coloured by modulating share.
+    await loadMap();
+    const sites = new Map();
+    for (const x of list) { if (!sites.has(x.r.site)) sites.set(x.r.site, []); sites.get(x.r.site).push(x); }
+    const pts = [];
+    for (const [, xs] of sites) xs.forEach((x, i) => {
+      const ang = (2 * Math.PI * i) / xs.length;
+      const rad = xs.length > 1 ? 0.12 : 0;
+      pts.push({ x, value: [x.r.lon + rad * Math.cos(ang) * 1.4, x.r.lat + rad * Math.sin(ang)] });
+    });
+    const scale = ["--seq-1", "--seq-2", "--seq-3", "--seq-4", "--seq-5"];
+    const colourOf = v => cssVar(scale[Math.min(4, Math.floor(v / 20))]);
+    this.mapPanel.setTitle(`How often each reactor modulated in ${bandName}`, `${fmtPeriod(from, to)} · share of running hours below ${cut}% of available`);
+    this.mapPanel.render({ series: [], source: "RTE and ENTSO-E", legendCaption: null,
+      custom: {
+        exportSize: 800,
+        legend: ["0–20%", "20–40%", "40–60%", "60–80%", "80–100%"].map((n, i) => ({ name: n, colour: scale[i], shape: "dot" })),
+        option: (t, { forExport }) => ({
+          backgroundColor: "transparent", animation: false,
+          tooltip: forExport ? undefined : { trigger: "item", backgroundColor: t.tooltip, borderColor: t.border, textStyle: { color: t.text, fontSize: 12 }, formatter: p => { const x = pts[p.dataIndex]?.x; return x ? `<b>${x.r.label}</b> · ${x.r.series}<br>Modulating ${fmtNumber(x.share, 0)}% of ${fmtNumber(x.hours, 0)} running hours<br>Unused ${fmtNumber(x.unused / 1000, 0)} GWh` : ""; } },
+          geo: { map: "fr-region", roam: !forExport, boundingCoords: [[-5.4, 51.25], [9.7, 41.9]], top: forExport ? 100 : 10, bottom: forExport ? 60 : 10, silent: true,
+            itemStyle: { areaColor: cssVar("--map-other"), borderColor: t.grid }, regions: [{ name: "France", itemStyle: { areaColor: cssVar("--map-land"), borderColor: t.axis } }] },
+          series: [{ type: "scatter", coordinateSystem: "geo", data: pts.map(p => ({ value: p.value, symbolSize: 7 + (p.x.r.mw - 880) / 110, itemStyle: { color: colourOf(p.x.share), borderColor: t.panel, borderWidth: 1 } })) }]
+        }),
+        table: () => ({ headers: ["Reactor", "Series", "Running hours", `Hours below ${cut}%`, "Share (%)", "Unused (MWh)"], rows: list.map(x => [x.r.label, x.r.series, x.hours, x.mod, fmtNumber(x.share, 1), x.unused]) })
+      } });
+
+    // Heat map: reactor x month.
+    const months = [...new Set(rows.map(r => r.month))].sort();
+    const order = [...list].sort((a, b) => (a.r.site === b.r.site ? a.r.label.localeCompare(b.r.label, "en", { numeric: true }) : a.r.site.localeCompare(b.r.site)));
+    const cell = new Map();
+    for (const r of rows) {
+      const k = `${r.eic}|${r.month}`;
+      const c = cell.get(k) || [0, 0];
+      c[0] += r.hours; c[1] += r[`m${cut}`];
+      cell.set(k, c);
+    }
+    const data = [];
+    order.forEach((x, yi) => months.forEach((m, xi) => { const c = cell.get(`${x.eic}|${m}`); if (c && c[0] >= 3) data.push([xi, yi, 100 * c[1] / c[0], c[0]]); }));
+    this.heatPanel.setTitle(`Share of running ${bandName} spent modulating, by reactor and month`, `Below ${cut}% of available · blank: fewer than 3 such hours`);
+    this.heatPanel.render({ source: "RTE and ENTSO-E", legendCaption: null,
+      custom: {
+        exportSize: 1000,
+        legend: [{ name: "0%", colour: "--seq-1" }, { name: "100%", colour: "--seq-5" }],
+        option: t => ({
+          backgroundColor: "transparent", animation: false, grid: { left: 110, right: 16, top: 8, bottom: 34 },
+          tooltip: { backgroundColor: t.tooltip, borderColor: t.border, textStyle: { color: t.text, fontSize: 12 }, formatter: p => `<b>${order[p.value[1]].r.label}</b>, ${fmtMonth(parisMidnight(`${months[p.value[0]]}-01`))}<br>Modulating ${fmtNumber(p.value[2], 0)}% of ${p.value[3]} hours` },
+          xAxis: { type: "category", data: months.map(m => fmtMonth(parisMidnight(`${m}-01`))), axisLabel: { color: t.muted, fontSize: 10 }, axisLine: { lineStyle: { color: t.axis } } },
+          yAxis: { type: "category", data: order.map(x => x.r.label), inverse: true, axisLabel: { color: t.muted, fontSize: 9.5, interval: 0 }, axisLine: { show: false } },
+          visualMap: { show: false, min: 0, max: 100, dimension: 2, inRange: { color: scale.map(cssVar) } },
+          series: [{ type: "heatmap", data, itemStyle: { borderWidth: 0 } }]
+        }),
+        table: () => ({ headers: ["Reactor", ...months], rows: order.map(x => [x.r.label, ...months.map(m => { const c = cell.get(`${x.eic}|${m}`); return c && c[0] ? fmtNumber(100 * c[1] / c[0], 1) : ""; })]) })
+      } });
+
+    // By reactor series.
+    const ser = new Map();
+    for (const x of list) { const k = x.r.series; const a = ser.get(k) || { h: 0, m: 0, u: 0 }; a.h += x.hours; a.m += x.mod; a.u += x.unused; ser.set(k, a); }
+    const sk = [...ser.keys()];
+    this.seriesPanel.setTitle("By reactor series", `Share of running ${bandName} below ${cut}% of available`);
+    this.seriesPanel.render({ xType: "category", categories: sk.map(k => k.replace(/ \((.*)\)/, " · $1")), xLabel: x => x, xHeader: "Series", yName: "%", yMin: 0, yScale: false, legendCaption: null, source: "RTE and ENTSO-E",
+      series: [{ name: "Modulating", colour: "--f-nuclear", type: "bar", data: sk.map((k, i) => [i, 100 * ser.get(k).m / ser.get(k).h]), unit: "%", decimals: 1, avg: false, barWidth: 26, labels: v => `${fmtNumber(v, 0)}%` }] });
+
+    // One reactor, hourly.
+    const sel = list.find(x => x.eic === s.unit) || byShare[0];
+    const oneTo = to;
+    const oneFrom = daysBetween(from, to) > 13 ? addDays(to, -13) : from;
+    const [out, av, pr] = await Promise.all([getUnitHourly("unit_hourly", oneFrom, oneTo), getUnitHourly("unit_avail", oneFrom, oneTo), getPrices("FR", oneFrom, oneTo)]);
+    if (id !== this.renderId) return;
+    const ph = new Map(toHoursPrice(pr));
+    const series = [
+      { name: "Available", colour: "--s-avg", type: "line", data: av.map(r => [r.t, r[sel.eic]]).filter(p => p[1] != null), unit: "MW", decimals: 0, dashed: true, width: 1.6, step: "start" },
+      { name: "Output", colour: "--f-nuclear", type: "line", data: out.map(r => [r.t, r[sel.eic]]).filter(p => p[1] != null), unit: "MW", decimals: 0, width: 2.2, area: true, areaOpacity: 0.15 },
+      { name: "French price", colour: "--s-actual", type: "line", yAxis: 1, data: [...ph].sort((a, b) => a[0] - b[0]), unit: "€/MWh", decimals: 2, width: 1.2, step: "start" }
+    ];
+    this.onePanel.setTitle(`${sel.r.label}: output, availability and price`, `${fmtPeriod(oneFrom, oneTo)} · hourly · MW and €/MWh`);
+    this.onePanel.render({ xType: "time", xLabel: fmtDateTime, yName: "MW", yMin: 0, yAxis2: { name: "€/MWh", format: v => fmtNumber(v, 0) }, series, source: "RTE and ENTSO-E",
+      notes: [`The last ${daysBetween(oneFrom, oneTo) + 1} days of the period. Click another reactor in the table to switch.`] });
+  }
+}
+
+function toHoursPrice(points) {
+  return toHours(points).map(p => [p.t, p.v]);
 }
 
 export { DAY, HOUR };
