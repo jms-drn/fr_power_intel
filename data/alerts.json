@@ -1,0 +1,13 @@
+{
+ "generated_utc": "2026-11-02T15:20Z",
+ "alerts": [
+  {
+   "id": "solar-high-month-2026-11-01",
+   "date": "2026-11-01",
+   "level": "month",
+   "title": "Highest solar output (daily average) for November",
+   "detail": "3.7 GW on 1 Nov 2026, the highest for any November since 2015.",
+   "link": "generation/explorer?subject=solar"
+  }
+ ]
+}

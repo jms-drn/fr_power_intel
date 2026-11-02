@@ -1,0 +1,195 @@
+{
+ "generated_utc": "2026-11-02T15:20Z",
+ "records": [
+  {
+   "key": "solar",
+   "kind": "high",
+   "label": "solar output (daily average)",
+   "unit": "GW",
+   "value": 8275.0,
+   "date": "2026-07-06",
+   "text": "Highest solar output (daily average): 8.3 GW on 6 Jul 2026",
+   "link": "generation/explorer?subject=solar"
+  },
+  {
+   "key": "wind",
+   "kind": "high",
+   "label": "wind output (daily average)",
+   "unit": "GW",
+   "value": 18379.0,
+   "date": "2024-11-24",
+   "text": "Highest wind output (daily average): 18.4 GW on 24 Nov 2024",
+   "link": "generation/explorer?subject=wind"
+  },
+  {
+   "key": "wind",
+   "kind": "low",
+   "label": "wind output (daily average)",
+   "unit": "GW",
+   "value": 363.0,
+   "date": "2015-06-25",
+   "text": "Lowest wind output (daily average): 0.4 GW on 25 Jun 2015",
+   "link": "generation/explorer?subject=wind"
+  },
+  {
+   "key": "nuclear_out",
+   "kind": "high",
+   "label": "nuclear output (daily average)",
+   "unit": "GW",
+   "value": 60659.0,
+   "date": "2015-01-21",
+   "text": "Highest nuclear output (daily average): 60.7 GW on 21 Jan 2015",
+   "link": "generation/explorer?subject=nuclear"
+  },
+  {
+   "key": "nuclear_out",
+   "kind": "low",
+   "label": "nuclear output (daily average)",
+   "unit": "GW",
+   "value": 20346.0,
+   "date": "2022-08-28",
+   "text": "Lowest nuclear output (daily average): 20.3 GW on 28 Aug 2022",
+   "link": "generation/explorer?subject=nuclear"
+  },
+  {
+   "key": "gas",
+   "kind": "high",
+   "label": "gas-fired output (daily average)",
+   "unit": "GW",
+   "value": 9196.0,
+   "date": "2017-01-18",
+   "text": "Highest gas-fired output (daily average): 9.2 GW on 18 Jan 2017",
+   "link": "generation/explorer?subject=gas"
+  },
+  {
+   "key": "gas",
+   "kind": "low",
+   "label": "gas-fired output (daily average)",
+   "unit": "GW",
+   "value": 173.0,
+   "date": "2026-06-06",
+   "text": "Lowest gas-fired output (daily average): 0.2 GW on 6 Jun 2026",
+   "link": "generation/explorer?subject=gas"
+  },
+  {
+   "key": "hydro",
+   "kind": "high",
+   "label": "hydro output (daily average)",
+   "unit": "GW",
+   "value": 13209.0,
+   "date": "2021-02-11",
+   "text": "Highest hydro output (daily average): 13.2 GW on 11 Feb 2021",
+   "link": "generation/explorer?subject=hydro"
+  },
+  {
+   "key": "hydro",
+   "kind": "low",
+   "label": "hydro output (daily average)",
+   "unit": "GW",
+   "value": 531.0,
+   "date": "2023-07-23",
+   "text": "Lowest hydro output (daily average): 0.5 GW on 23 Jul 2023",
+   "link": "generation/explorer?subject=hydro"
+  },
+  {
+   "key": "low_carbon",
+   "kind": "high",
+   "label": "low-carbon share of generation",
+   "unit": "%",
+   "value": 99.81,
+   "date": "2023-07-02",
+   "text": "Highest low-carbon share of generation: 99.8% on 2 Jul 2023",
+   "link": "generation/explorer?subject=lowc&measure=share"
+  },
+  {
+   "key": "low_carbon",
+   "kind": "low",
+   "label": "low-carbon share of generation",
+   "unit": "%",
+   "value": 81.39,
+   "date": "2016-11-08",
+   "text": "Lowest low-carbon share of generation: 81.4% on 8 Nov 2016",
+   "link": "generation/explorer?subject=lowc&measure=share"
+  },
+  {
+   "key": "net_exports",
+   "kind": "high",
+   "label": "net exports (daily average)",
+   "unit": "GW",
+   "value": 17928.0,
+   "date": "2025-12-07",
+   "text": "Highest net exports (daily average): 17.9 GW on 7 Dec 2025",
+   "link": "flows/explorer?subject=net"
+  },
+  {
+   "key": "net_exports",
+   "kind": "low",
+   "label": "net exports (daily average)",
+   "unit": "GW",
+   "value": -12605.0,
+   "date": "2022-12-08",
+   "text": "Lowest net exports (daily average): -12.6 GW on 8 Dec 2022",
+   "link": "flows/explorer?subject=net"
+  },
+  {
+   "key": "fr_base",
+   "kind": "high",
+   "label": "French day-ahead baseload",
+   "unit": "EUR/MWh",
+   "value": 743.84,
+   "date": "2022-08-30",
+   "text": "Highest French day-ahead baseload: \u20ac743.84/MWh on 30 Aug 2022",
+   "link": "prices/explorer?subject=FR&measure=base"
+  },
+  {
+   "key": "fr_base",
+   "kind": "low",
+   "label": "French day-ahead baseload",
+   "unit": "EUR/MWh",
+   "value": -41.39,
+   "date": "2026-05-01",
+   "text": "Lowest French day-ahead baseload: \u2212\u20ac41.39/MWh on 1 May 2026",
+   "link": "prices/explorer?subject=FR&measure=base"
+  },
+  {
+   "key": "fr_min",
+   "kind": "low",
+   "label": "single French day-ahead price",
+   "unit": "EUR/MWh",
+   "value": -498.65,
+   "date": "2026-05-01",
+   "text": "Lowest single French day-ahead price: \u2212\u20ac498.65/MWh on 1 May 2026",
+   "link": "prices/explorer?subject=FR&measure=min"
+  },
+  {
+   "key": "fr_neg",
+   "kind": "high",
+   "label": "negative-price hours in a day (France)",
+   "unit": "h",
+   "value": 16.0,
+   "date": "2020-05-24",
+   "text": "Highest negative-price hours in a day (France): 16.00 h on 24 May 2020",
+   "link": "prices/explorer?subject=FR&measure=neg"
+  },
+  {
+   "key": "demand",
+   "kind": "high",
+   "label": "demand (daily average)",
+   "unit": "GW",
+   "value": 88430.0,
+   "date": "2018-02-28",
+   "text": "Highest demand (daily average): 88.4 GW on 28 Feb 2018",
+   "link": "demand/explorer"
+  },
+  {
+   "key": "demand",
+   "kind": "low",
+   "label": "demand (daily average)",
+   "unit": "GW",
+   "value": 33871.0,
+   "date": "2023-05-28",
+   "text": "Lowest demand (daily average): 33.9 GW on 28 May 2023",
+   "link": "demand/explorer"
+  }
+ ]
+}
