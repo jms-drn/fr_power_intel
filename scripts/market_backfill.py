@@ -36,28 +36,66 @@ def year_windows(first_year, end):
     return windows
 
 
+def chunks(a, b, months=3):
+    """Split a window into pieces of a few months (used when a year-long request times out)."""
+    out = []
+    start = a.astimezone(PARIS)
+    while start.astimezone(UTC) < b:
+        m = start.month - 1 + months
+        nxt = datetime(start.year + m // 12, m % 12 + 1, 1, tzinfo=PARIS)
+        out.append((start.astimezone(UTC), min(nxt.astimezone(UTC), b)))
+        start = nxt
+    return out
+
+
+def robust(fetch, store, key, a, b, failures):
+    """Fetch a year; if ENTSO-E times out, retry it in three-month pieces."""
+    try:
+        points = fetch(key, a, b)
+        return store(key, points), len(points)
+    except Exception as error:  # noqa: BLE001
+        print(f"  {key} {a.astimezone(PARIS):%Y}: whole year failed ({error}); trying quarters")
+    added = n = 0
+    for x, y in chunks(a, b):
+        try:
+            points = fetch(key, x, y)
+            added += store(key, points)
+            n += len(points)
+        except Exception as error:  # noqa: BLE001
+            failures.append(f"{key} {x.astimezone(PARIS):%Y-%m}: {error}")
+            print(f"  {key} {x.astimezone(PARIS):%Y-%m}: FAILED {error}")
+        time.sleep(2)
+    return added, n
+
+
 def backfill_prices(first_year, zones):
     end = paris_midnight(datetime.now(PARIS).date() + timedelta(days=2)).astimezone(UTC)
+    failures = []
     for zone in zones:
         total = 0
         for a, b in year_windows(first_year, end):
-            points = fetch_prices(zone, a, b)
-            total += store_prices(zone, points)
-            print(f"  prices {zone} {a:%Y}: {len(points)} periods")
+            added, n = robust(fetch_prices, store_prices, zone, a, b, failures)
+            total += added
+            print(f"  prices {zone} {a.astimezone(PARIS):%Y}: {n} periods")
             time.sleep(1)
         print(f"Prices {zone}: {total} rows added or changed")
+    if failures:
+        raise RuntimeError(f"{len(failures)} price windows failed: {failures[:5]}")
 
 
 def backfill_flows(first_year, borders):
     end = datetime.now(UTC).replace(minute=0, second=0, microsecond=0)
+    failures = []
     for border in borders:
         total = 0
         for a, b in year_windows(first_year, end):
-            points = fetch_flows(border, a, b)
-            total += store_flows(border, points)
-            print(f"  flows {border} {a:%Y}: {len(points)} periods")
+            added, n = robust(fetch_flows, store_flows, border, a, b, failures)
+            total += added
+            print(f"  flows {border} {a.astimezone(PARIS):%Y}: {n} periods")
             time.sleep(1)
         print(f"Flows {border}: {total} rows added or changed")
+    if failures:
+        raise RuntimeError(f"{len(failures)} flow windows failed: {failures[:5]}")
 
 
 def backfill_mix(first_year):

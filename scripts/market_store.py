@@ -88,7 +88,7 @@ def entsoe_get(params, attempts=5):
             body = error.read().decode("utf-8", "replace")
             if error.code == 400 and "No matching data" in body:
                 return ""
-            if error.code in (429, 500, 502, 503, 504) and attempt < attempts:
+            if (error.code == 429 or error.code >= 500) and attempt < attempts:
                 wait = 20 * attempt
                 print(f"  ENTSO-E HTTP {error.code}, waiting {wait}s", file=sys.stderr)
                 time.sleep(wait)
@@ -220,7 +220,9 @@ def write_rows(path, fields, rows):
 def num(value, decimals=2):
     if value is None or value == "":
         return ""
-    text = f"{value:.{decimals}f}".rstrip("0").rstrip(".")
+    text = f"{value:.{decimals}f}"
+    if "." in text:  # strip trailing decimal zeros only (never from whole numbers)
+        text = text.rstrip("0").rstrip(".")
     return "0" if text in ("-0", "") else text
 
 
