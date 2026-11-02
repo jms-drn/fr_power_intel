@@ -57,3 +57,6 @@ Une nouvelle version sera publiée en fonction des diagnostics et des analyses q
 The duration of the unavailability is a pre-defined 24 hours period, assessed on the basis of the nuclear fleet feedback
 A new version will be published according to diagnostic and technical instruction."
 EDF-05470_EDF_T_00339172,2,2026-11-02T14:34Z,17W100P100P0148D,ST LAURENT 2,915,UNPLANNED,FAILURE,ACTIVE,2026-11-02T13:30Z,2026-11-02T21:00Z,2026-11-02T13:30Z/2026-11-02T21:00Z/370/545,-
+EDF-05470_EDF_T_00339188,1,2026-11-02T16:54Z,17W100P100P0145J,ST ALBAN 1,1335,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-02T19:00Z,2026-11-02T23:00Z,2026-11-02T19:00Z/2026-11-02T23:00Z/260/1075,"Causes externes liées à l'environnement
+------------
+Environmental issues."
