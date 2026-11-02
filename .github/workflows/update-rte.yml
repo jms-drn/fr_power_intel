@@ -30,6 +30,7 @@ jobs:
       RTE_GENERATION_CLIENT_SECRET: ${{ secrets.RTE_GENERATION_CLIENT_SECRET }}
       RTE_UNAVAILABILITY_CLIENT_ID: ${{ secrets.RTE_UNAVAILABILITY_CLIENT_ID }}
       RTE_UNAVAILABILITY_CLIENT_SECRET: ${{ secrets.RTE_UNAVAILABILITY_CLIENT_SECRET }}
+      ENTSOE_API_KEY: ${{ secrets.ENTSOE_API_KEY }}
 
     steps:
       # Always start from the latest version of main, not the version the run

@@ -66,8 +66,9 @@ export class ChartPanel {
    * @param {HTMLElement} container
    * @param {{title: string, subtitle?: string, size?: string, table?: boolean, overview?: boolean}} options
    */
-  constructor(container, { title, subtitle = "", size = "", table = true, overview = false } = {}) {
+  constructor(container, { title, subtitle = "", size = "", table = true, overview = false, source = "" } = {}) {
     this.overview = overview;
+    this.source = source;
     this.root = el("article", { class: "panel" });
     this.root.innerHTML = `
       <div class="panel-head">
@@ -224,7 +225,7 @@ export class ChartPanel {
         };
         option.graphic = [...(option.graphic || []), {
           type: "text", left: 20, bottom: 14,
-          style: { text: `Source: RTE (French TSO) · ${exportBrand} · Exported ${fmtDateTime(Date.now())} Paris time`, fill: t.muted, font: "12px Inter, sans-serif" }
+          style: { text: `Source: ${this.spec?.source || this.source || "RTE (French TSO)"} · ${exportBrand} · Exported ${fmtDateTime(Date.now())} Paris time`, fill: t.muted, font: "12px Inter, sans-serif" }
         }];
       }
       return option;
@@ -254,7 +255,7 @@ export class ChartPanel {
 
       if (s.type === "bar") {
         series.push({
-          ...common, type: "bar", data: points.filter(p => p[1] != null), barMaxWidth: s.barWidth || 16, large: points.length > 2000,
+          ...common, type: "bar", data: spec.xType === "category" ? points : points.filter(p => p[1] != null), barMaxWidth: s.barWidth || 16, large: points.length > 2000,
           label: s.labels ? { show: true, position: "top", color: t.soft, fontSize: 11, fontFamily: "JetBrains Mono", formatter: p => s.labels(p.value[1], p.dataIndex) } : undefined,
           itemStyle: {
             borderRadius: [2, 2, 0, 0],
@@ -328,7 +329,7 @@ export class ChartPanel {
 
     const overview = this.overview && this.isTime() && !forExport;
     const exportFooter = forExport
-      ? `Source: RTE (French TSO) · ${exportBrand} · Exported ${fmtDateTime(Date.now())} Paris time`
+      ? `Source: ${this.spec?.source || this.source || "RTE (French TSO)"} · ${exportBrand} · Exported ${fmtDateTime(Date.now())} Paris time`
       : "";
 
     return {
@@ -384,6 +385,7 @@ export class ChartPanel {
           showMinLabel: this.isTime() ? false : undefined, showMaxLabel: this.isTime() ? false : undefined,
           formatter: this.isTime() ? v => labelFn(fromWall(v)) : labelFn
         },
+        interval: spec.xInterval,
         splitLine: { show: false }
       },
       yAxis: yAxes,

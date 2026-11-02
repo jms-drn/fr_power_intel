@@ -168,7 +168,7 @@ export async function getOutages(years) {
     parseQuotedCsv(await fetchText(`data/nuclear/outages/${y}.csv`)).map(r => ({
       ...r,
       start: parseUtc(r.start_utc), end: parseUtc(r.end_utc),
-      firstEnd: parseUtc(r.first_end_utc), firstStart: parseUtc(r.first_start_utc),
+      firstEnd: parseUtc(r.first_end_utc), firstStart: parseUtc(r.first_start_utc), startEnd: parseUtc(r.start_end_utc || r.first_end_utc),
       firstPub: parseUtc(r.first_pub_utc), lastPub: parseUtc(r.last_pub_utc),
       versions: Number(r.versions), offMw: Number(r.off_mw), capMw: Number(r.cap_mw)
     })))));

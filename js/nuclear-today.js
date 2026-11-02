@@ -376,9 +376,9 @@ export class NuclearToday {
       lines.push(`<div>Expected back <b>${u.until ? fmtWhen(u.until) : "no date given"}</b>${u.until ? ` (in ${fmtDuration(u.until - this.now)})` : ""}</div>`);
     }
     for (const n of u.notices.slice(0, 2)) {
-      const first = parseUtc(n.first_end_utc);
+      const first = parseUtc(n.start_end_utc || n.first_end_utc);
       const end = parseUtc(n.end_utc);
-      const delay = first && end && end - first > HOUR ? ` · <span style="color:${cssVar("--danger")}">${fmtDuration(end - first)} later than first announced</span>` : "";
+      const delay = first && end && end - first > HOUR ? ` · <span style="color:${cssVar("--danger")}">extended ${fmtDuration(end - first)} since it began</span>` : "";
       lines.push(`<div style="margin-top:6px;padding-top:6px;border-top:1px solid ${cssVar("--border")}">
         <b>${n.type === "planned" ? "Planned" : "Unplanned"}</b> · ${reasonLabel(n.reason, n.remark)} · ${fmtNumber(n.off_mw, 0)} MW off<br>
         ${fmtDayTime(parseUtc(n.start_utc))} → ${fmtDayTime(end)}${delay}<br>

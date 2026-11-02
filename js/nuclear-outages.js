@@ -5,13 +5,13 @@
 import { ChartPanel } from "./chart.js";
 import { DAY, HOUR, addDays, copyText, cssVar, csvDateTime, dateKey, downloadBlob, fmtDateTime, fmtDayTime, fmtLongDate,
   fmtNumber, fmtTick, fromWall, heroHtml, parisMidnight, toCsv, toWall, todayParis, writeHash } from "./util.js";
-import { fmtDuration, fmtStamp, reasonLabel, siteSort, stripePattern } from "./nuclear-common.js";
+import { fmtDuration, fmtStamp, reasonLabel, setSwitch, siteSort, stripePattern, switchHtml } from "./nuclear-common.js";
 import { getFleet, getOutages } from "./power-data.js";
 
 const DURATIONS = { 0: "Any length", 1: "1 day or more", 7: "1 week or more", 30: "1 month or more" };
 
 function defaults() {
-  return { win: "now", from: "", to: "", type: "all", dur: "1", size: "major", state: "all", running: "0", site: "all", unit: "", q: "", sort: "start", dir: "asc" };
+  return { win: "now", from: "", to: "", type: "all", dur: "1", size: "major", state: "all", running: "0", during: "1", site: "all", unit: "", q: "", sort: "start", dir: "asc" };
 }
 
 export class NuclearOutages {
@@ -34,7 +34,7 @@ export class NuclearOutages {
     const years = [];
     for (let k = y + 1; k >= 2015; k--) years.push(k);
     this.root.innerHTML = `
-      ${heroHtml("Nuclear outages,", "reactor by reactor.", "Every planned and unplanned outage notice, as a timeline for each reactor and as a table. The purple part of a bar is how far the outage has run, or is expected to run, beyond the end date first announced.")}
+      ${heroHtml("Nuclear outages,", "reactor by reactor.", "Every planned and unplanned outage notice, as a timeline for each reactor and as a table. The purple part of a bar is how far the outage has run, or is expected to run, beyond its planned end: by default the end date in force when the outage began, so earlier rescheduling doesn't count.")}
       <div class="toolbar" role="group" aria-label="Outage filters">
         <div class="toolbar-row">
           <label class="field"><span>Window</span>
@@ -50,7 +50,7 @@ export class NuclearOutages {
           <label class="field"><span>Size</span><select data-k="size"><option value="major">A quarter of the reactor or more</option><option value="half">Half the reactor or more</option><option value="all">Any size</option></select></label>
           <label class="field"><span>Status</span>
             <select data-k="state"><option value="all">Any</option><option value="ongoing">Ongoing now</option><option value="upcoming">Not started yet</option>
-              <option value="ended">Ended</option><option value="overran">Ran past first announced end</option><option value="early">Ended early</option></select>
+              <option value="ended">Ended</option><option value="overran">Ran past its planned end</option><option value="early">Ended early</option></select>
           </label>
           <label class="field"><span>Offline for</span>
             <select data-k="running"><option value="0">Any time so far</option><option value="7">Over a week so far</option><option value="30">Over a month so far</option>
@@ -58,6 +58,7 @@ export class NuclearOutages {
           </label>
           <label class="field"><span>Site</span><select data-k="site" data-sites><option value="all">All sites</option></select></label>
           <label class="field grow"><span>Search</span><input type="search" data-k="q" placeholder="Reactor, reason or remark"></label>
+          <div class="field"><span>Count changes</span>${switchHtml("data-during", "Since first notice", "Only after it began")}</div>
           <div class="field"><span>Quick</span><div class="chips">
             <button class="chip" type="button" data-all-outages style="color:var(--accent)"><span class="swatch"></span><span class="chip-label">Show all outages</span></button>
           </div></div>
@@ -80,6 +81,11 @@ export class NuclearOutages {
     this.gantt = new ChartPanel(this.root.querySelector("[data-gantt]"), { title: "Outage timeline", size: "gantt" });
     this.root.querySelector("[data-copy]").addEventListener("click", () => copyText(this.headline.textContent));
     this.root.querySelector("[data-csv]").addEventListener("click", () => this.exportCsv());
+    this.root.querySelector("[data-during]").addEventListener("click", () => {
+      this.state.during = this.state.during === "1" ? "0" : "1";
+      this.syncControls();
+      this.update();
+    });
     this.root.querySelector("[data-all-outages]").addEventListener("click", () => {
       const all = this.isAll();
       Object.assign(this.state, all ? { dur: "1", size: "major" } : { dur: "0", size: "all", type: "all", state: "all", running: "0", q: "" });
@@ -117,6 +123,7 @@ export class NuclearOutages {
       this.root.querySelector('[data-k="to"]').value = to;
     }
     this.root.querySelector("[data-all-outages]").setAttribute("aria-pressed", this.isAll());
+    setSwitch(this.root.querySelector("[data-during]"), s.during === "1");
     const note = this.root.querySelector("[data-unit-note]");
     note.hidden = !s.unit;
     if (s.unit) {
@@ -128,6 +135,15 @@ export class NuclearOutages {
   isAll() {
     const s = this.state;
     return s.dur === "0" && s.size === "all" && s.type === "all" && s.state === "all" && s.running === "0" && !s.q;
+  }
+
+  during() {
+    return this.state.during === "1";
+  }
+
+  /** What an outage's end is compared with: the end in force when it began, or the first announced. */
+  refLabel(short = false) {
+    return this.during() ? (short ? "End when it began" : "the end date in force when it began") : (short ? "First announced end" : "the end date first announced");
   }
 
   labelOf(name) {
@@ -196,13 +212,17 @@ export class NuclearOutages {
       if (s.state === "ongoing" && !(o.start <= now && o.end > now)) return false;
       if (s.state === "upcoming" && !(o.start > now)) return false;
       if (s.state === "ended" && !(o.end <= now)) return false;
-      if (s.state === "overran" && !(o.end - o.firstEnd > HOUR && o.firstEnd < now)) return false;
-      if (s.state === "early" && !(o.end <= now && o.firstEnd - o.end > HOUR)) return false;
+      const ref = this.during() ? o.startEnd : o.firstEnd;
+      if (s.state === "overran" && !(o.end - ref > HOUR && ref < now)) return false;
+      if (s.state === "early" && !(o.end <= now && ref - o.end > HOUR)) return false;
       if (Number(s.running) > 0 && !(o.start <= now && o.end > now && now - o.start >= Number(s.running) * DAY)) return false;
       if (s.site !== "all" && site(o.unit) !== s.site) return false;
       if (q && !`${this.labelOf(o.unit)} ${o.unit} ${reasonLabel(o.reason, o.remark)} ${o.remark} ${o.type}`.toLowerCase().includes(q)) return false;
       return true;
-    }).map(o => ({ ...o, label: this.labelOf(o.unit), delay: o.end - o.firstEnd }));
+    }).map(o => {
+      const ref = this.during() ? o.startEnd : o.firstEnd;
+      return { ...o, label: this.labelOf(o.unit), ref, delay: o.end - ref };
+    });
   }
 
   renderSummary(from, to) {
@@ -220,7 +240,7 @@ export class NuclearOutages {
 
     let text = `${rows.length} outage${rows.length === 1 ? "" : "s"} on ${reactors} reactor${reactors === 1 ? "" : "s"} overlap ${fmtLongDate(from)} to ${fmtLongDate(to)}, removing about ${fmtNumber(twh, 1)} TWh of nuclear capacity in that window.`;
     if (ended.length) {
-      text += ` Of the ${ended.length} planned outages that have ended, ${overran.length} (${fmtNumber(100 * overran.length / ended.length, 0)}%) ran past the end date first announced; on average they finished ${fmtDuration(Math.abs(avgDelay))} ${avgDelay >= 0 ? "later" : "earlier"} than first announced.`;
+      text += ` Of the ${ended.length} planned outages that have ended, ${overran.length} (${fmtNumber(100 * overran.length / ended.length, 0)}%) ran past ${this.refLabel()}; on average they finished ${fmtDuration(Math.abs(avgDelay))} ${avgDelay >= 0 ? "later" : "earlier"} than that.`;
     }
     this.headline.textContent = text;
     const card = (l, v, d = "", c = "") => `<div class="card${c}"><div class="label">${l}</div><div class="value">${v}</div><div class="detail">${d}</div></div>`;
@@ -229,8 +249,8 @@ export class NuclearOutages {
       card("Capacity lost in window", `${fmtNumber(twh, 1)} TWh`, "Unavailable MW × hours, inside the window"),
       card("Ongoing now", `${ongoing.length}`, `${fmtNumber(ongoing.reduce((a, o) => a + o.offMw, 0) / 1000, 1)} GW off`),
       card("Still to start", `${upcoming.length}`, upcoming.length ? `Next: ${upcoming.sort((a, b) => a.start - b.start)[0].label}, ${fmtDayTime(upcoming[0].start)}` : ""),
-      ended.length ? card("Planned outages overrunning", `${fmtNumber(100 * overran.length / ended.length, 0)}%`, `${overran.length} of ${ended.length} that ended in view`) : "",
-      avgDelay != null ? card("Average change vs first end date", `${avgDelay >= 0 ? "+" : "−"}${fmtNumber(Math.abs(avgDelay) / DAY, 1)} days`, "Planned outages that ended") : ""
+      ended.length ? card(this.during() ? "Planned outages extended after starting" : "Planned outages overrunning", `${fmtNumber(100 * overran.length / ended.length, 0)}%`, `${overran.length} of ${ended.length} that ended in view`) : "",
+      avgDelay != null ? card(this.during() ? "Average extension once started" : "Average change vs first end date", `${avgDelay >= 0 ? "+" : "−"}${fmtNumber(Math.abs(avgDelay) / DAY, 1)} days`, "Planned outages that ended") : ""
     ].join("");
   }
 
@@ -245,7 +265,7 @@ export class NuclearOutages {
     }).sort(siteSort);
     const index = new Map(reactors.map((r, i) => [r.name, i]));
     const labels = reactors.map(r => r.label);
-    const items = rows.filter(o => index.has(o.unit)).map((o, i) => [index.get(o.unit), toWall(o.start), toWall(o.end), toWall(o.firstEnd), o.offMw / o.capMw, o.type === "planned" ? 0 : 1, i]);
+    const items = rows.filter(o => index.has(o.unit)).map((o, i) => [index.get(o.unit), toWall(o.start), toWall(o.end), toWall(o.ref), o.offMw / o.capMw, o.type === "planned" ? 0 : 1, i]);
     const height = Math.max(260, reactors.length * 14 + 90);
     this.gantt.chartEl.style.height = `${height}px`;
     this.gantt.chart?.resize();
@@ -307,7 +327,7 @@ export class NuclearOutages {
       series: [],
       custom: {
         option, exportSize: height + 170,
-        legend: [{ name: "Planned", colour: "--st-planned" }, { name: "Unplanned", colour: "--st-unplanned", stripes: true }, { name: "Beyond the end date first announced", colour: "--st-overrun" }],
+        legend: [{ name: "Planned", colour: "--st-planned" }, { name: "Unplanned", colour: "--st-unplanned", stripes: true }, { name: this.during() ? "Extended after it began" : "Beyond the end date first announced", colour: "--st-overrun" }],
         table: () => this.tableRows()
       },
       legendCaption: null,
@@ -318,12 +338,13 @@ export class NuclearOutages {
   tooltip(o) {
     if (!o) return "";
     const delay = o.delay;
-    const delayText = Math.abs(delay) < HOUR ? "as first announced" : `${fmtDuration(Math.abs(delay))} ${delay > 0 ? "later" : "earlier"} than first announced`;
+    const delayText = Math.abs(delay) < HOUR ? "on time" : `${fmtDuration(Math.abs(delay))} ${delay > 0 ? "later" : "earlier"} than ${this.refLabel()}`;
     return `<div style="max-width:340px;white-space:normal">
       <div style="font-weight:700;font-size:13px">${o.label}</div>
       <div><span class="tag ${o.type}">${o.type}</span> ${reasonLabel(o.reason, o.remark)} · ${fmtNumber(o.offMw, 0)} of ${fmtNumber(o.capMw, 0)} MW off</div>
       <div style="margin-top:6px">${fmtDateTime(o.start)} → ${fmtDateTime(o.end)} (${fmtDuration(o.end - o.start)})</div>
-      <div>End first announced: ${fmtDateTime(o.firstEnd)} · <b style="color:${delay > HOUR ? cssVar("--danger") : "inherit"}">${delayText}</b></div>
+      <div>End first announced: ${fmtDateTime(o.firstEnd)}${o.startEnd !== o.firstEnd ? ` · when it began: ${fmtDateTime(o.startEnd)}` : ""}</div>
+      <div><b style="color:${delay > HOUR ? cssVar("--danger") : "inherit"}">${delayText}</b></div>
       <div class="muted">First published ${fmtDayTime(o.firstPub)} · ${o.versions} version${o.versions === 1 ? "" : "s"} · last ${fmtDayTime(o.lastPub)}</div>
       ${o.remark ? `<div class="muted" style="margin-top:4px">${o.remark}</div>` : ""}</div>`;
   }
@@ -332,7 +353,7 @@ export class NuclearOutages {
     const { sort, dir } = this.state;
     const key = {
       unit: o => o.label, type: o => o.type, reason: o => reasonLabel(o.reason, o.remark), start: o => o.start, end: o => o.end,
-      dur: o => o.end - o.start, firstEnd: o => o.firstEnd, delay: o => o.delay, mw: o => o.offMw, versions: o => o.versions, pub: o => o.lastPub
+      dur: o => o.end - o.start, firstEnd: o => o.ref, delay: o => o.delay, mw: o => o.offMw, versions: o => o.versions, pub: o => o.lastPub
     }[sort] || (o => o.start);
     const sign = dir === "asc" ? 1 : -1;
     return [...this.rows].sort((a, b) => {
@@ -344,9 +365,9 @@ export class NuclearOutages {
 
   tableRows() {
     return {
-      headers: ["Reactor", "Type", "Reason", "Start (Paris)", "End (Paris)", "Duration (days)", "End first announced (Paris)", "Change vs first end (days)", "MW off", "Capacity (MW)", "Versions", "First published (Paris)", "Last updated (Paris)", "Remark", "Notice id"],
+      headers: ["Reactor", "Type", "Reason", "Start (Paris)", "End (Paris)", "Duration (days)", "End first announced (Paris)", "End when it began (Paris)", "Change counted (days)", "MW off", "Capacity (MW)", "Versions", "First published (Paris)", "Last updated (Paris)", "Remark", "Notice id"],
       rows: this.sorted().map(o => [o.label, o.type, reasonLabel(o.reason, o.remark), csvDateTime(o.start), csvDateTime(o.end), Number(((o.end - o.start) / DAY).toFixed(2)),
-        csvDateTime(o.firstEnd), Number((o.delay / DAY).toFixed(2)), o.offMw, o.capMw, o.versions, csvDateTime(o.firstPub), csvDateTime(o.lastPub), o.remark, o.id])
+        csvDateTime(o.firstEnd), csvDateTime(o.startEnd), Number((o.delay / DAY).toFixed(2)), o.offMw, o.capMw, o.versions, csvDateTime(o.firstPub), csvDateTime(o.lastPub), o.remark, o.id])
     };
   }
 
@@ -356,13 +377,13 @@ export class NuclearOutages {
     const head = (key, label) => `<th class="sortable${s.sort === key ? ` sorted ${s.dir}` : ""}" data-sort="${key}">${label}</th>`;
     const shown = rows.slice(0, 800);
     this.root.querySelector("[data-table-title]").textContent = `Outages (${rows.length})`;
-    this.tableEl.innerHTML = `<table><thead><tr>${head("unit", "Reactor")}${head("type", "Type")}${head("reason", "Reason")}${head("start", "Start")}${head("end", "End")}${head("dur", "Length")}${head("firstEnd", "First announced end")}${head("delay", "Change")}${head("mw", "MW off")}${head("versions", "Versions")}${head("pub", "Updated")}<th>Remark</th></tr></thead><tbody>
+    this.tableEl.innerHTML = `<table><thead><tr>${head("unit", "Reactor")}${head("type", "Type")}${head("reason", "Reason")}${head("start", "Start")}${head("end", "End")}${head("dur", "Length")}${head("firstEnd", this.refLabel(true))}${head("delay", "Change")}${head("mw", "MW off")}${head("versions", "Versions")}${head("pub", "Updated")}<th>Remark</th></tr></thead><tbody>
       ${shown.map(o => {
         const d = o.delay;
         const change = Math.abs(d) < HOUR ? "–" : `${d > 0 ? "+" : "−"}${fmtDuration(Math.abs(d))}`;
         return `<tr><td class="text"><button class="link" type="button" data-unit="${o.unit}">${o.label}</button></td><td class="text"><span class="tag ${o.type}">${o.type}</span></td><td class="text">${reasonLabel(o.reason, o.remark)}</td>
           <td>${fmtStamp(o.start)}</td><td>${fmtStamp(o.end)}</td>
-          <td>${fmtDuration(o.end - o.start)}</td><td>${fmtStamp(o.firstEnd)}</td>
+          <td>${fmtDuration(o.end - o.start)}</td><td>${fmtStamp(o.ref)}</td>
           <td class="${d > HOUR ? "bad" : d < -HOUR ? "good" : ""}">${change}</td><td>${fmtNumber(o.offMw, 0)}</td><td>${o.versions}</td><td>${fmtStamp(o.lastPub)}</td>
           <td class="text remark" title="${(o.remark || "").replace(/"/g, "&quot;")}">${o.remark || ""}</td></tr>`;
       }).join("")}</tbody></table>

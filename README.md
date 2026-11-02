@@ -1,6 +1,6 @@
 # fr_power_intel
 
-**France Power Intelligence**: a web tool for the French power system from RTE data — electricity demand, nuclear availability and outages, and hydro reservoirs — each compared with earlier years.
+**France Power Intelligence**: a web tool for the French power system from RTE and ENTSO-E data — electricity demand, nuclear availability and outages, hydro reservoirs, day-ahead prices, generation by fuel and cross-border flows — each compared with earlier years.
 
 ## The site
 
@@ -12,7 +12,9 @@ A left sidebar switches between pages; each page keeps its own tabs. Links from 
 | **Demand** | The four tabs below |
 | **Nuclear availability** | *Today*: availability now, map of every reactor coloured by status, time offline so far or time until return, next 14 days, output by reactor over the past week, notice changes in the past 72 hours. *Explorer*: availability, unavailable capacity (planned/unplanned), availability rate, output, load factor and reactors offline for any period since 2011, by fleet, site or reactor series, compared with earlier years, ranking, outlook extension. *Outages*: timeline per reactor and sortable table of every outage, with the change against the first announced end date. *Outlook*: expected availability for any period up to 540 days ahead, compared with the outlook a week or month earlier or on the same date in earlier years, and with what actually happened |
 | **Hydro reserves** | Weekly stored energy since Dec 2014 against earlier years (average, range, every year), difference view, ranking of the week, full history |
-| **Generation** | Coming soon |
+| **Prices** | Eight numbered tabs with previous/next links. *Short term*: today's and tomorrow's day-ahead prices with stats tiles (vs 7- and 30-day averages, same weekday last year, peak/off-peak, extremes, negative hours, parity and spread with a chosen neighbour). *Explorer*: FR, DE, BE, CH, IT-North, ES from 15 minutes to yearly; baseload, peak, off-peak, daily low/high, range, volatility, negative hours, negative-price depth; comparisons, alignment, profile, duration curve, difference, ranking. *Spreads*, *Mix & Price*, *Negative Prices*, *Capture Prices*, *Residual Demand*, *Nuclear Modulation* |
+| **Generation** | *Today*: 15-minute mix against the same hours last year, shares. *Explorer* by fuel (output, share, energy). *Records* with links to the data |
+| **Flows** | *Live map* of physical flows on each border (incl. GB), *Explorer* (net exports, exports, imports), *Flows and prices* (flow against the price gap) |
 
 ### Demand tabs
 
@@ -37,9 +39,11 @@ The site is static (GitHub Pages) and reads the CSV files below. Code: `index.ht
 
 | **Backfill nuclear and hydro history (one-off)** | By hand only | Downloads every nuclear unavailability notice version since Dec 2010 (at most 20 calls an hour, as RTE asks), fleet nuclear output since Dec 2014 and hydro reservoirs since Dec 2014. Safe to re-run |
 
-Each update run also fetches new nuclear notices (every run), nuclear output fleet and per reactor (at most hourly) and reservoir levels (every 12 hours), then rebuilds the nuclear files (`scripts/power_update.py`, `scripts/power_summarise.py`).
+| **Backfill prices, flows and generation history (one-off)** | By hand only | Day-ahead prices (ENTSO-E, from 5 Jan 2015), physical flows on every border (ENTSO-E) and the generation mix (RTE: hourly 2015–16, 15-minute from 2017). Year-long ENTSO-E requests that time out are retried in three-month pieces. Safe to re-run |
 
-The workflows use the `RTE_CLIENT_ID` / `RTE_CLIENT_SECRET` (consumption), `RTE_GENERATION_CLIENT_ID` / `RTE_GENERATION_CLIENT_SECRET` (actual generation) and `RTE_UNAVAILABILITY_CLIENT_ID` / `RTE_UNAVAILABILITY_CLIENT_SECRET` (unavailability) repository secrets, and never write data at the same time. The site checks for new data every two minutes.
+Each update run also fetches new nuclear notices (every run), nuclear output fleet and per reactor (at most hourly) and reservoir levels (every 12 hours), then rebuilds the nuclear files (`scripts/power_update.py`, `scripts/power_summarise.py`). It then fetches the generation mix for today and yesterday (every run), prices from yesterday to the day after tomorrow (hourly, and every run between 12:00 and 15:00 Paris time until tomorrow's French prices appear) and flows for the past two days (hourly), and rebuilds the market files (`scripts/market_update.py`, `scripts/market_summarise.py`).
+
+The workflows use the `RTE_CLIENT_ID` / `RTE_CLIENT_SECRET` (consumption), `RTE_GENERATION_CLIENT_ID` / `RTE_GENERATION_CLIENT_SECRET` (actual generation) and `RTE_UNAVAILABILITY_CLIENT_ID` / `RTE_UNAVAILABILITY_CLIENT_SECRET` (unavailability) and `ENTSOE_API_KEY` (ENTSO-E Transparency Platform) repository secrets, and never write data at the same time. The site checks for new data every two minutes.
 
 ## Data files
 
@@ -69,6 +73,15 @@ All times are stored in UTC (`2026-10-23T22:00Z`). Files are split by month in P
 | `data/nuclear/outages/YYYY.csv` | One row per notice (latest version), by start year, with the first announced dates |
 | `data/nuclear/live.json` | Live reactor status, next 14 days, notice changes in the past 72 hours, current outlook |
 | `data/hydro/reserves.csv` | Weekly reservoir levels (MWh) |
+| `data/prices/<ZONE>/YYYY/YYYY-MM.csv` | Day-ahead prices (ENTSO-E): `start_utc,eur,min` (`min` = period length, 60 or 15). Zones FR, DE, BE, CH, IT_NORD, ES |
+| `data/prices/daily.csv` | Per Paris day and zone: base, peak, off-peak, min, max, negative hours, zero-price hours, negative-price depth, volatility; parity (`par_`) and spread (`spr_`) of FR against each neighbour |
+| `data/flows/<BORDER>/YYYY/YYYY-MM.csv` | Physical flows (ENTSO-E): `start_utc,export_mw,import_mw,min`. Borders BE, DE, CH, IT_NORD, ES, GB |
+| `data/flows/daily.csv` | Daily mean exports, imports and net per border, and the net total |
+| `data/generation/mix/YYYY/YYYY-MM.csv` | RTE generation by fuel and subtype (MW), hourly 2015–16, 15-minute from 2017 |
+| `data/generation/daily.csv` | Daily mean MW by fuel, total, low-carbon/renewable shares and share by fuel |
+| `data/market/hourly/YYYY/YYYY-MM.csv` | Hourly table joining FR price, demand, residual demand, nuclear output and availability (and unused available capacity), output by fuel and net exports |
+| `data/market/daily.csv`, `data/market/capture.csv` | Daily residual demand, nuclear headroom, net exports; daily capture prices and energy by technology |
+| `data/records.json`, `data/alerts.json`, `data/market/index.json` | Records, notable events for the bell, and the list of monthly market files |
 
 ## Methodology notes
 
@@ -89,3 +102,15 @@ All times are stored in UTC (`2026-10-23T22:00Z`). Files are split by month in P
 - **Availability** = installed capacity − unavailable capacity in the latest version of each notice covering that moment. Overlapping notices on one reactor are not added: the largest reduction counts. Cancelled (DISMISSED) versions count as no outage. Times are rounded to 15 minutes.
 - **As-of outlooks** use, for each notice, the latest version published by the end of that Paris day.
 - **Fleet changes**: Fessenheim 1 and 2 leave the fleet at their closures in 2020; Flamanville 3 joins at its first grid connection (21 Dec 2024).
+
+### Prices, generation and flows
+
+- **Day-ahead prices**: ENTSO-E document A44, keeping the SDAC result (contract type A01, classification sequence 1; DE-LU also publishes EXAA). Curve type A03 points that repeat are filled forward. Germany is DE-AT-LU before 1 Oct 2018 and DE-LU after. 15-minute prices from delivery 30 Sep 2025 (Switzerland stays hourly).
+- **Peak** is Monday–Friday 08:00–20:00 Paris time. Daily averages weight each period by its length; days with fewer than 20 hours of prices are left out.
+- **Parity** is measured on a 15-minute grid (hourly prices repeated): the two prices differ by less than €0.01/MWh.
+- **Negative-price depth** = Σ |price| × hours over negative periods (€/MWh·h).
+- **Capture price** = Σ(price × output) / Σ output on a 15-minute grid, per day; longer periods are output-weighted.
+- **Generation mix** periods where all fuels add up to less than 20 GW are treated as missing (RTE's mix has a few broken periods, e.g. 14 Apr 2024).
+- **Unused available nuclear capacity** = available capacity (notices) − output, floored at zero, hourly.
+- **Flows** are ENTSO-E physical flows (document A11) in both directions per border; net = France→neighbour minus neighbour→France.
+- **Alerts**: records over the whole history, month records, and "highest/lowest since" with a minimum gap of 7 days (prices) or 30 days (generation, flows, demand); new unplanned nuclear outages ≥ 1 GW and return dates pushed back ≥ 7 days in the past 24 hours; negative French prices today or tomorrow.

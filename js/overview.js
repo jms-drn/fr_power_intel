@@ -4,6 +4,7 @@
 import { getDaily, getLatest, getRange, latestSeries } from "./data.js";
 import { RESERVOIR_CAPACITY_MWH, isoWeek } from "./hydro.js";
 import { getLive, getNuclearDaily, getReserves } from "./power-data.js";
+import { BORDERS, fmtEur, getFlowDaily, getFlows, getGenDaily, getMix, getPriceDaily, toHours } from "./market-data.js";
 import { parseUtc } from "./data.js";
 import {
   QUARTER, addDays, alignDate, copyText, cssVar, dateKey, fmtDayTime, fmtGW, fmtLongDate, fmtNumber, fmtShortDate,
@@ -15,7 +16,17 @@ const ICONS = {
   nuclear: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1.7"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/></svg>',
   hydro: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2c3.3 4.2 6 7.6 6 10.8a6 6 0 0 1-12 0c0-3.2 2.7-6.6 6-10.8Z"/></svg>',
   prices: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 6.5A6.5 6.5 0 1 0 17.5 17.5"/><path d="M4.5 10.5h9M4.5 13.5h9"/></svg>',
-  generation: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2.5 5 13.5h6l-1 8 8-11h-6l1-8Z"/></svg>'
+  generation: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2.5 5 13.5h6l-1 8 8-11h-6l1-8Z"/></svg>',
+  flows: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5h14M14.5 5l3.5 3.5-3.5 3.5M20 15.5H6M9.5 12 6 15.5 9.5 19"/></svg>'
+};
+
+const ABOUT = {
+  demand: "Live demand, RTE's forecasts and their accuracy, history since 2012.",
+  nuclear: "Reactor map, outages and return dates, availability against earlier years, outlooks.",
+  hydro: "Weekly energy stored in reservoirs against every year since 2014.",
+  prices: "Day-ahead prices for France and its neighbours: spreads, negative prices, capture prices.",
+  generation: "Output by fuel every 15 minutes, shares, records.",
+  flows: "Physical flows on every border, live map, flows against price gaps."
 };
 
 /** Small SVG trend line: series = [{ values: [[x, y]], colour, dashed?, width? }]. */
@@ -45,15 +56,19 @@ export class Overview {
   constructor(root) {
     this.root = root;
     this.root.innerHTML = `
-      ${heroHtml("France's power system,", "at a glance.", "The latest from RTE's data on French electricity demand, nuclear availability and hydro reservoirs, each against earlier years. Open a tile for the full page with charts, comparisons and downloads. Prices and generation are on the way.")}
-      <div class="tiles" data-tiles>${'<div class="tile skeleton"></div>'.repeat(3)}</div>
-      <div class="tiles soon-row" data-soon></div>
+      ${heroHtml("France's power system,", "at a glance.", "The latest on French electricity demand, nuclear availability, hydro reservoirs, prices, generation and cross-border flows, each against earlier years, from RTE and ENTSO-E data. Open a tile for the full page with charts, comparisons and downloads.")}
+      <section class="brief market-brief">
+        <h2>Today's market <button class="btn ghost small" type="button" data-copy-market>Copy</button></h2>
+        <p data-market class="muted">Loading…</p>
+      </section>
+      <div class="tiles" data-tiles>${'<div class="tile skeleton"></div>'.repeat(6)}</div>
       <section class="brief">
         <h2>Main points <button class="btn ghost small" type="button" data-copy>Copy all</button></h2>
         <ul data-points><li class="muted">Loading…</li></ul>
       </section>`;
     this.tiles = this.root.querySelector("[data-tiles]");
-    this.soon = this.root.querySelector("[data-soon]");
+    this.market = this.root.querySelector("[data-market]");
+    this.root.querySelector("[data-copy-market]").addEventListener("click", () => copyText(this.market.textContent));
     this.points = this.root.querySelector("[data-points]");
     this.root.querySelector("[data-copy]").addEventListener("click", () =>
       copyText([...this.points.querySelectorAll("li")].map(li => `• ${li.textContent}`).join("\n")));
@@ -64,23 +79,20 @@ export class Overview {
   }
 
   async update() {
-    const results = await Promise.allSettled([this.demand(), this.nuclear(), this.hydro()]);
+    const keys = ["demand", "nuclear", "hydro", "prices", "generation", "flows"];
+    const titles = ["Demand", "Nuclear availability", "Hydro reserves", "Prices", "Generation", "Flows"];
+    const hrefs = ["#demand/today", "#nuclear/today", "#hydro", "#prices/short", "#generation/today", "#flows/today"];
+    const results = await Promise.allSettled([this.demand(), this.nuclear(), this.hydro(), this.prices(), this.generation(), this.flows()]);
     const tiles = results.map((r, i) => (r.status === "fulfilled" ? r.value : {
-      html: this.tile(["demand", "nuclear", "hydro"][i], ["Demand", "Nuclear availability", "Hydro reserves"][i], "#", "–", "", [`<span class="muted">Couldn't load (${r.reason?.message || "error"})</span>`], ""),
+      html: this.tile(keys[i], titles[i], hrefs[i], "–", "", [`<span class="muted">Couldn't load (${r.reason?.message || "error"})</span>`], ""),
       points: []
     }));
     this.tiles.innerHTML = tiles.map(t => t.html).join("");
-    this.soon.innerHTML = `
-      <div class="tile soon">
-        <div class="tile-head"><span class="tile-title">${ICONS.prices}Prices</span><span class="tile-go">Coming soon</span></div>
-        <div class="tile-lines"><span>Day-ahead spot prices for France and neighbouring markets.</span></div>
-      </div>
-      <div class="tile soon">
-        <div class="tile-head"><span class="tile-title">${ICONS.generation}Generation</span><span class="tile-go">Coming soon</span></div>
-        <div class="tile-lines"><span>Output by fuel, renewables and exports.</span></div>
-      </div>`;
     const points = tiles.flatMap(t => t.points);
     this.points.innerHTML = points.length ? points.map(p => `<li>${p}</li>`).join("") : `<li class="muted">No data available.</li>`;
+    const market = [3, 4, 1, 5].map(i => tiles[i]?.market).filter(Boolean);
+    this.market.classList.toggle("muted", !market.length);
+    this.market.textContent = market.length ? market.join(" ") : "Market data is not available yet.";
   }
 
   tile(key, title, href, value, small, lines, spark) {
@@ -89,6 +101,7 @@ export class Overview {
       <div class="tile-value">${value}${small ? `<small>${small}</small>` : ""}</div>
       <div class="tile-lines">${lines.map(l => `<span>${l}</span>`).join("")}</div>
       ${spark}
+      <div class="tile-about">${ABOUT[key]}</div>
     </a>`;
   }
 
@@ -166,7 +179,9 @@ export class Overview {
     if (next30 != null && ly30 != null) points.push(`Notices published so far point to ${fmtGW(next30)} available on average over the next 30 days, against ${fmtGW(ly30)} in the same period last year.`);
     const delays = (live.changes || []).filter(c => c.version > 1 && c.prev_end_utc && parseUtc(c.end_utc) - parseUtc(c.prev_end_utc) > 3600000);
     if (delays.length) points.push(`${delays.length} notice${delays.length === 1 ? "" : "s"} pushed back a return date in the past 72 hours (latest: ${delays[0].unit.replace(/\b\w+/g, w => w[0] + w.slice(1).toLowerCase())}, ${fmtDayTime(parseUtc(delays[0].published_utc))}).`);
+    const market = `Nuclear availability is ${fmtGW(f.available_mw)} with ${offline} reactors offline.`;
     return {
+      market,
       html: this.tile("nuclear", "Nuclear availability", "#nuclear/today", fmtGW(f.available_mw), "available", lines,
         sparkline([{ values: ly, colour: "--s-ly", width: 1.2 }, { values: past, colour: "--s-actual" }, { values: [past.at(-1), ...ahead].filter(Boolean), colour: "--s-fcst", dashed: true }])),
       points
@@ -197,6 +212,102 @@ export class Overview {
       html: this.tile("hydro", "Hydro reserves", "#hydro", `${fmtNumber(r.mwh / 1e6, 2)} TWh`, "stored", lines,
         sparkline([{ values: year, colour: "--s-actual" }], { band })),
       points
+    };
+  }
+
+  async prices() {
+    const daily = await getPriceDaily();
+    const today = todayParis();
+    const tomorrow = addDays(today, 1);
+    const t = daily.byDate.get(today);
+    const n = daily.byDate.get(tomorrow);
+    if (!t?.FR_base && !n?.FR_base) throw new Error("no prices yet");
+    const main = n?.FR_base != null ? n : t;
+    const label = main === n ? "tomorrow" : "today";
+    const prev30 = mean(daily.rows.filter(r => r.date < today && r.date >= addDays(today, -30)).map(r => r.FR_base));
+    const spark = [];
+    const ly = [];
+    for (let i = 59; i >= 0; i--) {
+      const d = addDays(today, -i);
+      const v = daily.byDate.get(d)?.FR_base;
+      if (v != null) spark.push([-i, v]);
+      const l = daily.byDate.get(addDays(d, -364))?.FR_base;
+      if (l != null) ly.push([-i, l]);
+    }
+    const de = main.DE_base;
+    const lines = [
+      main === n && t?.FR_base != null ? `Today ${fmtEur(t.FR_base)}` : "",
+      prev30 != null ? `<b class="${dir(main.FR_base - prev30)}">${main.FR_base >= prev30 ? "+" : "−"}€${fmtNumber(Math.abs(main.FR_base - prev30), 2)}</b> vs the previous 30-day average` : "",
+      `<span class="muted">Last 60 days, daily baseload · last year dashed</span>`
+    ].filter(Boolean);
+    const neg = main.FR_neg > 0 ? ` with ${fmtNumber(main.FR_neg, main.FR_neg % 1 ? 2 : 0)} hours below zero` : "";
+    const points = [`The French day-ahead baseload price for ${label} is ${fmtEur(main.FR_base)}${prev30 != null ? `, €${fmtNumber(Math.abs(main.FR_base - prev30), 2)} ${main.FR_base >= prev30 ? "above" : "below"} the average of the previous 30 days` : ""}${neg}.`];
+    if (de != null) points.push(`Germany's baseload for ${label} is ${fmtEur(de)}, so France is ${main.FR_base <= de ? "cheaper" : "dearer"} by €${fmtNumber(Math.abs(main.FR_base - de), 2)}/MWh.`);
+    return {
+      market: `French day-ahead baseload is ${fmtEur(main.FR_base)} for ${label}${de != null ? ` (Germany ${fmtEur(de)})` : ""}${neg}.`,
+      html: this.tile("prices", "Prices", "#prices/short", fmtEur(main.FR_base).replace("/MWh", ""), `€/MWh baseload ${label}`, lines,
+        sparkline([{ values: ly, colour: "--s-ly", dashed: true, width: 1.4 }, { values: spark, colour: "--s-actual" }])),
+      points
+    };
+  }
+
+  async generation() {
+    const today = todayParis();
+    const [mix, daily] = await Promise.all([getMix(today, today), getGenDaily()]);
+    const rows = mix.filter(r => r.nuclear != null);
+    if (!rows.length) throw new Error("no generation data yet today");
+    const fuels = ["nuclear", "hydro", "wind", "solar", "gas", "coal", "oil", "bio"];
+    const sum = fs => rows.reduce((a, r) => a + fs.reduce((x, f) => x + Math.max(0, r[f] || 0), 0), 0);
+    const tot = sum(fuels);
+    const low = 100 * sum(["nuclear", "hydro", "wind", "solar", "bio"]) / tot;
+    const vre = sum(["wind", "solar"]) / rows.length;
+    const spark = [];
+    const ly = [];
+    for (let i = 60; i >= 1; i--) {
+      const d = addDays(today, -i);
+      const r = daily.byDate.get(d);
+      if (r?.wind != null && r?.solar != null) spark.push([-i, (r.wind + r.solar) / 1000]);
+      const l = daily.byDate.get(addDays(d, -364));
+      if (l?.wind != null && l?.solar != null) ly.push([-i, (l.wind + l.solar) / 1000]);
+    }
+    const lines = [
+      `Wind and solar ${fmtGW(vre)} on average today so far`,
+      `Nuclear ${fmtGW(sum(["nuclear"]) / rows.length)} · gas ${fmtGW(sum(["gas"]) / rows.length)}`,
+      `<span class="muted">Wind plus solar, daily average, last 60 days · last year dashed</span>`
+    ];
+    const upTo = fmtTime(rows.at(-1).t + QUARTER);
+    return {
+      market: `Low-carbon sources have supplied ${fmtNumber(low, 1)}% of French generation today, with wind and solar averaging ${fmtGW(vre)}.`,
+      html: this.tile("generation", "Generation", "#generation/today", `${fmtNumber(low, 1)}%`, "low-carbon today", lines,
+        sparkline([{ values: ly, colour: "--s-ly", dashed: true, width: 1.4 }, { values: spark, colour: "--s-actual" }])),
+      points: [`Low-carbon sources supplied ${fmtNumber(low, 1)}% of French generation today to ${upTo}; wind and solar averaged ${fmtGW(vre)}.`]
+    };
+  }
+
+  async flows() {
+    const today = todayParis();
+    const borders = Object.keys(BORDERS);
+    const [daily, ...pts] = await Promise.all([getFlowDaily(), ...borders.map(b => getFlows(b, addDays(today, -1), today))]);
+    const hourly = pts.map(p => ({ e: new Map(toHours(p, "export_mw").map(x => [x.t, x.v])), i: new Map(toHours(p, "import_mw").map(x => [x.t, x.v])) }));
+    const common = [...hourly[0].e.keys()].filter(t => hourly.every(h => h.e.has(t))).sort((a, b) => a - b);
+    if (!common.length) throw new Error("no recent flow data");
+    const t = common.at(-1);
+    const net = hourly.reduce((a, h) => a + h.e.get(t) - (h.i.get(t) ?? 0), 0);
+    const spark = [];
+    const ly = [];
+    for (let i = 60; i >= 1; i--) {
+      const d = addDays(today, -i);
+      const v = daily.byDate.get(d)?.net;
+      if (v != null) spark.push([-i, v / 1000]);
+      const l = daily.byDate.get(addDays(d, -364))?.net;
+      if (l != null) ly.push([-i, l / 1000]);
+    }
+    const lines = [`${fmtTime(t)}–${fmtTime(t + 3600000)} Paris time, all ${borders.length} borders`, `<span class="muted">Net exports, daily average, last 60 days · last year dashed</span>`];
+    return {
+      market: `France is ${net >= 0 ? "exporting" : "importing"} a net ${fmtGW(Math.abs(net))} across its borders.`,
+      html: this.tile("flows", "Flows", "#flows/today", fmtGW(Math.abs(net)), net >= 0 ? "net exports" : "net imports", lines,
+        sparkline([{ values: ly, colour: "--s-ly", dashed: true, width: 1.4 }, { values: spark, colour: "--s-actual" }])),
+      points: [`France was ${net >= 0 ? "exporting" : "importing"} a net ${fmtGW(Math.abs(net))} in the hour from ${fmtTime(t)} Paris time (physical flows, latest from ENTSO-E).`]
     };
   }
 

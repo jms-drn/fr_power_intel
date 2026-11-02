@@ -1,8 +1,46 @@
 // Version history shown in the "What's new" panel. Newest first.
 
-export const VERSION = "3.1";
+export const VERSION = "4.0";
 
 export const CHANGELOG = [
+  {
+    version: "4.0",
+    date: "2 Nov 2026",
+    title: "Prices, generation and cross-border flows",
+    sections: [
+      {
+        heading: "New: Prices (ENTSO-E day-ahead, since Jan 2015)",
+        items: [
+          "Eight tabs, numbered, with Previous and Next links at the foot of each so none get lost: Short term, Explorer, Spreads, Mix & Price, Negative Prices, Capture Prices, Residual Demand and Nuclear Modulation.",
+          "Short term: today's and tomorrow's French price (15-minute since 30 Sep 2025) with tiles for baseload against yesterday, the 7- and 30-day averages and the same weekday last year, peak and off-peak, highest and lowest quarter-hour, intraday range, negative hours, and parity and spread with a neighbour you choose.",
+          "Explorer: France, Germany, Belgium, Switzerland, Italy North and Spain from 15 minutes to yearly; baseload, peak (Mon–Fri 08:00–20:00), off-peak, daily low and high, range, volatility, negative hours and negative-price depth; compare with last year, an average or range of earlier years, a chosen year or another country; weekday or calendar alignment; daily profile (with weekdays and weekends), duration curve, difference view and ranking.",
+          "Spreads: France minus each neighbour and the share of time at the same price, by month.",
+          "Mix & Price: the price above the generation mix, average price by solar share, wind, nuclear, gas, residual demand, net exports or hour, and every hour as a point coloured by year.",
+          "Negative Prices: hours, depth and lowest prices year to date against last year and an average, with any threshold above or below, an option to include zero-priced periods, a month-by-hour heat map and a price histogram.",
+          "Capture Prices: output-weighted prices and capture rates for solar, wind, nuclear, hydro and gas, plus when each technology earns through the day.",
+          "Residual Demand: demand minus wind and solar, and the average price at each level.",
+          "Nuclear Modulation: available nuclear capacity left unused in negative, low and normal price hours (fleet level)."
+        ]
+      },
+      {
+        heading: "New: Generation (RTE) and Flows (ENTSO-E)",
+        items: [
+          "Generation: today's 15-minute mix against the same hours last year, low-carbon and renewable shares, an Explorer by fuel (output, share, energy) and a Records list where each record opens the data around that day.",
+          "Flows: a live map with an arrow on each border (including Great Britain), an Explorer for net exports, exports and imports, and flows against price gaps, counting the hours power ran from the dearer to the cheaper market."
+        ]
+      },
+      {
+        heading: "Across the site",
+        items: [
+          "A notification bell shows a count and a soft glow for notable events: records, the highest or lowest for a while (at least a week for prices, a month for generation), new unplanned nuclear outages and negative prices. Click one to open the data.",
+          "Overview: a \"Today's market\" paragraph, tiles for prices, generation and flows, and a one-line explainer on every tile.",
+          "The update time now shows the time zone (CET or CEST).",
+          "Nuclear Outages: a switch counts only end-date changes made after an outage began, so rescheduling before the start is not counted as an extension (now the default).",
+          "Exported images name their source (RTE or ENTSO-E)."
+        ]
+      }
+    ]
+  },
   {
     version: "3.1",
     date: "29 Oct 2026",

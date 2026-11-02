@@ -46,8 +46,8 @@ the old address was deliberately not redirected).
 
 ## 2. What the site is
 
-A static, dark-by-default web tool on French power-system data from RTE (and,
-next, ENTSO-E), each dataset compared with earlier years. Header style:
+A static, dark-by-default web tool on French power-system data from RTE and
+ENTSO-E, each dataset compared with earlier years. Header style:
 "France Power **<Accent> Intelligence**" with italic "by jms-drn" byline;
 the accent part changes per page:
 
@@ -57,8 +57,13 @@ the accent part changes per page:
 | Demand | France Power **Demand Intelligence** | Today · Explorer · Forecast accuracy · Outlook |
 | Nuclear availability | France Power **Nuclear Availability Intelligence** | Today · Explorer · Outages · Outlook |
 | Hydro reserves | France Power **Hydro Intelligence** | — (single page) |
-| Prices | *coming soon* (greyed in sidebar and Overview) | — |
-| Generation | *coming soon* (greyed in sidebar and Overview) | — |
+| Prices | France Power **Price Intelligence** | 1 Short term · 2 Explorer · 3 Spreads · 4 Mix & Price · 5 Negative Prices · 6 Capture Prices · 7 Residual Demand · 8 Nuclear Modulation (numbered tabs + Previous/Next links at the foot; order chosen by James) |
+| Generation | France Power **Generation Intelligence** | Today · Explorer · Records |
+| Flows | France Power **Flows Intelligence** (icon: two arrows in opposite directions) | Live map · Explorer · Flows and prices |
+
+Sidebar groups: "Data" (Demand, Nuclear, Hydro) and "Markets" (Prices,
+Generation, Flows). Header: status pill "Last updated HH:MM CET/CEST",
+notification bell, Refresh, Display.
 
 Navigation: sleek left sidebar (collapsible to an icon rail, remembered in
 the browser; slide-out drawer on phones with a menu button). Sidebar footer:
@@ -70,15 +75,17 @@ without tabs are `#hydro`. Every view writes its settings into the address so
 links can be shared. Old links `#today`, `#explorer?...`, `#accuracy`,
 `#outlook` open the Demand tabs (handled in `readHash` in `js/util.js`).
 
-### Features by page (current state, v3.1)
+### Features by page (current state, v4.0)
 
-**Overview** — three live tiles (Demand now + month to date vs 3-year average
-with a 60-day sparkline; Nuclear available now, reactors offline, today vs
-same day last year, sparkline of past 90 days + next 60 from notices; Hydro
-TWh and % full vs 5-year average with the previous-5-years range), two slim
-"coming soon" tiles (Prices, Generation), and an auto-written "Main points"
-list. Overview and nuclear Today lead with *availability*; Explorer and
-Outlook default to *unavailability* (James's explicit choice).
+**Overview** — "Today's market" paragraph, then six live tiles (Demand now +
+month to date vs 3-year average with a 60-day sparkline; Nuclear available
+now, reactors offline, today vs same day last year, past 90 days + next 60
+from notices; Hydro TWh and % full vs 5-year average with range; Prices
+baseload today/tomorrow vs 30-day average; Generation low-carbon share today;
+Flows net exports latest hour), each with a one-line explainer, and an
+auto-written "Main points" list. Overview and nuclear Today lead with
+*availability*; Explorer and Outlook default to *unavailability* (James's
+explicit choice).
 
 **Demand** (RTE consumption API; history from 17 Dec 2012)
 - *Today:* actual vs intraday, D-1, D-2; optional same-weekday last year /
@@ -151,11 +158,66 @@ Actual Generation APIs; availability history from 1 Jan 2015, output from
   view; full history; ranking of the latest week; headline includes the
   four-week trend vs the usual change and whether the gap to average widens.
 
+**Prices** (ENTSO-E day-ahead, from 5 Jan 2015; zones FR, DE, BE, CH,
+IT_NORD, ES — neighbours only, James's choice; €/MWh; peak = Mon–Fri
+08:00–20:00 Paris, the market standard)
+- *Short term:* today/tomorrow chart FR + chosen neighbour; tile rows Price
+  (baseload with "highest/lowest since", vs yesterday/today, vs 7- and 30-day
+  averages, vs same weekday last year), Shape of the day (peak, off-peak,
+  spread, highest/lowest quarter-hour, intraday range, negative hours),
+  Against the neighbour (baseload, spread, parity); baseload-by-country bars.
+- *Explorer:* the shared `TimeExplorer` (js/time-explorer.js): presets
+  (today…gas year, winter/summer, custom), resolutions 15 min–yearly
+  (pre-Oct-2025 hourly prices repeated across quarter-hours), measures base,
+  peak, off-peak, daily min/max, range, volatility, negative hours,
+  negative-price depth; compare last year, N-year average, range, a chosen
+  year, a second zone; alignment weekday for ≤ daily, calendar for weekly+
+  (switch); views over time / daily profile (weekday/weekend split) /
+  duration curve; difference view; ranking; headline + cards; CSV.
+- *Spreads:* FR minus each neighbour; parity share by month; most divergent.
+- *Mix & Price:* linked price + stacked mix charts (echarts.connect); average
+  price by condition band; scatter coloured by year.
+- *Negative Prices:* hours, "Negative-price depth" (James's name; €/MWh·h),
+  cumulative vs last year and N-year average, any threshold below/above, a
+  switch to include zero-priced periods, month bars, histogram, hour×month
+  heat map.
+- *Capture Prices:* TimeExplorer on daily capture prices (output-weighted
+  for weekly+), capture rate, discount; "when it earns" by hour.
+- *Residual Demand:* TimeExplorer (demand − wind − solar) + price by band.
+- *Nuclear Modulation:* fleet unused available capacity (available − output)
+  in negative / low (≤ threshold, default €20) / normal price hours, with a
+  caveat that it is not all price-led. Per-reactor version is pending.
+
+**Generation** (RTE: hourly per-type 2015–16, 15-minute mix from 2017)
+- *Today:* 15-min stacked mix, fuel tiles vs same hours on the same weekday
+  last year, shares; headline picks the most notable change.
+- *Explorer:* TimeExplorer by fuel / total / low-carbon / renewables / wind
+  and solar; output, share, energy, highest/lowest daily average.
+- *Records:* all-time highs/lows (records.json), each linking to the data.
+
+**Flows** (ENTSO-E physical flows A11, both directions; borders BE, DE, CH,
+IT_NORD, ES, GB — GB flows do exist; captioned "latest from ENTSO-E")
+- *Live map:* nuclear-map style, an arrow per border (width = size, teal
+  export, amber import); cards; past-7-days chart.
+- *Explorer:* net exports / exports / imports, all borders or one.
+- *Flows and prices:* average flow by price-gap band, scatter, share of
+  hours flowing from the dearer to the cheaper market (GB left out: no
+  price).
+
+**Notification bell:** count + soft glow (no sound, no pop-up); panel lists
+the past 4 days of `data/alerts.json` with click-through; seen ids in
+localStorage. "Highest/lowest since" needs a gap of ≥ 7 days for prices and
+≥ 30 days for generation/flows/demand (James's rule).
+
+**Overview:** "Today's market" paragraph (prices, generation, nuclear,
+flows; Copy), six tiles each with a one-line page explainer, Main points.
+
 **Every chart** (`ChartPanel` in `js/chart.js`): hover tooltips with all
 series, drag to zoom (double-click resets), overview strip on main charts,
 legend with averages for the period in view (click to hide/show), data table,
 CSV, PNG export with title/legend/source footer naming the page ("Source: RTE
-(French TSO) · France Power … Intelligence by jms-drn · Exported …"), copy
+(French TSO) · France Power … Intelligence by jms-drn · Exported …"; the
+source comes from `spec.source` / the panel's `source` option, e.g. ENTSO-E), copy
 image to clipboard. Time axes are in Paris wall-clock time; lines break at
 gaps. Custom charts (map, Gantt, heat map) go through `spec.custom`.
 
@@ -224,6 +286,11 @@ js/today.js explorer.js accuracy.js outlook.js           Demand tabs
 js/nuclear-common.js             labels, colours, durations, stripe pattern, switch helpers
 js/nuclear-today.js explorer.js outages.js outlook.js    Nuclear tabs
 js/hydro.js  js/overview.js      Hydro page, Overview
+js/market-data.js                prices/flows/mix/market loaders (old monthly files cached across updates), zones, fuels, formatters
+js/time-explorer.js              shared explorer engine (presets, comparisons, profile, duration, ranking)
+js/market-common.js              period picker, card markup
+js/prices-short.js prices-explorer.js (Explorer, Capture, Residual) prices-analysis.js (Spreads, Mix, Negative, Modulation)
+js/generation.js  js/flows.js    Generation and Flows pages
 js/vendor/echarts.min.js, europe-fr.json (Natural Earth outline, cropped)
 scripts/rte_client.py            RTE OAuth client for three APIs (consumption, generation, unavailability)
 scripts/store.py, summarise.py, update.py, backfill.py   demand pipeline
@@ -231,6 +298,10 @@ scripts/power_store.py           nuclear/hydro raw storage and fetchers
 scripts/power_summarise.py       builds every nuclear file the site reads
 scripts/power_update.py          regular nuclear/hydro update (called from update.py)
 scripts/power_backfill.py        one-off history download
+scripts/market_store.py          ENTSO-E client + parsing, RTE mix fetchers, monthly CSV storage
+scripts/market_summarise.py      daily tables, hourly join, capture, records.json, alerts.json, market/index.json
+scripts/market_update.py         regular price/flow/mix update (called from update.py)
+scripts/market_backfill.py       one-off history download (backfill-market.yml)
 worker/worker.js, worker/SETUP.md   Cloudflare Worker (deployed separately)
 ```
 
@@ -248,7 +319,9 @@ worker/worker.js, worker/SETUP.md   Cloudflare Worker (deployed separately)
 - **GitHub schedule** `47 * * * *` is only an hourly backup (GitHub skips many
   scheduled runs).
 - `update.py`: demand (latest, past 7 days re-check, week-ahead, annual) →
-  `power_update.run()` (nuclear notices every run; fleet and per-reactor
+  `power_update.run()` → `market_update.run()` (mix every run; prices
+  hourly and every run 12:00–15:00 Paris until tomorrow's FR prices exist;
+  flows hourly; then `market_summarise.main()`, ~20–40 s) (nuclear notices every run; fleet and per-reactor
   output at most every 55 min; reservoirs every 12 h; then
   `power_summarise.main()`) → `summarise.main()` writes `data/status.json`
   (its `generated_utc` is the site's data version). Power errors never block
@@ -256,8 +329,8 @@ worker/worker.js, worker/SETUP.md   Cloudflare Worker (deployed separately)
 - All data-writing workflows share the concurrency group `rte-data`. On a
   push rejection the update resets to `origin/main` and reruns.
 - Repository secrets: `RTE_CLIENT_ID/SECRET` (consumption),
-  `RTE_GENERATION_CLIENT_ID/SECRET`, `RTE_UNAVAILABILITY_CLIENT_ID/SECRET`.
-  Planned: `ENTSOE_API_KEY`.
+  `RTE_GENERATION_CLIENT_ID/SECRET`, `RTE_UNAVAILABILITY_CLIENT_ID/SECRET`,
+  `ENTSOE_API_KEY` (added by James 2 Nov 2026).
 
 ### Data files (times stored in UTC as `YYYY-MM-DDTHH:MMZ`)
 Demand: `data/archive/{realised,d1,d2,weekly}/YYYY/YYYY-MM.csv` (split by
@@ -274,7 +347,11 @@ installed/available/planned/unplanned/output), `unit_daily/YYYY.csv`,
 unplanned part, both in units of 10 MW), `outages/YYYY.csv` (latest version
 per notice by start year), `live.json` (reactor status, next 14 days hourly,
 72-hour notice changes, current outlook). Hydro: `data/hydro/reserves.csv`.
-`data/power_state.json` records last fetch times. See README for columns.
+`data/power_state.json` records last fetch times. Markets: `data/prices/<ZONE>/`,
+`data/flows/<BORDER>/`, `data/generation/mix/` (monthly), `data/prices/daily.csv`,
+`data/flows/daily.csv`, `data/generation/daily.csv`, `data/market/hourly/`,
+`data/market/{daily,capture}.csv`, `data/market/index.json`, `data/records.json`,
+`data/alerts.json`. See README for columns.
 
 ---
 
@@ -332,6 +409,24 @@ Monday).
   above; outlook figures were recomputed independently from the files (e.g.
   Nov 2025 outlook as of 29 Oct 2025: 54.4 GW available; actual 49.2 GW).
 
+**Prices, generation, flows**
+- ENTSO-E: `https://web-api.tp.entsoe.eu/api`, `securityToken`; about a
+  year per request, 2–10 s each; HTTP 599 gateway timeouts happen — the
+  backfill retries year windows in three-month pieces. Prices A44 (keep
+  contract A01 and classification sequence 1: DE-LU sequence 2 is EXAA; ES
+  A07 series are intraday auctions); flows A11 (in_Domain = to). Curve A03 =
+  forward-fill omitted positions. EICs in `market_store.py`. DE = DE-AT-LU
+  before 2018-09-30T22:00Z. 15-minute prices from 2025-09-29T22:00Z.
+- RTE `generation_mix_15min_time_scale` (≤ 14 days per call; no EXCHANGE
+  series, so net exports come from ENTSO-E flows); hydro subtypes do not add
+  up to the hydro total — show the total. Mix periods totalling < 20 GW are
+  treated as missing (broken days 14 Apr 2024, 16 Aug 2025).
+- **Lesson (2 Nov 2026):** the first storage code stripped trailing zeros
+  from whole numbers (49240 → 4924), making yearly nuclear ~9% low. Caught by
+  comparing yearly sums with RTE's annual totals (fleet hourly series matches
+  them: 2015 415.7 TWh, 2024 361.3 TWh). Always run that check after a
+  backfill.
+
 **Hydro**
 - Capacity 3,591 GWh (from RTE, confirmed by James). Highest week on record
   3,179 GWh (week of 14 Oct 2024). Weeks matched by ISO week; values labelled
@@ -359,22 +454,23 @@ Monday).
   Delays only), hydro fill level in pp + trend sentence, Colourblind-friendly
   rename, Prices "coming soon", knob-centred switches, repo renamed to
   `fr_power_intel`.
+- **v4.0** (2 Nov 2026) — Prices (8 tabs), Generation, Flows, notification
+  bell, Overview "Today's market" + explainers, shared TimeExplorer engine,
+  ENTSO-E pipeline; v3.1 tweaks: CET/CEST in the status pill and the Outages
+  switch "Since first notice / Only after it began" (default: after it
+  began; uses `start_end_utc`, the end in force when the outage started).
 
 ---
 
 ## 7. Future plans and ideas discussed
 
-1. **Prices page (next)** — James has an **ENTSO-E Transparency Platform API
-   key** (to be stored as `ENTSOE_API_KEY`; GB not available after Brexit).
-   Ideas agreed in principle: day-ahead prices for France and neighbours
-   (DE-LU, BE, NL, CH, IT-North, ES), 15-minute products since the late-2025
-   day-ahead change; a Prices Explorer like the others (baseload/peak,
-   YoY, ranking, CSV); spreads and price convergence with neighbours;
-   negative/extreme price counts; cross-border flows and commercial
-   exchanges; links to existing pages (price vs nuclear unavailability or
-   demand). Ask James which countries to start with.
-2. **Generation page** — output by fuel, renewables share, exports; ENTSO-E
-   or RTE actual generation data.
+1. **Per-reactor output history since 2015** (≈53 RTE calls a year, daily
+   averages for long views) — James said "not for now" and asked to be
+   reminded to run it later; needed for a per-reactor Nuclear Modulation.
+2. **Interconnector capacity / utilisation (NTC, ENTSO-E)** — proposed in the
+   v4 brainstorm, not built in v4.0.
+2b. Possible: commercial (scheduled) exchanges A09 alongside physical flows;
+   NL as an extra zone.
 3. **Other countries** — possible expansion to Spain and Germany "with
    similar tabs". Suggested approach: one site with a country switch; France
    keeps RTE depth; ENTSO-E gives a common core (load and forecasts,

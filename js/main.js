@@ -6,7 +6,7 @@ import { refreshAllCharts, setExportBrand } from "./chart.js";
 import { CONFIG } from "./config.js";
 import { dataVersion, getStatus, parseUtc, setDataVersion, setLiveOverride } from "./data.js";
 import { PALETTES, apply, settings, updateSettings } from "./settings.js";
-import { el, fmtDateTime, fmtTime, readHash, toast, writeHash } from "./util.js";
+import { el, fmtDateTime, fmtTime, parisOffset, readHash, toast, writeHash } from "./util.js";
 
 apply();
 
@@ -37,6 +37,35 @@ const PAGES = {
   hydro: {
     accent: "Hydro Intelligence", doc: "France Power Hydro Intelligence",
     tabs: { main: { label: "Reservoirs", load: async root => new (await import("./hydro.js")).Hydro(root) } }
+  },
+  prices: {
+    accent: "Price Intelligence", doc: "France Power Price Intelligence", stepper: true,
+    tabs: {
+      short: { label: "Short term", load: async root => new (await import("./prices-short.js")).PriceShort(root) },
+      explorer: { label: "Explorer", load: async root => (await import("./prices-explorer.js")).priceExplorer(root) },
+      spreads: { label: "Spreads", load: async root => new (await import("./prices-analysis.js")).PriceSpreads(root) },
+      mix: { label: "Mix & Price", load: async root => new (await import("./prices-analysis.js")).MixPrice(root) },
+      negative: { label: "Negative Prices", load: async root => new (await import("./prices-analysis.js")).NegativePrices(root) },
+      capture: { label: "Capture Prices", load: async root => new (await import("./prices-explorer.js")).CapturePrices(root) },
+      residual: { label: "Residual Demand", load: async root => new (await import("./prices-explorer.js")).ResidualDemand(root) },
+      modulation: { label: "Nuclear Modulation", load: async root => new (await import("./prices-analysis.js")).NuclearModulation(root) }
+    }
+  },
+  generation: {
+    accent: "Generation Intelligence", doc: "France Power Generation Intelligence",
+    tabs: {
+      today: { label: "Today", load: async root => new (await import("./generation.js")).GenToday(root) },
+      explorer: { label: "Explorer", load: async root => (await import("./generation.js")).genExplorer(root) },
+      records: { label: "Records", load: async root => new (await import("./generation.js")).GenRecords(root) }
+    }
+  },
+  flows: {
+    accent: "Flows Intelligence", doc: "France Power Flows Intelligence",
+    tabs: {
+      today: { label: "Live map", load: async root => new (await import("./flows.js")).FlowsMap(root) },
+      explorer: { label: "Explorer", load: async root => (await import("./flows.js")).flowsExplorer(root) },
+      prices: { label: "Flows and prices", load: async root => new (await import("./flows.js")).FlowsPrices(root) }
+    }
   }
 };
 
@@ -53,7 +82,7 @@ function sectionFor(page, tab) {
   let section = document.getElementById(id);
   if (!section) {
     section = el("section", { id, "data-view": `${page}/${tab}`, class: "hidden" });
-    viewsRoot.insertBefore(section, footer);
+    viewsRoot.insertBefore(section, document.querySelector(".tab-nav") || footer);
   }
   return section;
 }
@@ -80,9 +109,12 @@ function renderChrome(page, tab) {
   });
   const names = Object.keys(config.tabs);
   tabsEl.hidden = names.length < 2;
-  tabsEl.innerHTML = names.length < 2 ? "" : names.map(name =>
-    `<button class="tab" role="tab" data-tab="${name}" aria-selected="${name === tab}">${config.tabs[name].label}</button>`).join("");
+  tabsEl.innerHTML = names.length < 2 ? "" : names.map((name, i) =>
+    `<button class="tab" role="tab" data-tab="${name}" aria-selected="${name === tab}">${config.stepper ? `<span class="tab-n">${i + 1}</span>` : ""}${config.tabs[name].label}</button>`).join("");
+  tabsEl.classList.toggle("stepper", !!config.stepper);
   document.body.dataset.page = page;
+  tabsEl.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  renderTabNav(page, tab);
 }
 
 async function navigate(page, tab, params) {
@@ -103,6 +135,23 @@ async function navigate(page, tab, params) {
   if (!view.writesHash) writeHash(tabs.length > 1 ? key : page, params);
   view.activate();
   requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+}
+
+/** "Previous / next tab" links at the foot of pages with many tabs, so no tab gets lost. */
+const tabNav = el("nav", { class: "tab-nav", "aria-label": "More tabs on this page" });
+viewsRoot.insertBefore(tabNav, footer);
+function renderTabNav(page, tab) {
+  const config = PAGES[page];
+  const names = Object.keys(config.tabs);
+  const i = names.indexOf(tab);
+  viewsRoot.insertBefore(tabNav, footer);
+  tabNav.hidden = !config.stepper;
+  if (!config.stepper) return;
+  const prev = names[i - 1];
+  const next = names[i + 1];
+  tabNav.innerHTML = `${prev ? `<a href="#${page}/${prev}" class="tab-nav-link prev"><span>← Previous</span><b>${config.tabs[prev].label}</b></a>` : "<span></span>"}
+    <span class="tab-nav-pos">Tab ${i + 1} of ${names.length}</span>
+    ${next ? `<a href="#${page}/${next}" class="tab-nav-link next"><span>Next →</span><b>${config.tabs[next].label}</b></a>` : "<span></span>"}`;
 }
 
 tabsEl.addEventListener("click", event => {
@@ -156,9 +205,9 @@ function showStatus() {
   const stamp = parseUtc(status.last_live_update_utc || status.generated_utc);
   const ageMinutes = (Date.now() - stamp) / 60000;
   statusDot.className = `status-dot ${ageMinutes < 90 ? "live" : ageMinutes < 360 ? "" : "error"}`;
-  statusText.textContent = `Updated ${fmtTime(stamp)}`;
+  statusText.textContent = `Last updated ${fmtTime(stamp)} ${parisOffset(stamp) === 2 * 3600000 ? "CEST" : "CET"}`;
   const next = CONFIG.workerUrl ? ` New data is fetched every ${CONFIG.updateEveryMinutes} minutes.` : "";
-  const problems = [...(status.last_errors || []), ...(status.power?.errors || [])];
+  const problems = [...(status.last_errors || []), ...(status.power?.errors || []), ...(status.market?.errors || [])];
   statusPill.title = `Latest data update: ${fmtDateTime(stamp)} Paris time.${next}${problems.length ? `\nLast update problems: ${problems.join("; ")}` : ""}`;
 }
 
@@ -174,6 +223,7 @@ async function checkForNewData({ rerender = true } = {}) {
   const changed = setDataVersion(status.generated_utc);
   for (const view of Object.values(views)) (await view).setStatus?.(status);
   showStatus();
+  if (changed || !bellLoaded) loadBell();
   if (changed && rerender && current) (await getView(current)).activate();
   return changed;
 }
@@ -219,6 +269,77 @@ refreshButton.addEventListener("click", async () => {
     refreshButton.classList.remove("spinning");
   }
 });
+
+// ---------- Notification bell ----------
+// Notable events (records, "highest since", new unplanned outages, negative
+// prices) from data/alerts.json. A count and a glow show unseen ones; there
+// is no sound and no pop-up. Seen alerts are remembered in this browser.
+
+const bellButton = document.getElementById("bell");
+const bellPanel = document.getElementById("bell-panel");
+const bellCount = bellButton.querySelector(".bell-count");
+let bellLoaded = false;
+let alerts = [];
+
+function seenAlerts() {
+  try { return new Set(JSON.parse(localStorage.getItem("seenAlerts") || "[]")); } catch (error) { return new Set(); }
+}
+
+function recentAlerts() {
+  const cutoff = new Date(Date.now() - 4 * 86400000).toISOString().slice(0, 10);
+  return alerts.filter(a => a.date >= cutoff);
+}
+
+function renderBell() {
+  const seen = seenAlerts();
+  const unseen = recentAlerts().filter(a => !seen.has(a.id)).length;
+  bellCount.textContent = unseen > 9 ? "9+" : String(unseen);
+  bellCount.hidden = !unseen;
+  bellButton.classList.toggle("glow", unseen > 0);
+  bellButton.title = unseen ? `${unseen} new notable ${unseen === 1 ? "event" : "events"}` : "Notable events";
+}
+
+async function loadBell() {
+  try {
+    const { getAlerts } = await import("./market-data.js");
+    alerts = (await getAlerts()).alerts || [];
+    bellLoaded = true;
+    renderBell();
+    if (!bellPanel.hidden) renderBellPanel();
+  } catch (error) { console.error(error); }
+}
+
+const LEVEL = { record: "Record", month: "Month record", since: "Highest/lowest since", event: "Event" };
+function renderBellPanel() {
+  const seen = seenAlerts();
+  const list = recentAlerts();
+  bellPanel.innerHTML = `<div class="bell-head"><b>Notable events</b><span class="muted">Past 4 days</span></div>
+    ${list.length ? `<ul class="bell-list">${list.map(a => `<li><a href="#${a.link}" class="${seen.has(a.id) ? "" : "unseen"}"><span class="bell-level ${a.level}">${LEVEL[a.level] || ""}</span><b>${a.title}</b><span>${a.detail}</span><span class="muted">${fmtDateShortIso(a.date)} · open the data →</span></a></li>`).join("")}</ul>`
+      : `<p class="muted bell-empty">Nothing notable in the past four days.</p>`}
+    <p class="bell-foot muted">Records, the highest or lowest values for a while (at least a week for prices, a month for generation), new unplanned nuclear outages and negative prices.</p>`;
+}
+
+function fmtDateShortIso(d) {
+  return new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(Date.parse(`${d}T12:00:00Z`));
+}
+
+function toggleBell(open) {
+  const show = open ?? bellPanel.hidden;
+  bellPanel.hidden = !show;
+  bellButton.setAttribute("aria-expanded", show);
+  if (show) {
+    renderBellPanel();
+    try { localStorage.setItem("seenAlerts", JSON.stringify([...new Set([...seenAlerts(), ...recentAlerts().map(a => a.id)])].slice(-300))); } catch (error) { /* private mode */ }
+    renderBell();
+  }
+}
+
+bellButton.addEventListener("click", event => { event.stopPropagation(); toggleMenu(false); toggleBell(); });
+bellPanel.addEventListener("click", event => {
+  event.stopPropagation();
+  if (event.target.closest("a")) toggleBell(false);
+});
+document.addEventListener("click", () => { if (!bellPanel.hidden) toggleBell(false); });
 
 // ---------- Display menu ----------
 
@@ -272,7 +393,7 @@ function toggleMenu(open) {
   if (show) renderDisplayMenu();
 }
 
-displayButton.addEventListener("click", event => { event.stopPropagation(); toggleMenu(); });
+displayButton.addEventListener("click", event => { event.stopPropagation(); if (!bellPanel.hidden) toggleBell(false); toggleMenu(); });
 document.addEventListener("click", event => {
   if (!displayMenu.hidden && !displayMenu.contains(event.target)) toggleMenu(false);
 });
@@ -303,7 +424,7 @@ function whatsNewHtml() {
 function aboutHtml() {
   const term = (t, d) => `<dt>${t}</dt><dd>${d}</dd>`;
   return `
-    <p>All figures come from RTE, the French transmission system operator, through its public APIs: consumption, actual generation and unavailability (REMIT notices). They cover mainland France. Times are Paris time.</p>
+    <p>Figures come from RTE, the French transmission system operator, through its public APIs (consumption, actual generation and unavailability notices), and from the ENTSO-E Transparency Platform (day-ahead prices and cross-border flows). They cover mainland France. Times are Paris time.</p>
     <h3>Demand</h3>
     <p>Demand includes grid losses and excludes pumping at hydropower plants. It is average power over each interval, in MW or GW.</p>
     <h4>Forecasts</h4>
@@ -359,6 +480,27 @@ function aboutHtml() {
     </ul>
     <h3 style="margin-top:22px">Hydro reservoirs</h3>
     <p>RTE's weekly figure for the energy stored in the hydro reservoirs it monitors, in MWh (shown as TWh), since December 2014. Fill level is that figure as a share of the reservoirs' total capacity of 3,591 GWh (RTE); differences in fill level are in percentage points (pp). Weeks are compared by ISO week number.</p>
+    <h3 style="margin-top:22px">Prices</h3>
+    <p>Day-ahead auction prices from the ENTSO-E Transparency Platform, in €/MWh, for France, Germany (DE-LU; DE-AT-LU before 1 Oct 2018), Belgium, Switzerland, Italy North and Spain, from 5 Jan 2015. The European day-ahead market moved from hourly to 15-minute prices for delivery from 30 Sep 2025; Switzerland stays hourly.</p>
+    <dl class="glossary">
+      ${term("Baseload", "Average of every period in the Paris day, each weighted by its length.")}
+      ${term("Peak / off-peak", "Peak is Monday–Friday 08:00–20:00 Paris time (the market standard); off-peak is every other period.")}
+      ${term("Spread", "France minus the neighbour: positive means France was dearer.")}
+      ${term("Parity", "Share of periods when the two prices differ by less than €0.01/MWh, usually because the interconnector between them was not congested.")}
+      ${term("Negative-price hours", "Time with a price below zero (a 15-minute period counts as 0.25 hours). Zero-priced periods can be included with a switch.")}
+      ${term("Negative-price depth", "How far below zero (or below the chosen threshold) each period was, times its length, added up, in €/MWh·h. It weighs depth and duration together.")}
+      ${term("Volatility", "Standard deviation of the prices within each day.")}
+      ${term("Capture price", "Average French price weighted by a technology's output: what a megawatt-hour of solar, wind or nuclear sold for on average. Capture rate: capture price divided by baseload.")}
+      ${term("Residual demand", "French demand minus wind and solar output: what the rest of the fleet and imports have to cover.")}
+      ${term("Unused available nuclear capacity", "Available capacity in the outage notices minus measured nuclear output, never below zero. It includes modulation to follow prices and demand, but also frequency reserves, end-of-cycle coast-downs, ramp limits and undeclared outages.")}
+      ${term("Duration curve", "Every period sorted from highest to lowest, so you can read the share of time a level was reached.")}
+    </dl>
+    <h3 style="margin-top:22px">Generation</h3>
+    <p>RTE's actual generation by fuel: hourly in 2015–16, every 15 minutes from 2017. Hydro includes run-of-river, reservoirs and pumped-storage generation; pumping is not counted. Low-carbon: nuclear, hydro, wind, solar and bioenergy. Renewable: hydro, wind, solar and bioenergy.</p>
+    <h3 style="margin-top:22px">Flows</h3>
+    <p>Physical (measured) flows on each French border from the ENTSO-E Transparency Platform, latest available: Belgium, Germany, Switzerland, Italy (North), Spain and Great Britain. Net exports are exports minus imports. Physical flows include loop flows and can differ from the commercial exchanges agreed in the markets.</p>
+    <h3 style="margin-top:22px">Notable events (the bell)</h3>
+    <p>Records, the highest or lowest value for a while (at least a week for prices, a month for generation and flows), new unplanned nuclear outages of 1 GW or more, return dates pushed back a week or more, and negative prices today or tomorrow. Events from the past four days are listed.</p>
     <p class="muted">Map outline: Natural Earth (public domain). Methodology, data files and code: <a href="${CONFIG.repoUrl}" target="_blank" rel="noopener">GitHub repository</a>.</p>`;
 }
 
@@ -394,6 +536,7 @@ document.addEventListener("keydown", event => {
   if (event.key !== "Escape") return;
   if (!drawer.hidden) closeDrawer();
   if (!displayMenu.hidden) toggleMenu(false);
+  if (!bellPanel.hidden) toggleBell(false);
   closeSidebar();
 });
 
