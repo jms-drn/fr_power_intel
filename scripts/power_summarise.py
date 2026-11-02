@@ -527,6 +527,21 @@ def english_remark(text):
     return re.sub(r"\s+", " ", best).strip()[:300]
 
 
+def end_known_at_start(rows, last):
+    """End date in force when the outage actually began.
+
+    The latest non-cancelled version published at or before the actual start
+    (the final version's start). Changes after that happened during the
+    outage; changes before it were rescheduling. Falls back to the first
+    version when every version was published after the start (e.g. an
+    unplanned outage announced once it had begun).
+    """
+    start = last["start_utc"]
+    live = [r for r in rows if r["status"] != "DISMISSED"] or rows
+    before = [r for r in live if r["publication_utc"] <= start]
+    return (before[-1] if before else live[0])["end_utc"]
+
+
 def build_outages(fleet, by_id):
     names = {u["name"] for u in fleet}
     by_year = defaultdict(list)
@@ -539,6 +554,7 @@ def build_outages(fleet, by_id):
         max_off = max((s[2] for s in steps), default=0)
         live = [r for r in rows if r["status"] != "DISMISSED"]
         first = live[0] if live else rows[0]
+        at_start = end_known_at_start(rows, last)
         by_year[last["start_utc"][:4]].append({
             "id": ident,
             "unit": last["unit_name"],
@@ -548,6 +564,7 @@ def build_outages(fleet, by_id):
             "start_utc": last["start_utc"],
             "end_utc": last["end_utc"],
             "first_end_utc": first["end_utc"],
+            "start_end_utc": at_start,
             "first_start_utc": first["start_utc"],
             "first_pub_utc": rows[0]["publication_utc"],
             "last_pub_utc": last["publication_utc"],
@@ -557,7 +574,7 @@ def build_outages(fleet, by_id):
             "remark": english_remark(last["remarks"]),
         })
     fields = ["id", "unit", "type", "reason", "status", "start_utc", "end_utc", "first_start_utc",
-              "first_end_utc", "first_pub_utc", "last_pub_utc", "versions", "off_mw", "cap_mw", "remark"]
+              "first_end_utc", "start_end_utc", "first_pub_utc", "last_pub_utc", "versions", "off_mw", "cap_mw", "remark"]
     for year, rows in by_year.items():
         rows.sort(key=lambda r: (r["start_utc"], r["unit"]))
         write_csv(OUTAGES_DIR / f"{year}.csv", fields, rows)
@@ -617,6 +634,7 @@ def build_live(fleet, by_id, grid, cap, avail, planned, unplanned, now, outlook_
                 "start_utc": last["start_utc"],
                 "end_utc": last["end_utc"],
                 "first_end_utc": next((r["end_utc"] for r in rows if r["status"] != "DISMISSED"), last["end_utc"]),
+                "start_end_utc": end_known_at_start(rows, last),
                 "versions": len(rows),
                 "off_mw": max((s[2] for s in steps), default=0),
                 "remark": english_remark(last["remarks"]),
