@@ -1,13 +1,21 @@
 {
- "generated_utc": "2026-11-02T22:46Z",
+ "generated_utc": "2026-11-02T23:01Z",
  "alerts": [
   {
-   "id": "solar-high-month-2026-11-01",
-   "date": "2026-11-01",
-   "level": "month",
-   "title": "Highest solar output (daily average) for November",
-   "detail": "3.7 GW on 1 Nov 2026, the highest for any November since 2015.",
-   "link": "generation/explorer?subject=solar"
+   "id": "gas-high-since-2026-11-02",
+   "date": "2026-11-02",
+   "level": "since",
+   "title": "Highest gas-fired output (daily average) since 2 Feb 2026",
+   "detail": "4.8 GW on 2 Nov 2026.",
+   "link": "generation/explorer?subject=gas"
+  },
+  {
+   "id": "demand-high-since-2026-11-02",
+   "date": "2026-11-02",
+   "level": "since",
+   "title": "Highest demand (daily average) since 3 Apr 2026",
+   "detail": "54.2 GW on 2 Nov 2026.",
+   "link": "demand/explorer"
   }
  ]
 }
