@@ -51,3 +51,8 @@ EDF-05470_EDF_T_00339070,1,2026-11-02T06:56Z,17W100P100P0146H,ST ALBAN 2,1335,PL
 --------
 Planned test."
 EDF-05470_EDF_T_00336446,3,2026-11-02T09:22Z,17W100P100P0144L,PENLY 2,1330,PLANNED,FORESEEN_MAINTENANCE,ACTIVE,2026-11-22T23:00Z,2026-12-01T22:00Z,2026-11-22T23:00Z/2026-12-01T22:00Z/0/1330,-
+EDF-05470_EDF_T_00339172,1,2026-11-02T13:39Z,17W100P100P0148D,ST LAURENT 2,915,UNPLANNED,FAILURE,ACTIVE,2026-11-02T13:30Z,2026-11-03T13:30Z,2026-11-02T13:30Z/2026-11-03T13:30Z/375/540,"La durée indiquée de l'indisponibilité correspond à une durée forfaitaire de 24h, évaluée sur la base du retour d'expérience sur le parc nucléaire.
+Une nouvelle version sera publiée en fonction des diagnostics et des analyses qui seront réalisés.
+--------
+The duration of the unavailability is a pre-defined 24 hours period, assessed on the basis of the nuclear fleet feedback
+A new version will be published according to diagnostic and technical instruction."
