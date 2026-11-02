@@ -79,7 +79,7 @@ async function monthly(base, from, to, cols, pick) {
   const hi = parisMidnight(addDays(to, 1));
   const index = await getMarketIndex().catch(() => ({}));
   const known = pick ? pick(index) : null;
-  const months = monthsOf(from, to).filter(ym => !known || known.includes(ym) || ym >= monthKey(Date.now() - 3 * DAY));
+  const months = monthsOf(from, to).filter(ym => !known || known.includes(ym) || (ym >= monthKey(Date.now() - 3 * DAY) && ym <= monthKey(Date.now() + 2 * DAY)));
   const texts = await Promise.all(months.map(ym => monthText(`${base}/${ym.slice(0, 4)}/${ym}.csv`, ym)));
   const out = [];
   for (const text of texts) {

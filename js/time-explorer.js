@@ -723,7 +723,7 @@ export class TimeExplorer {
     const rankHigh = current ? desc.indexOf(current) + 1 : null;
     const rankLow = current ? rows.length - rankHigh + 1 : null;
     const rankText = current ? `${rankLow < rankHigh ? `${rankLow === 1 ? "" : `${ordinal(rankLow)} `}lowest` : `${rankHigh === 1 ? "" : `${ordinal(rankHigh)} `}highest`} of ${rows.length} years` : "";
-    if (current && this.baseHeadline && s.view === "series") this.headline.textContent = `${this.baseHeadline.slice(0, -1)}, the ${rankText} for these ${align === "cal" ? "dates" : "weeks"}${rows[0] ? ` since ${rows[0].label.slice(0, 4)}` : ""}.`;
+    if (current && this.baseHeadline && s.view === "series") this.headline.textContent = `${this.baseHeadline.slice(0, -1)}, the ${rankText} for this period${rows[0] ? ` since ${rows[0].label.slice(0, 4)}` : ""}.`;
     const sc = m.scale || 1;
     const n = Number(s.n);
     const colourFor = (_, i) => (rows[i]?.k === 0 ? "--s-actual" : rows[i]?.k <= n ? "--s-avg" : "--s-band");

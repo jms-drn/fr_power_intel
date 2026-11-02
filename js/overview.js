@@ -224,7 +224,8 @@ export class Overview {
     if (!t?.FR_base && !n?.FR_base) throw new Error("no prices yet");
     const main = n?.FR_base != null ? n : t;
     const label = main === n ? "tomorrow" : "today";
-    const prev30 = mean(daily.rows.filter(r => r.date < today && r.date >= addDays(today, -30)).map(r => r.FR_base));
+    // Same window as the Short term tab: the 30 days before the day shown.
+    const prev30 = mean(daily.rows.filter(r => r.date < main.date && r.date >= addDays(main.date, -30)).map(r => r.FR_base));
     const spark = [];
     const ly = [];
     for (let i = 59; i >= 0; i--) {
