@@ -1,6 +1,14 @@
 {
- "generated_utc": "2026-11-03T07:01Z",
+ "generated_utc": "2026-11-03T07:16Z",
  "alerts": [
+  {
+   "id": "nuc-delay-EDF-05470_EDF_T_00334551-15",
+   "date": "2026-11-03",
+   "level": "event",
+   "title": "Return pushed back 25 days: Paluel 1",
+   "detail": "Now due back 2026-11-30 (was 2026-11-05).",
+   "link": "nuclear/today"
+  },
   {
    "id": "gas-high-since-2026-11-02",
    "date": "2026-11-02",
