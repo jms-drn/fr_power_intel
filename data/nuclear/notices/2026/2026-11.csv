@@ -151,3 +151,13 @@ La baisse de production est susceptible de se prolonger jusqu'à la fin du mouve
 Strike
 The production restriction is likely to continue until the end of the national strike."
 EDF-05470_EDF_T_00338986,2,2026-11-04T21:59Z,17W100P100P0093C,BLAYAIS 2,910,PLANNED,FORESEEN_MAINTENANCE,ACTIVE,2026-11-01T19:30Z,2026-11-04T22:30Z,2026-11-01T19:30Z/2026-11-04T22:30Z/0/910,-
+EC-EDF-05470-EDF-T-00104303,19,2026-11-04T22:31Z,17W100P100P0142P,PALUEL 4,1330,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-09-18T21:00Z,2026-11-05T08:00Z,2026-09-18T21:00Z/2026-11-05T08:00Z/0/1330,"Après son recouplage, la tranche remontera progressivement par palier de charge à sa pleine puissance
+La remontée durera au moins 48h
+Premier palier à atteindre : 540 MW
+Retour anticipé d'arrêt programmé, sous réserve d'accord du gestionnaire de réseau de transport
+-
+After its restart, the plant will gradually return by various load threshold to full power
+The ramp-up period will take at least 48 hours
+First threshold after restart : 540 MW
+Early restart, subject to TSO agreement."
+EDF-05470_EDF_T_00338986,3,2026-11-04T22:40Z,17W100P100P0093C,BLAYAIS 2,910,PLANNED,FORESEEN_MAINTENANCE,ACTIVE,2026-11-01T19:30Z,2026-11-05T01:00Z,2026-11-01T19:30Z/2026-11-05T01:00Z/0/910,-
