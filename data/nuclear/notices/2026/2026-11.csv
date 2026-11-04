@@ -125,3 +125,9 @@ EDF-05470_EDF_T_00339172,8,2026-11-04T09:10Z,17W100P100P0148D,ST LAURENT 2,915,U
 EDF-05470_EDF_T_00339070,2,2026-11-04T09:40Z,17W100P100P0146H,ST ALBAN 2,1335,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-04T22:30Z,2026-11-04T23:00Z,2026-11-04T22:30Z/2026-11-04T23:00Z/550/785,"Essai programmé.
 --------
 Planned test."
+EC-EDF-05470-EDF-T-00122752,9,2026-11-04T10:15Z,17W100P100P01101,CHOOZ 1,1500,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2027-05-14T22:00Z,2027-08-14T22:00Z,2027-05-14T22:00Z/2027-08-14T22:00Z/0/1500,"After its restart, the plant will gradually return by various load thresholds to full power. The ramp-up period will take at least 48 hours.
+-------------------------------------
+Après son recouplage, la tranche remontera progressivement par palier de charge à sa pleine puissance. La remontée durera au moins 48h."
+EC-EDF-05470-EDF-T-00135648,7,2026-11-04T10:15Z,17W100P100P0112Y,CHOOZ 2,1500,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2027-10-08T22:00Z,2028-01-06T23:00Z,2027-10-08T22:00Z/2028-01-06T23:00Z/0/1500,"After its restart, the plant will gradually return by various load thresholds to full power. The ramp-up period will take at least 48 hours.
+-------------------------------------
+Après son recouplage, la tranche remontera progressivement par palier de charge à sa pleine puissance. La remontée durera au moins 48h."
