@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-04T22:46Z",
+ "generated_utc": "2026-11-04T23:01Z",
  "alerts": [
   {
    "id": "fr_base-high-since-2026-11-05",
@@ -8,6 +8,30 @@
    "title": "Highest French day-ahead baseload since 29 Oct 2026",
    "detail": "\u20ac261.40/MWh on 5 Nov 2026.",
    "link": "prices/explorer?subject=FR&measure=base"
+  },
+  {
+   "id": "gas-high-since-2026-11-04",
+   "date": "2026-11-04",
+   "level": "since",
+   "title": "Highest gas-fired output (daily average) since 29 Jan 2026",
+   "detail": "5.9 GW on 4 Nov 2026.",
+   "link": "generation/explorer?subject=gas"
+  },
+  {
+   "id": "low_carbon-low-since-2026-11-04",
+   "date": "2026-11-04",
+   "level": "since",
+   "title": "Lowest low-carbon share of generation since 29 Jan 2026",
+   "detail": "89.9% on 4 Nov 2026.",
+   "link": "generation/explorer?subject=lowc&measure=share"
+  },
+  {
+   "id": "demand-high-since-2026-11-04",
+   "date": "2026-11-04",
+   "level": "since",
+   "title": "Highest demand (daily average) since 20 Feb 2026",
+   "detail": "59.2 GW on 4 Nov 2026.",
+   "link": "demand/explorer"
   },
   {
    "id": "nuc-new-EDF-05470_EDF_T_00339696",
@@ -32,30 +56,6 @@
    "title": "Return pushed back 49 days: Chooz 2",
    "detail": "Now due back 2028-01-06 (was 2027-11-18).",
    "link": "nuclear/today"
-  },
-  {
-   "id": "gas-high-since-2026-11-03",
-   "date": "2026-11-03",
-   "level": "since",
-   "title": "Highest gas-fired output (daily average) since 29 Jan 2026",
-   "detail": "5.8 GW on 3 Nov 2026.",
-   "link": "generation/explorer?subject=gas"
-  },
-  {
-   "id": "low_carbon-low-since-2026-11-03",
-   "date": "2026-11-03",
-   "level": "since",
-   "title": "Lowest low-carbon share of generation since 29 Jan 2026",
-   "detail": "90.5% on 3 Nov 2026.",
-   "link": "generation/explorer?subject=lowc&measure=share"
-  },
-  {
-   "id": "demand-high-since-2026-11-03",
-   "date": "2026-11-03",
-   "level": "since",
-   "title": "Highest demand (daily average) since 27 Mar 2026",
-   "detail": "56.8 GW on 3 Nov 2026.",
-   "link": "demand/explorer"
   }
  ]
 }
