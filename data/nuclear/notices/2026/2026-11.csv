@@ -161,3 +161,8 @@ The ramp-up period will take at least 48 hours
 First threshold after restart : 540 MW
 Early restart, subject to TSO agreement."
 EDF-05470_EDF_T_00338986,3,2026-11-04T22:40Z,17W100P100P0093C,BLAYAIS 2,910,PLANNED,FORESEEN_MAINTENANCE,ACTIVE,2026-11-01T19:30Z,2026-11-05T01:00Z,2026-11-01T19:30Z/2026-11-05T01:00Z/0/910,-
+EDF-05470_EDF_T_00339711,1,2026-11-04T23:03Z,17W100P100P0122V,DAMPIERRE 3,890,UNPLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-04T23:30Z,2026-11-05T07:00Z,2026-11-04T23:30Z/2026-11-05T07:00Z/180/710,"Grève
+La baisse de production est susceptible de se prolonger jusqu'à la fin du mouvement social annoncé.
+--------
+Strike
+The production restriction is likely to continue until the end of the national strike."
