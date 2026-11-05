@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-05T20:46Z",
+ "generated_utc": "2026-11-05T21:01Z",
  "alerts": [
   {
    "id": "fr_base-high-since-2026-11-06",
@@ -64,14 +64,6 @@
    "title": "Highest demand (daily average) since 20 Feb 2026",
    "detail": "59.2 GW on 4 Nov 2026.",
    "link": "demand/explorer"
-  },
-  {
-   "id": "nuc-new-EDF-05470_EDF_T_00339696",
-   "date": "2026-11-04",
-   "level": "event",
-   "title": "New unplanned outage: Penly 1",
-   "detail": "1,020 MW off from 2026-11-04 20:48 UTC to 2026-11-05 07:00 UTC.",
-   "link": "nuclear/today"
   }
  ]
 }
