@@ -1,12 +1,12 @@
 {
- "generated_utc": "2026-11-05T12:16Z",
+ "generated_utc": "2026-11-05T12:31Z",
  "alerts": [
   {
-   "id": "fr_base-high-since-2026-11-05",
-   "date": "2026-11-05",
+   "id": "fr_base-high-since-2026-11-06",
+   "date": "2026-11-06",
    "level": "since",
-   "title": "Highest French day-ahead baseload since 29 Oct 2026",
-   "detail": "\u20ac261.40/MWh on 5 Nov 2026.",
+   "title": "Highest French day-ahead baseload since 17 Dec 2022",
+   "detail": "\u20ac278.29/MWh on 6 Nov 2026.",
    "link": "prices/explorer?subject=FR&measure=base"
   },
   {
