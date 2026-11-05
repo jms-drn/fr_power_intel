@@ -197,3 +197,13 @@ La baisse de production est susceptible de se prolonger jusqu'à la fin du mouve
 --------
 Strike
 The production restriction is likely to continue until the end of the national strike."
+EDF-05470_EDF_T_00339295,3,2026-11-05T07:27Z,17W100P100P0148D,ST LAURENT 2,915,PLANNED,COMPLEMENTARY_INFORMATION,DISMISSED,2026-11-06T11:30Z,2026-11-06T12:00Z,2026-11-06T11:30Z/2026-11-06T12:00Z/440/475,"Essai programmé. La remontée à puissance maximale prendra 1 heure
+--------
+Planned test. The unit will return to full load in 1 hour
+."
+EDF-05470_EDF_T_00337551,3,2026-11-05T07:28Z,17W100P100P0147F,ST LAURENT 1,915,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-07T00:00Z,2026-11-08T13:00Z,2026-11-07T00:00Z/2026-11-08T13:00Z/0/915,"After its restart, the plant will gradually return to full power. The ramp-up period take 5 hours. 
+-----------------------------------------------------------------------
+Après son recouplage, la tranche remontera progressivement à sa pleine puissance. La remontée prendre 5 heures."
+EDF-05470_EDF_T_00339551,2,2026-11-05T07:29Z,17W100P100P00958,BLAYAIS 4,910,PLANNED,COMPLEMENTARY_INFORMATION,DISMISSED,2026-11-06T01:30Z,2026-11-06T02:00Z,2026-11-06T01:30Z/2026-11-06T02:00Z/379/531,"Essai programmé.
+--------
+Planned test."
