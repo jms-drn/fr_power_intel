@@ -281,3 +281,11 @@ Planned test."
 EC-EDF-05470-EDF-T-00099844,8,2026-11-05T14:45Z,17W100P100P0090I,BELLEVILLE 1,1310,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-08-07T22:00Z,2026-11-22T23:00Z,2026-08-07T22:00Z/2026-11-22T23:00Z/0/1310,"After its restart, the plant will gradually return by various load thresholds to full power. The ramp-up period will take at least 48 hours.
 -------------------------------------
 Après son recouplage, la tranche remontera progressivement par palier de charge à sa pleine puissance. La remontée durera au moins 48h."
+EDF-05470_EDF_T_00336641,3,2026-11-05T16:04Z,17W100P100P0129H,GOLFECH 2,1310,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-07T00:00Z,2026-11-08T10:00Z,2026-11-07T00:00Z/2026-11-08T10:00Z/0/1310,"Remontée à puissance maximale avec palier
+--------------------------------
+Ramp-up to maximal power with load threshold
+
+Montée à 280MW : [1h] – Palier à 280MW : [2h] – Montée à 900MW : [1h] – Palier à 900MW : [6h] – Montée à 1280MW : [30min]
+------------------------------------------ 
+Ramp-up to 280MW : [1h] – threshold at 280MW : [2h] – ramp-up to 900MW : [1h] – threshold at 900MW : [6h] – ramp-up to 1280MW : [30min]"
+EDF-05470_EDF_T_00338765,5,2026-11-05T16:20Z,17W100P100P0112Y,CHOOZ 2,1500,UNPLANNED,FAILURE,ACTIVE,2026-10-31T18:01Z,2026-11-06T19:00Z,2026-10-31T18:01Z/2026-11-06T19:00Z/0/1500,-
