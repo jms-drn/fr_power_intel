@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-04T23:57Z",
+ "generated_utc": "2026-11-05T00:02Z",
  "series": {
   "realised": {
    "months": [
@@ -698,15 +698,15 @@
    "last_utc": "2026-11-14T22:30Z"
   }
  },
- "last_live_update_utc": "2026-11-04T23:56Z",
+ "last_live_update_utc": "2026-11-05T00:02Z",
  "last_backfill_utc": "2026-10-26T15:47Z",
  "last_errors": [],
  "power": {
-  "updated_utc": "2026-11-04T23:55Z",
+  "updated_utc": "2026-11-05T00:00Z",
   "errors": []
  },
  "market": {
-  "updated_utc": "2026-11-04T23:56Z",
+  "updated_utc": "2026-11-05T00:01Z",
   "errors": []
  }
 }
