@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-05T14:46Z",
+ "generated_utc": "2026-11-05T15:01Z",
  "alerts": [
   {
    "id": "fr_base-high-since-2026-11-06",
@@ -8,6 +8,14 @@
    "title": "Highest French day-ahead baseload since 17 Dec 2022",
    "detail": "\u20ac278.29/MWh on 6 Nov 2026.",
    "link": "prices/explorer?subject=FR&measure=base"
+  },
+  {
+   "id": "nuc-delay-EC-EDF-05470-EDF-T-00099844-8",
+   "date": "2026-11-05",
+   "level": "event",
+   "title": "Return pushed back 10 days: Belleville 1",
+   "detail": "Now due back 2026-11-22 (was 2026-11-12).",
+   "link": "nuclear/today"
   },
   {
    "id": "nuc-delay-EC-EDF-05470-EDF-T-00104283-8",
