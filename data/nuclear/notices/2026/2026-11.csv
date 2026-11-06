@@ -324,3 +324,8 @@ Planned test. The unit will return to full load in 1 hour."
 EDF-05470_EDF_T_00339995,1,2026-11-06T02:24Z,17W100P100P0133Q,GRAVELINES 4,910,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-06T03:30Z,2026-11-06T04:00Z,2026-11-06T03:30Z/2026-11-06T04:00Z/440/470,"Essai programmé.
 --------
 Planned test."
+EDF-05470_EDF_T_00340024,1,2026-11-06T05:25Z,17W100P100P01012,CATTENOM 1,1300,UNPLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-06T05:23Z,2026-11-07T05:23Z,2026-11-06T05:23Z/2026-11-07T05:23Z/0/1300,"La durée indiquée de l'indisponibilité correspond à une durée forfaitaire de 24h, évaluée sur la base du retour d'expérience sur le parc nucléaire.
+Une nouvelle version sera publiée en fonction des diagnostics et des analyses qui seront réalisés.
+--------
+The duration of the unavailability is a pre-defined 24 hours period, assessed on the basis of the nuclear fleet feedback
+A new version will be published according to diagnostic and technical instruction."

@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-06T05:16Z",
+ "generated_utc": "2026-11-06T05:31Z",
  "alerts": [
   {
    "id": "fr_base-high-since-2026-11-06",
@@ -8,6 +8,14 @@
    "title": "Highest French day-ahead baseload since 17 Dec 2022",
    "detail": "\u20ac278.29/MWh on 6 Nov 2026.",
    "link": "prices/explorer?subject=FR&measure=base"
+  },
+  {
+   "id": "nuc-new-EDF-05470_EDF_T_00340024",
+   "date": "2026-11-06",
+   "level": "event",
+   "title": "New unplanned outage: Cattenom 1",
+   "detail": "1,300 MW off from 2026-11-06 05:23 UTC to 2026-11-07 05:23 UTC.",
+   "link": "nuclear/today"
   },
   {
    "id": "gas-high-since-2026-11-05",
