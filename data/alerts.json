@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-06T11:01Z",
+ "generated_utc": "2026-11-06T11:16Z",
  "alerts": [
   {
    "id": "fr_base-high-since-2026-11-06",
@@ -55,14 +55,6 @@
    "level": "event",
    "title": "Return pushed back 10 days: Dampierre 4",
    "detail": "Now due back 2026-11-26 (was 2026-11-15).",
-   "link": "nuclear/today"
-  },
-  {
-   "id": "nuc-new-EDF-05470_EDF_T_00339928",
-   "date": "2026-11-05",
-   "level": "event",
-   "title": "New unplanned outage: Paluel 4",
-   "detail": "1,330 MW off from 2026-11-05 11:14 UTC to 2026-11-06 11:14 UTC.",
    "link": "nuclear/today"
   }
  ]
