@@ -1,14 +1,6 @@
 {
- "generated_utc": "2026-11-06T14:16Z",
+ "generated_utc": "2026-11-06T14:31Z",
  "alerts": [
-  {
-   "id": "fr_base-high-since-2026-11-06",
-   "date": "2026-11-06",
-   "level": "since",
-   "title": "Highest French day-ahead baseload since 17 Dec 2022",
-   "detail": "\u20ac278.29/MWh on 6 Nov 2026.",
-   "link": "prices/explorer?subject=FR&measure=base"
-  },
   {
    "id": "nuc-new-EDF-05470_EDF_T_00340024",
    "date": "2026-11-06",
