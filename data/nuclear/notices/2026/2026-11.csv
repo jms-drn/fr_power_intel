@@ -330,3 +330,6 @@ Une nouvelle version sera publiée en fonction des diagnostics et des analyses q
 The duration of the unavailability is a pre-defined 24 hours period, assessed on the basis of the nuclear fleet feedback
 A new version will be published according to diagnostic and technical instruction."
 EDF-05470_EDF_T_00340053,1,2026-11-06T06:46Z,17W100P100P0109N,CHINON 4,905,PLANNED,FORESEEN_MAINTENANCE,ACTIVE,2026-11-07T17:00Z,2026-11-07T18:30Z,2026-11-07T17:00Z/2026-11-07T18:30Z/798/107,-
+EDF-05470_EDF_T_00339970,4,2026-11-06T07:07Z,17W100P100P0142P,PALUEL 4,1330,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-05T22:00Z,2026-11-08T07:30Z,2026-11-05T22:00Z/2026-11-08T07:30Z/500/830,"Remontée par paliers en cours - prochain palier : 980 MW
+ Palier à 500 MW : 14h30 - Montée à 980 MW : 13h - Palier à 980 MW : 19h - Montée à 1303 MW : 8h
+Les durées indiquées peuvent varier en fonction de l'évolution de paramètres techniques"
