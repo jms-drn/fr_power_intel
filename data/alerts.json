@@ -1,6 +1,30 @@
 {
- "generated_utc": "2026-11-06T22:46Z",
+ "generated_utc": "2026-11-06T23:01Z",
  "alerts": [
+  {
+   "id": "gas-high-since-2026-11-06",
+   "date": "2026-11-06",
+   "level": "since",
+   "title": "Highest gas-fired output (daily average) since 19 Jan 2026",
+   "detail": "6.8 GW on 6 Nov 2026.",
+   "link": "generation/explorer?subject=gas"
+  },
+  {
+   "id": "hydro-high-since-2026-11-06",
+   "date": "2026-11-06",
+   "level": "since",
+   "title": "Highest hydro output (daily average) since 24 Jun 2026",
+   "detail": "6.3 GW on 6 Nov 2026.",
+   "link": "generation/explorer?subject=hydro"
+  },
+  {
+   "id": "low_carbon-low-since-2026-11-06",
+   "date": "2026-11-06",
+   "level": "since",
+   "title": "Lowest low-carbon share of generation since 30 Nov 2023",
+   "detail": "87.2% on 6 Nov 2026.",
+   "link": "generation/explorer?subject=lowc&measure=share"
+  },
   {
    "id": "nuc-delay-EDF-05470_EDF_T_00340024-3",
    "date": "2026-11-06",
@@ -18,28 +42,12 @@
    "link": "nuclear/today"
   },
   {
-   "id": "gas-high-since-2026-11-05",
-   "date": "2026-11-05",
-   "level": "since",
-   "title": "Highest gas-fired output (daily average) since 29 Jan 2026",
-   "detail": "6.0 GW on 5 Nov 2026.",
-   "link": "generation/explorer?subject=gas"
-  },
-  {
-   "id": "low_carbon-low-since-2026-11-05",
-   "date": "2026-11-05",
-   "level": "since",
-   "title": "Lowest low-carbon share of generation since 6 Jan 2026",
-   "detail": "88.8% on 5 Nov 2026.",
-   "link": "generation/explorer?subject=lowc&measure=share"
-  },
-  {
-   "id": "net_exports-low-since-2026-11-05",
-   "date": "2026-11-05",
-   "level": "since",
-   "title": "Lowest net exports (daily average) since 6 Jan 2026",
-   "detail": "-0.2 GW on 5 Nov 2026.",
-   "link": "flows/explorer?subject=net"
+   "id": "wind-low-month-2026-11-06",
+   "date": "2026-11-06",
+   "level": "month",
+   "title": "Lowest wind output (daily average) for November",
+   "detail": "0.7 GW on 6 Nov 2026, the lowest for any November since 2015.",
+   "link": "generation/explorer?subject=wind"
   }
  ]
 }

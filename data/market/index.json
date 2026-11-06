@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-06T22:46Z",
+ "generated_utc": "2026-11-06T23:01Z",
  "price_months": {
   "FR": [
    "2015-01",
@@ -2032,7 +2032,7 @@
   "2026-11"
  ],
  "latest_price_utc": "2026-11-07T22:45Z",
- "latest_mix_utc": "2026-11-06T22:15Z",
+ "latest_mix_utc": "2026-11-06T22:30Z",
  "latest_flow_utc": {
   "BE": "2026-11-06T21:45Z",
   "DE": "2026-11-06T21:45Z",
