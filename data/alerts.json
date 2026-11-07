@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-07T18:01Z",
+ "generated_utc": "2026-11-07T18:16Z",
  "alerts": [
   {
    "id": "fr_base-low-since-2026-11-08",
@@ -32,14 +32,6 @@
    "title": "Lowest low-carbon share of generation since 30 Nov 2023",
    "detail": "87.2% on 6 Nov 2026.",
    "link": "generation/explorer?subject=lowc&measure=share"
-  },
-  {
-   "id": "nuc-delay-EDF-05470_EDF_T_00340024-3",
-   "date": "2026-11-06",
-   "level": "event",
-   "title": "Return pushed back 10 days: Cattenom 1",
-   "detail": "Now due back 2026-11-16 (was 2026-11-06).",
-   "link": "nuclear/today"
   },
   {
    "id": "wind-low-month-2026-11-06",
