@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-07T22:46Z",
+ "generated_utc": "2026-11-07T23:01Z",
  "alerts": [
   {
    "id": "fr_base-low-since-2026-11-08",
@@ -8,38 +8,6 @@
    "title": "Lowest French day-ahead baseload since 1 Nov 2026",
    "detail": "\u20ac242.16/MWh on 8 Nov 2026.",
    "link": "prices/explorer?subject=FR&measure=base"
-  },
-  {
-   "id": "gas-high-since-2026-11-06",
-   "date": "2026-11-06",
-   "level": "since",
-   "title": "Highest gas-fired output (daily average) since 19 Jan 2026",
-   "detail": "6.8 GW on 6 Nov 2026.",
-   "link": "generation/explorer?subject=gas"
-  },
-  {
-   "id": "hydro-high-since-2026-11-06",
-   "date": "2026-11-06",
-   "level": "since",
-   "title": "Highest hydro output (daily average) since 24 Jun 2026",
-   "detail": "6.3 GW on 6 Nov 2026.",
-   "link": "generation/explorer?subject=hydro"
-  },
-  {
-   "id": "low_carbon-low-since-2026-11-06",
-   "date": "2026-11-06",
-   "level": "since",
-   "title": "Lowest low-carbon share of generation since 30 Nov 2023",
-   "detail": "87.2% on 6 Nov 2026.",
-   "link": "generation/explorer?subject=lowc&measure=share"
-  },
-  {
-   "id": "wind-low-month-2026-11-06",
-   "date": "2026-11-06",
-   "level": "month",
-   "title": "Lowest wind output (daily average) for November",
-   "detail": "0.7 GW on 6 Nov 2026, the lowest for any November since 2015.",
-   "link": "generation/explorer?subject=wind"
   }
  ]
 }
