@@ -393,3 +393,10 @@ Ramp-up to maximal power without load threshold."
 EDF-05470_EDF_T_00337551,7,2026-11-07T18:55Z,17W100P100P0147F,ST LAURENT 1,915,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-07T00:30Z,2026-11-08T20:00Z,2026-11-07T00:30Z/2026-11-08T20:00Z/0/915,"Après son recouplage, la tranche remontera progressivement à sa pleine puissance. La remontée prendre 5 heures.
 -----------------------------------------------------------------------
 After its restart, the plant will gradually return to full power. The ramp-up period take 5 hours."
+EDF-05470_EDF_T_00336641,5,2026-11-07T21:19Z,17W100P100P0129H,GOLFECH 2,1310,PLANNED,FORESEEN_MAINTENANCE,ACTIVE,2026-11-07T00:00Z,2026-11-09T17:00Z,2026-11-07T00:00Z/2026-11-09T17:00Z/0/1310,-
+EDF-05470_EDF_T_00339967,2,2026-11-07T21:22Z,17W100P100P0129H,GOLFECH 2,1310,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-09T17:00Z,2026-11-10T03:30Z,2026-11-09T17:00Z/2026-11-10T03:30Z/10/1300,"Remontée par paliers en cours - prochain palier : 280 MW
+Montée à 280MW : 1h – Palier à 280MW : 2h – Montée à 900MW : 1h – Palier à 900MW : 6h – Montée à 1280MW : 30min
+Les durées indiquées peuvent varier en fonction de l'évolution de paramètres techniques
+----------------
+Unit is currently ramping up by steps - next step : 280 MW
+Ramp-up to 280MW : 1h – threshold at 280MW : 2h – ramp-up to 900MW : 1h – threshold at 900MW : 6h – ramp-up to 1280MW : 30min"
