@@ -354,3 +354,11 @@ EDF-05470_EDF_T_00340190,4,2026-11-07T00:08Z,17W100P100P0131U,GRAVELINES 2,910,P
 EDF-05470_EDF_T_00339970,6,2026-11-07T00:48Z,17W100P100P0142P,PALUEL 4,1330,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-05T22:00Z,2026-11-08T12:00Z,2026-11-05T22:00Z/2026-11-08T12:00Z/530/800,"Remontée par paliers en cours - prochain palier : 980 MW
  Palier à 530 MW : 29h - Montée à 980 MW : 13h - Palier à 980 MW : 19h 
 Les durées indiquées peuvent varier en fonction de l'évolution de paramètres techniques"
+EDF-05470_EDF_T_00339970,7,2026-11-07T01:05Z,17W100P100P0142P,PALUEL 4,1330,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-05T22:00Z,2026-11-08T20:00Z,2026-11-05T22:00Z/2026-11-08T20:00Z/530/800,"Remontée par paliers en cours - prochain palier : 980 MW
+Palier à 530 MW : 29h - Montée à 980 MW : 13h - Palier à 980 MW : 19h - Montée à 1303 MW : 8h
+Les durées indiquées peuvent varier en fonction de l'évolution de paramètres techniques
+--
+Unit is currently ramping up by steps - next step : 980 MW
+Threshold at 530 MW : 29h - Ramp-up to 980 MW : 13h - Threshold to 980 MW : 19h - Ramp-up to 1303 MW : 8h 
+The indicated duration could be reassessed according to technical analysis."
+EDF-05470_EDF_T_00340190,5,2026-11-07T01:13Z,17W100P100P0131U,GRAVELINES 2,910,PLANNED,FORESEEN_MAINTENANCE,ACTIVE,2026-11-07T01:30Z,2026-11-07T05:00Z,2026-11-07T01:30Z/2026-11-07T05:00Z/809/101,-
