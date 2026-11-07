@@ -370,3 +370,6 @@ EDF-05470_EDF_T_00340190,10,2026-11-07T05:58Z,17W100P100P0131U,GRAVELINES 2,910,
 EDF-05470_EDF_T_00337551,5,2026-11-07T06:44Z,17W100P100P0147F,ST LAURENT 1,915,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-07T00:30Z,2026-11-08T12:00Z,2026-11-07T00:30Z/2026-11-08T12:00Z/0/915,"After its restart, the plant will gradually return to full power. The ramp-up period take 5 hours. 
 -----------------------------------------------------------------------
 Après son recouplage, la tranche remontera progressivement à sa pleine puissance. La remontée prendre 5 heures."
+EDF-05470_EDF_T_00339817,3,2026-11-07T06:45Z,17W100P100P0147F,ST LAURENT 1,915,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-08T12:00Z,2026-11-08T17:00Z,2026-11-08T12:00Z/2026-11-08T17:00Z/880/35,"Remontée à puissance maximale sans palier.
+--------
+Ramp-up to maximal power without load threshold."
