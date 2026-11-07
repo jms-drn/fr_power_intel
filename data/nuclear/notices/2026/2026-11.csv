@@ -384,3 +384,12 @@ Les durées indiquées peuvent varier en fonction de l'évolution de paramètres
 Unit is currently ramping up by steps - next step : 980 MW
 Threshold at 530 MW : 29h - Ramp-up to 980 MW : 14h - Threshold to 980 MW : 19h - Ramp-up to 1303 MW : 8h 
 The indicated duration could be reassessed according to technical analysis."
+EDF-05470_EDF_T_00337551,6,2026-11-07T18:53Z,17W100P100P0147F,ST LAURENT 1,915,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-07T00:30Z,2026-11-08T20:00Z,2026-11-07T00:30Z/2026-11-08T20:00Z/0/915,"After its restart, the plant will gradually return to full power. The ramp-up period take 5 hours. 
+-----------------------------------------------------------------------
+Après son recouplage, la tranche remontera progressivement à sa pleine puissance. La remontée prendre 5 heures."
+EDF-05470_EDF_T_00339817,4,2026-11-07T18:53Z,17W100P100P0147F,ST LAURENT 1,915,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-08T20:00Z,2026-11-09T01:00Z,2026-11-08T20:00Z/2026-11-09T01:00Z/880/35,"Remontée à puissance maximale sans palier.
+--------
+Ramp-up to maximal power without load threshold."
+EDF-05470_EDF_T_00337551,7,2026-11-07T18:55Z,17W100P100P0147F,ST LAURENT 1,915,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-07T00:30Z,2026-11-08T20:00Z,2026-11-07T00:30Z/2026-11-08T20:00Z/0/915,"Après son recouplage, la tranche remontera progressivement à sa pleine puissance. La remontée prendre 5 heures.
+-----------------------------------------------------------------------
+After its restart, the plant will gradually return to full power. The ramp-up period take 5 hours."
