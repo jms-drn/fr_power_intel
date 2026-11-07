@@ -377,3 +377,10 @@ EDF-05470_EDF_T_00340306,1,2026-11-07T07:04Z,17W100P100P0148D,ST LAURENT 2,915,P
 --------
 Planned test."
 EDF-05470_EDF_T_00340307,1,2026-11-07T07:07Z,17W100P100P0148D,ST LAURENT 2,915,PLANNED,FORESEEN_MAINTENANCE,ACTIVE,2026-11-08T07:00Z,2026-11-08T09:00Z,2026-11-08T07:00Z/2026-11-08T09:00Z/800/115,-
+EDF-05470_EDF_T_00339970,8,2026-11-07T16:41Z,17W100P100P0142P,PALUEL 4,1330,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-05T22:00Z,2026-11-08T21:00Z,2026-11-05T22:00Z/2026-11-08T21:00Z/530/800,"Remontée par paliers en cours - prochain palier : 980 MW
+Palier à 530 MW : 29h - Montée à 980 MW : 14h - Palier à 980 MW : 19h - Montée à 1303 MW : 8h
+Les durées indiquées peuvent varier en fonction de l'évolution de paramètres techniques
+--
+Unit is currently ramping up by steps - next step : 980 MW
+Threshold at 530 MW : 29h - Ramp-up to 980 MW : 14h - Threshold to 980 MW : 19h - Ramp-up to 1303 MW : 8h 
+The indicated duration could be reassessed according to technical analysis."
