@@ -400,3 +400,13 @@ Les durées indiquées peuvent varier en fonction de l'évolution de paramètres
 ----------------
 Unit is currently ramping up by steps - next step : 280 MW
 Ramp-up to 280MW : 1h – threshold at 280MW : 2h – ramp-up to 900MW : 1h – threshold at 900MW : 6h – ramp-up to 1280MW : 30min"
+EDF-05470_EDF_T_00339970,9,2026-11-08T06:30Z,17W100P100P0142P,PALUEL 4,1330,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-05T22:00Z,2026-11-08T21:00Z,2026-11-05T22:00Z/2026-11-08T21:00Z/980/350,"Remontée par paliers en cours - prochain palier : 1300 MW
+Palier à 980 MW : 19h - Montée à 1303 MW : 8h
+Les durées indiquées peuvent varier en fonction de l'évolution de paramètres techniques
+--
+Unit is currently ramping up by steps - next step : 1300 MW
+Threshold to 980 MW : 19h - Ramp-up to 1303 MW : 8h 
+The indicated duration could be reassessed according to technical analysis."
+EDF-05470_EDF_T_00340489,1,2026-11-08T06:32Z,17W100P100P0147F,ST LAURENT 1,915,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-10T17:30Z,2026-11-10T18:00Z,2026-11-10T17:30Z/2026-11-10T18:00Z/445/470,"Essai programmé.
+--------
+Planned test."
