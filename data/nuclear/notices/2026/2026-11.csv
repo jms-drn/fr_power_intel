@@ -425,3 +425,10 @@ Les durées indiquées peuvent varier en fonction de l'évolution de paramètres
 Unit is currently ramping up by steps - next step : 1300 MW
 Threshold to 980 MW : 27h - Ramp-up to 1303 MW : 8h 
 The indicated duration could be reassessed according to technical analysis."
+EDF-05470_EDF_T_00339970,11,2026-11-08T12:01Z,17W100P100P0142P,PALUEL 4,1330,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-05T22:00Z,2026-11-09T05:00Z,2026-11-05T22:00Z/2026-11-09T05:00Z/980/350,"Remontée par paliers en cours - prochain palier : 1300 MW
+Palier à 980 MW : 27h - Montée à 1303 MW : 8h
+Les durées indiquées peuvent varier en fonction de l'évolution de paramètres techniques
+--
+Unit is currently ramping up by steps - next step : 1300 MW
+Threshold to 980 MW : 27h - Ramp-up to 1303 MW : 8h 
+The indicated duration could be reassessed according to technical analysis."
