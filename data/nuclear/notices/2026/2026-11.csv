@@ -481,6 +481,9 @@ Les durées indiquées peuvent varier en fonction de l'évolution de paramètres
 ----------------
 Unit is currently ramping up by steps - next step : 280 MW
 Ramp-up to 280MW : 1h – threshold at 280MW : 2h – ramp-up to 900MW : 1h – threshold at 900MW : 6h – ramp-up to 1280MW : 30min"
+EDF-05470_EDF_T_00340489,3,2026-11-09T20:26Z,17W100P100P0147F,ST LAURENT 1,915,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-10T17:00Z,2026-11-10T17:30Z,2026-11-10T17:00Z/2026-11-10T17:30Z/445/470,"Essai programmé. La remontée à puissance maximale prendra 1 heure 30 min.
+--------
+Planned test. The unit will return to full load in 1 hour 30 min."
 EDF-05470_EDF_T_00340812,1,2026-11-09T20:42Z,17W100P100P0113W,CIVAUX 1,1495,UNPLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-09T20:35Z,2026-11-10T20:35Z,2026-11-09T20:35Z/2026-11-10T20:35Z/1330/165,"Causes externes liées à l'environnement
 Palier de puissance atteint
 ------------
