@@ -1,4 +1,13 @@
 {
- "generated_utc": "2026-11-09T22:46Z",
- "alerts": []
+ "generated_utc": "2026-11-09T23:01Z",
+ "alerts": [
+  {
+   "id": "hydro-high-since-2026-11-09",
+   "date": "2026-11-09",
+   "level": "since",
+   "title": "Highest hydro output (daily average) since 1 Jun 2026",
+   "detail": "6.9 GW on 9 Nov 2026.",
+   "link": "generation/explorer?subject=hydro"
+  }
+ ]
 }
