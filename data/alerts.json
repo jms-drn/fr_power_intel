@@ -1,6 +1,14 @@
 {
- "generated_utc": "2026-11-10T09:16Z",
+ "generated_utc": "2026-11-10T09:31Z",
  "alerts": [
+  {
+   "id": "nuc-new-EDF-05470_EDF_T_00340899",
+   "date": "2026-11-10",
+   "level": "event",
+   "title": "New unplanned outage: Golfech 2",
+   "detail": "1,010 MW off from 2026-11-10 06:58 UTC to 2026-11-11 06:58 UTC.",
+   "link": "nuclear/today"
+  },
   {
    "id": "hydro-high-since-2026-11-09",
    "date": "2026-11-09",

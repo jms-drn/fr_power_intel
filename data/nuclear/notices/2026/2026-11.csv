@@ -540,3 +540,25 @@ Les durées indiquées peuvent varier en fonction de l'évolution de paramètres
 ----------------
 Unit is currently ramping up by steps - next step : 900 MW
 threshold at 165 MW : 2h – ramp-up to 900MW : 1h – threshold at 900MW : 6h – ramp-up to 1280MW : 30min"
+EDF-05470_EDF_T_00339967,10,2026-11-10T06:20Z,17W100P100P0129H,GOLFECH 2,1310,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-10T01:00Z,2026-11-10T12:30Z,2026-11-10T01:00Z/2026-11-10T12:30Z/995/315,"Remontée par paliers en cours - prochain palier : PMD 
+Palier à 900MW : 6h – Montée à 1280MW : 30min
+Les durées indiquées peuvent varier en fonction de l'évolution de paramètres techniques
+----------------
+Unit is currently ramping up by steps - next step : PMD 
+threshold at 900MW : 6h – ramp-up to 1280MW : 30min"
+EDF-05470_EDF_T_00340899,1,2026-11-10T06:59Z,17W100P100P0129H,GOLFECH 2,1310,UNPLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-10T06:58Z,2026-11-11T06:58Z,2026-11-10T06:58Z/2026-11-11T06:58Z/300/1010,"La durée indiquée de l'indisponibilité correspond à une durée forfaitaire de 24h, évaluée sur la base du retour d'expérience sur le parc nucléaire.
+Une nouvelle version sera publiée en fonction des diagnostics et des analyses qui seront réalisés.
+--------
+The duration of the unavailability is a pre-defined 24 hours period, assessed on the basis of the nuclear fleet feedback
+A new version will be published according to diagnostic and technical instruction."
+EDF-05470_EDF_T_00339967,11,2026-11-10T07:03Z,17W100P100P0129H,GOLFECH 2,1310,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-10T01:00Z,2026-11-10T12:30Z,2026-11-10T01:00Z/2026-11-10T12:30Z/300/1010,"Planning de remontée en cours de recalage
+---------------------
+The ramp-up planning is being updated"
+EDF-05470_EDF_T_00339967,12,2026-11-10T07:53Z,17W100P100P0129H,GOLFECH 2,1310,PLANNED,COMPLEMENTARY_INFORMATION,INACTIVE,2026-11-10T01:00Z,2026-11-10T07:53Z,2026-11-10T01:00Z/2026-11-10T07:53Z/300/1010,"Planning de remontée en cours de recalage
+---------------------
+The ramp-up planning is being updated"
+EDF-05470_EDF_T_00340899,2,2026-11-10T07:53Z,17W100P100P0129H,GOLFECH 2,1310,UNPLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-10T06:58Z,2026-11-11T06:58Z,2026-11-10T06:58Z/2026-11-11T06:58Z/0/1310,"La durée indiquée de l'indisponibilité correspond à une durée forfaitaire de 24h, évaluée sur la base du retour d'expérience sur le parc nucléaire.
+Une nouvelle version sera publiée en fonction des diagnostics et des analyses qui seront réalisés.
+--------
+The duration of the unavailability is a pre-defined 24 hours period, assessed on the basis of the nuclear fleet feedback
+A new version will be published according to diagnostic and technical instruction."
