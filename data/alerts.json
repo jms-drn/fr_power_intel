@@ -1,6 +1,14 @@
 {
- "generated_utc": "2026-11-10T12:01Z",
+ "generated_utc": "2026-11-10T12:16Z",
  "alerts": [
+  {
+   "id": "fr_min-low-since-2026-11-11",
+   "date": "2026-11-11",
+   "level": "since",
+   "title": "Lowest single French day-ahead price since 1 Nov 2026",
+   "detail": "\u20ac171.62/MWh on 11 Nov 2026.",
+   "link": "prices/explorer?subject=FR&measure=min"
+  },
   {
    "id": "nuc-new-EDF-05470_EDF_T_00340899",
    "date": "2026-11-10",
