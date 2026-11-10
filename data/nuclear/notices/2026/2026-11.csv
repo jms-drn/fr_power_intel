@@ -581,3 +581,6 @@ After its restart, the plant will gradually return by various load thresholds to
 The ramp-up period will take at least 48 hours.
 First threshold after restart : 273 MW
 Stop likely to be extended."
+EDF-05470_EDF_T_00340657,2,2026-11-10T14:55Z,17W100P100P0093C,BLAYAIS 2,910,PLANNED,COMPLEMENTARY_INFORMATION,DISMISSED,2026-11-11T02:30Z,2026-11-11T03:00Z,2026-11-11T02:30Z/2026-11-11T03:00Z/378/532,"Essai programmé.
+--------
+Planned test."
