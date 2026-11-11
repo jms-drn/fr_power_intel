@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-11T06:46Z",
+ "generated_utc": "2026-11-11T07:01Z",
  "alerts": [
   {
    "id": "fr_min-low-since-2026-11-11",
@@ -16,14 +16,6 @@
    "title": "Highest gas-fired output (daily average) since 19 Jan 2026",
    "detail": "7.0 GW on 10 Nov 2026.",
    "link": "generation/explorer?subject=gas"
-  },
-  {
-   "id": "nuc-new-EDF-05470_EDF_T_00340899",
-   "date": "2026-11-10",
-   "level": "event",
-   "title": "New unplanned outage: Golfech 2",
-   "detail": "1,010 MW off from 2026-11-10 06:58 UTC to 2026-11-11 06:58 UTC.",
-   "link": "nuclear/today"
   }
  ]
 }
