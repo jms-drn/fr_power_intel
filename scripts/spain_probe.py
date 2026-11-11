@@ -44,4 +44,22 @@ TOPICS = {
     "Day-ahead price": ["precio mercado spot", "mercado diario"],
     "Nuclear": ["nuclear"],
     "Hydro": ["hidráulica", "hidraulica"],
-    
+    "Wind": ["eólica", "eolica"],
+    "Solar": ["solar fotovoltaica", "solar térmica", "solar termica"],
+    "Gas (combined cycle)": ["ciclo combinado"],
+    "Cogeneration": ["cogeneración", "cogeneracion"],
+    "Interconnections": ["intercambio", "interconexión", "interconexion", "saldo"],
+    "Hydro reserves": ["embalse", "reservas hidr", "energía embalsada", "energia embalsada"],
+    "Pumping": ["bombeo"],
+}
+MAX_TESTS_PER_TOPIC = 4  # matched indicators whose data is actually fetched
+
+report = []
+
+
+def say(line=""):
+    print(line)
+    report.append(line)
+
+
+def minutes_
