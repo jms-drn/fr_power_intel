@@ -1,0 +1,472 @@
+topic,id,name
+Demand (actual),624,Demanda real máximo diario
+Demand (actual),625,Demanda real mínimo diario
+Demand (actual),1293,Demanda real Peninsular
+Demand (actual),1740,Demanda real territorios no peninsulares
+Demand (actual),2037,Demanda real nacional
+Demand (actual),2052,Demanda real prevista nacional
+Demand (actual),2053,Demanda real programada nacional
+Demand (actual),10004,Demanda real suma de generación
+Demand (actual),10350,Demanda real suma de generación SNP
+Demand (forecast),544,Demanda prevista Peninsular
+Demand (forecast),622,Margen generación disponible - máxima demanda prevista
+Demand (forecast),1742,Demanda prevista territorios no peninsulares
+Demand (forecast),10249,Previsión de la demanda residual
+Day-ahead price,600,Precio mercado SPOT Diario
+Day-ahead price,612,Precio mercado SPOT Intradiario Sesión 1
+Day-ahead price,613,Precio mercado SPOT Intradiario Sesión 2
+Day-ahead price,614,Precio mercado SPOT Intradiario Sesión 3
+Day-ahead price,615,Precio mercado SPOT Intradiario Sesión 4
+Day-ahead price,616,Precio mercado SPOT Intradiario Sesión 5
+Day-ahead price,617,Precio mercado SPOT Intradiario Sesión 6
+Day-ahead price,618,Precio mercado SPOT Intradiario Sesión 7
+Day-ahead price,779,Precio medio cuarto horario componente mercado diario comercializadores de referencia
+Day-ahead price,792,Precio medio cuarto horario componente mercado diario contratación libre
+Day-ahead price,805,Precio medio cuarto horario componente mercado diario
+Day-ahead price,857,Precio medio mensual componente mercado diario contratación libre
+Day-ahead price,870,Precio medio mensual componente mercado diario comercialización de referencia
+Day-ahead price,883,Precio medio mensual componente mercado diario
+Day-ahead price,935,Precio medio anual componente mercado diario contratación libre
+Day-ahead price,948,Precio medio anual componente mercado diario comercialización de referencia
+Day-ahead price,961,Precio medio anual componente mercado diario
+Day-ahead price,1016,Desglose peaje por defecto 2.0.A Mercado diario e intradiario
+Day-ahead price,1023,Desglose eficiencia 2 periodos (DHA) 2.0.DHA Mercado diario e intradiario
+Day-ahead price,1030,Desglose vehículo eléctrico 2.0.DHS Mercado diario e intradiario
+Day-ahead price,1875,Desglose peaje por defecto 2.0TD Mercado diario e intradiario
+Day-ahead price,1904,Precio medio horario componente RD-L 10/2022 mercado diario e intradiario - diferencia por liquidación con medidas
+Day-ahead price,1905,Precio medio horario componente RD-L 10/2022 mercado diario e intradiario - dif. por liq. con medidas contratación libre
+Day-ahead price,1906,Precio medio horario componente RD-L 10/2022 mercado diario e intradiario - dif. por liq. con med. comerc. referencia
+Day-ahead price,1907,Precio medio horario componente RD-L 10/2022 mercado diario e intradiario 
+Day-ahead price,1908,Precio medio horario componente RD-L 10/2022 mercado diario e intradiario contratación libre
+Day-ahead price,1909,Precio medio horario componente RD-L 10/2022 mercado diario e intradiario comercializadores de referencia
+Day-ahead price,1913,Precio medio mensual componente RD-L 10/2022 mercado diario e intradiario - diferencia por liquidación con medidas
+Day-ahead price,1914,Precio medio mensual componente RD-L 10/2022 mercado diario e intradiario - diferencia por liquidación con medidas contratación libre
+Day-ahead price,1915,Precio medio mensual componente RD-L 10/2022 mercado diario e intradiario - diferencia por liquidación con medidas comercialización de referencia
+Day-ahead price,1916,Precio medio mensual componente RD-L 10/2022 mercado diario e intradiario
+Day-ahead price,1917,Precio medio mensual componente RD-L 10/2022 mercado diario e intradiario contratación libre
+Day-ahead price,1918,Precio medio mensual componente RD-L 10/2022 mercado diario e intradiario comercialización de referencia
+Day-ahead price,1922,Precio medio anual componente RD-L 10/2022 mercado diario e intradiario - diferencia por liquidación con medidas
+Day-ahead price,1923,Precio medio anual componente RD-L 10/2022 mercado diario e intradiario - diferencia por liquidación con medidas contratación libre
+Day-ahead price,1924,Precio medio anual componente RD-L 10/2022 mercado diario e intradiario - diferencia por liquidación con medidas comercialización de referencia
+Day-ahead price,1925,Precio medio anual componente RD-L 10/2022 mercado diario e intradiario
+Day-ahead price,1926,Precio medio anual componente RD-L 10/2022 mercado diario e intradiario contratación libre
+Day-ahead price,1927,Precio medio anual componente RD-L 10/2022 mercado diario e intradiario comercialización de referencia
+Day-ahead price,10406,RD-L 10/2022 mercado diario e intradiario - Mensual
+Day-ahead price,10407,RD-L 10/2022 mercado diario e intradiario - diferencia por liquidación con medidas - Mensual
+Day-ahead price,10409,RD-L 10/2022 mercado diario e intradiario - Anual
+Day-ahead price,10410,RD-L 10/2022 mercado diario e intradiario - diferencia por liquidación con medidas - Anual
+Nuclear,4,Generación programada PBF Nuclear
+Nuclear,39,Generación programada PVP Nuclear
+Nuclear,74,Generación programada P48 Nuclear
+Nuclear,109,Generación programada PHF1 Nuclear
+Nuclear,144,Generación programada PHF2 Nuclear
+Nuclear,179,Generación programada PHF3 Nuclear
+Nuclear,214,Generación programada PHF4 Nuclear
+Nuclear,249,Generación programada PHF5 Nuclear
+Nuclear,284,Generación programada PHF6 Nuclear
+Nuclear,319,Generación programada PHF7 Nuclear
+Nuclear,424,Programa bilateral PBF Nuclear
+Nuclear,466,Potencia instalada de generación convencional Nuclear
+Nuclear,474,Potencia disponible de generación Nuclear horizonte horario
+Nuclear,482,Potencia disponible de generación Nuclear horizonte año móvil
+Nuclear,549,Generación T.Real nuclear
+Nuclear,1153,Generación medida Nuclear
+Nuclear,1403,Generación programada PHFC Nuclear
+Nuclear,1477,Potencia instalada de generación nuclear
+Nuclear,2039,Generación T.Real nuclear nacional
+Nuclear,2452,Serie estadística generación Nuclear por CCAA
+Hydro,1,Generación programada PBF Hidráulica UGH
+Hydro,2,Generación programada PBF Hidráulica no UGH
+Hydro,36,Generación programada PVP Hidráulica UGH
+Hydro,37,Generación programada PVP Hidráulica no UGH
+Hydro,71,Generación programada P48 Hidráulica UGH
+Hydro,72,Generación programada P48 Hidráulica no UGH
+Hydro,106,Generación programada PHF1 Hidráulica UGH
+Hydro,107,Generación programada PHF1 Hidráulica no UGH
+Hydro,141,Generación programada PHF2 Hidráulica UGH
+Hydro,142,Generación programada PHF2 Hidráulica no UGH
+Hydro,176,Generación programada PHF3 Hidráulica UGH
+Hydro,177,Generación programada PHF3 Hidráulica no UGH
+Hydro,211,Generación programada PHF4 Hidráulica UGH
+Hydro,212,Generación programada PHF4 Hidráulica no UGH
+Hydro,246,Generación programada PHF5 Hidráulica UGH
+Hydro,247,Generación programada PHF5 Hidráulica no UGH
+Hydro,281,Generación programada PHF6 Hidráulica UGH
+Hydro,282,Generación programada PHF6 Hidráulica no UGH
+Hydro,316,Generación programada PHF7 Hidráulica UGH
+Hydro,317,Generación programada PHF7 Hidráulica no UGH
+Hydro,421,Programa bilateral PBF Hidráulica UGH
+Hydro,422,Programa bilateral PBF Hidráulica no UGH
+Hydro,464,Potencia instalada de generación convencional Hidráulica UGH
+Hydro,472,Potencia disponible de generación Hidráulica UGH horizonte horario
+Hydro,480,Potencia disponible de generación Hidráulica UGH horizonte año móvil
+Hydro,546,Generación T.Real hidráulica
+Hydro,1150,Generación medida Hidráulica UGH
+Hydro,1151,Generación medida Hidráulica no UGH
+Hydro,1400,Generación programada PHFC Hidráulica UGH
+Hydro,1401,Generación programada PHFC Hidráulica no UGH
+Hydro,1475,Potencia instalada de generación hidráulica
+Hydro,1749,Generación T.Real hidráulica SNP
+Hydro,1943,Potencia instalada de generación autoconsumo hidráulica
+Hydro,2042,Generación T.Real hidráulica nacional
+Hydro,2067,Generación T.Real generación hidráulica Nacional
+Hydro,2080,Generación T.Real generación hidráulica
+Hydro,2083,Generación T.Real generación hidráulica para sistemas no peninsulares
+Hydro,2335,Potencia habilitada en aFRR Hidráulica
+Hydro,2358,Potencia instalada de híbrida hidráulica
+Hydro,10035,Generación medida Hidráulica
+Wind,12,Generación programada PBF Eólica terrestre
+Wind,13,Generación programada PBF Eólica marina
+Wind,47,Generación programada PVP Eólica terrestre
+Wind,48,Generación programada PVP Eólica marina
+Wind,82,Generación programada P48 Eólica terrestre
+Wind,83,Generación programada P48 Eólica marina
+Wind,117,Generación programada PHF1 Eólica terrestre
+Wind,118,Generación programada PHF1 Eólica marina
+Wind,152,Generación programada PHF2 Eólica terrestre
+Wind,153,Generación programada PHF2 Eólica marina
+Wind,187,Generación programada PHF3 Eólica terrestre
+Wind,188,Generación programada PHF3 Eólica marina
+Wind,222,Generación programada PHF4 Eólica terrestre
+Wind,223,Generación programada PHF4 Eólica marina
+Wind,257,Generación programada PHF5 Eólica terrestre
+Wind,258,Generación programada PHF5 Eólica marina
+Wind,292,Generación programada PHF6 Eólica terrestre
+Wind,293,Generación programada PHF6 Eólica marina
+Wind,327,Generación programada PHF7 Eólica terrestre
+Wind,328,Generación programada PHF7 Eólica marina
+Wind,355,Demanda programada PBF Corrección eólica
+Wind,362,Demanda programada PVP Corrección eólica
+Wind,369,Demanda programada P48 Corrección eólica
+Wind,376,Demanda programada PHF1 Corrección eólica
+Wind,383,Demanda programada PHF2 Corrección eólica
+Wind,390,Demanda programada PHF3 Corrección eólica
+Wind,397,Demanda programada PHF4 Corrección eólica
+Wind,404,Demanda programada PHF5 Corrección eólica
+Wind,411,Demanda programada PHF6 Corrección eólica
+Wind,418,Demanda programada PHF7 Corrección eólica
+Wind,432,Programa bilateral PBF Eólica terrestre
+Wind,433,Programa bilateral PBF Eólica marina
+Wind,541,Previsión de la producción eólica peninsular
+Wind,551,Generación T.Real eólica
+Wind,1159,Generación medida Eólica terrestre
+Wind,1160,Generación medida Eólica marina
+Wind,1411,Generación programada PHFC Eólica terrestre
+Wind,1412,Generación programada PHFC Eólica marina
+Wind,1439,Demanda programada PHFC Corrección eólica
+Wind,1484,Potencia instalada de generación hidroeólica
+Wind,1485,Potencia instalada de generación eólica
+Wind,1745,Generación T.Real eólica SNP
+Wind,1777,Previsión diaria D+1 eólica
+Wind,1778,Previsión intradiaria H+3 eólica
+Wind,1944,Potencia instalada de generación autoconsumo eólica
+Wind,2038,Generación T.Real eólica nacional
+Wind,2273,Potencia instalada de generación eólica híbridada
+Wind,2330,Potencia habilitada en aFRR Eólica
+Wind,2445,Serie estadística generación Hidroeólica por CCAA
+Wind,10010,Generación programada P48 Eólica
+Wind,10037,Generación medida Eólica
+Wind,10073,Generación programada PBF Eólica
+Wind,10158,Generación programada PVP Eólica
+Wind,10159,Generación programada PHF1 Eólica
+Wind,10160,Generación programada PHF2 Eólica
+Wind,10161,Generación programada PHF3 Eólica
+Wind,10162,Generación programada PHF4 Eólica
+Wind,10163,Generación programada PHF5 Eólica
+Wind,10164,Generación programada PHF6 Eólica
+Wind,10165,Generación programada PHF7 Eólica
+Wind,10281,Generación programada PHFC Eólica
+Wind,10358,Previsión diaria D+1 eólica más fotovoltaica
+Wind,10359,Previsión intradiaria H+3 eólica más fotovoltaica
+Solar,14,Generación programada PBF Solar fotovoltaica
+Solar,15,Generación programada PBF Solar térmica
+Solar,49,Generación programada PVP Solar fotovoltaica
+Solar,50,Generación programada PVP Solar térmica
+Solar,84,Generación programada P48 Solar fotovoltaica
+Solar,85,Generación programada P48 Solar térmica
+Solar,119,Generación programada PHF1 Solar fotovoltaica
+Solar,120,Generación programada PHF1 Solar térmica
+Solar,154,Generación programada PHF2 Solar fotovoltaica
+Solar,155,Generación programada PHF2 Solar térmica
+Solar,189,Generación programada PHF3 Solar fotovoltaica
+Solar,190,Generación programada PHF3 Solar térmica
+Solar,224,Generación programada PHF4 Solar fotovoltaica
+Solar,225,Generación programada PHF4 Solar térmica
+Solar,259,Generación programada PHF5 Solar fotovoltaica
+Solar,260,Generación programada PHF5 Solar térmica
+Solar,294,Generación programada PHF6 Solar fotovoltaica
+Solar,295,Generación programada PHF6 Solar térmica
+Solar,329,Generación programada PHF7 Solar fotovoltaica
+Solar,330,Generación programada PHF7 Solar térmica
+Solar,434,Programa bilateral PBF Solar fotovoltaica
+Solar,435,Programa bilateral PBF Solar térmica
+Solar,542,Generación prevista Solar fotovoltaica
+Solar,543,Generación prevista Solar térmica
+Solar,1161,Generación medida Solar fotovoltaica
+Solar,1162,Generación medida Solar térmica
+Solar,1294,Generación T.Real Solar térmica
+Solar,1295,Generación T.Real Solar fotovoltaica
+Solar,1413,Generación programada PHFC Solar fotovoltaica
+Solar,1414,Generación programada PHFC Solar térmica
+Solar,1486,Potencia instalada de generación solar fotovoltaica
+Solar,1487,Potencia instalada de generación solar térmica
+Solar,1748,Generación t.real solar fotovoltaica territorios no peninsulares
+Solar,1945,Potencia instalada de generación autoconsumo solar fotovoltaica
+Solar,2017,Potencia instalada de generación autoconsumo solar térmica
+Solar,2044,Generación T.Real solar fotovoltaica nacional
+Solar,2045,Generación T.Real solar térmica nacional
+Solar,2272,Potencia instalada de generación solar fotovoltaica híbridada
+Solar,2333,Potencia habilitada en aFRR Solar Térmica
+Solar,2334,Potencia habilitada en aFRR Solar Fotovoltaica
+Solar,2359,Potencia instalada de híbrida solar térmica
+Gas (combined cycle),9,Generación programada PBF Ciclo combinado
+Gas (combined cycle),44,Generación programada PVP Ciclo combinado
+Gas (combined cycle),79,Generación programada P48 Ciclo combinado
+Gas (combined cycle),114,Generación programada PHF1 Ciclo combinado
+Gas (combined cycle),149,Generación programada PHF2 Ciclo combinado
+Gas (combined cycle),184,Generación programada PHF3 Ciclo combinado
+Gas (combined cycle),219,Generación programada PHF4 Ciclo combinado
+Gas (combined cycle),254,Generación programada PHF5 Ciclo combinado
+Gas (combined cycle),289,Generación programada PHF6 Ciclo combinado
+Gas (combined cycle),324,Generación programada PHF7 Ciclo combinado
+Gas (combined cycle),429,Programa bilateral PBF Ciclo combinado
+Gas (combined cycle),469,Potencia instalada de generación convencional Ciclo combinado
+Gas (combined cycle),477,Potencia disponible de generación Ciclo combinado horizonte horario
+Gas (combined cycle),485,Potencia disponible de generación Ciclo combinado horizonte año móvil
+Gas (combined cycle),1156,Generación medida Ciclo combinado
+Gas (combined cycle),1408,Generación programada PHFC Ciclo combinado
+Gas (combined cycle),1483,Potencia instalada de generación ciclo combinado
+Gas (combined cycle),1746,Generación T.Real ciclo combinado SNP
+Gas (combined cycle),2041,Generación T.Real ciclo combinado nacional
+Gas (combined cycle),2453,Serie estadística generación Ciclo combinado por CCAA
+Cogeneration,17,Generación programada PBF Gas Natural Cogeneración
+Cogeneration,52,Generación programada PVP Gas Natural Cogeneración
+Cogeneration,87,Generación programada P48 Gas Natural Cogeneración
+Cogeneration,122,Generación programada PHF1 Gas Natural Cogeneración
+Cogeneration,157,Generación programada PHF2 Gas Natural Cogeneración
+Cogeneration,192,Generación programada PHF3 Gas Natural Cogeneración
+Cogeneration,227,Generación programada PHF4 Gas Natural Cogeneración
+Cogeneration,262,Generación programada PHF5 Gas Natural Cogeneración
+Cogeneration,297,Generación programada PHF6 Gas Natural Cogeneración
+Cogeneration,332,Generación programada PHF7 Gas Natural Cogeneración
+Cogeneration,437,Programa bilateral PBF Gas Natural Cogeneración
+Cogeneration,1164,Generación medida Gas Natural Cogeneración
+Cogeneration,1297,Generación T.Real Cogeneración y resto
+Cogeneration,1416,Generación programada PHFC Gas Natural Cogeneración
+Cogeneration,1489,Potencia instalada de generación cogeneración
+Cogeneration,1755,Generación T.Real cogeneración SNP
+Cogeneration,1946,Potencia instalada de generación autoconsumo cogeneración
+Cogeneration,2051,Generación T.Real cogeneración y residuos nacional
+Cogeneration,2274,Potencia instalada de generación cogeneración híbridada
+Cogeneration,2329,Potencia habilitada en aFRR Cogeneración
+Cogeneration,10011,Generación programada P48 Cogeneración
+Cogeneration,10039,Generación medida cogeneración
+Cogeneration,10086,Generación programada PBF Cogeneración
+Cogeneration,10087,Generación programada PVP Cogeneración
+Cogeneration,10088,Generación programada PHF1 Cogeneración
+Cogeneration,10089,Generación programada PHF2 Cogeneración
+Cogeneration,10090,Generación programada PHF3 Cogeneración
+Cogeneration,10091,Generación programada PHF4 Cogeneración
+Cogeneration,10092,Generación programada PHF5 Cogeneración
+Cogeneration,10093,Generación programada PHF6 Cogeneración
+Cogeneration,10094,Generación programada PHF7 Cogeneración
+Cogeneration,10273,Generación programada PHFC Cogeneración
+Interconnections,488,Capacidad de intercambio (NTC) con Francia importación
+Interconnections,489,Capacidad de intercambio (NTC) con Portugal importación
+Interconnections,490,Capacidad de intercambio (NTC) con Marruecos importación
+Interconnections,491,Capacidad de intercambio (NTC) con Andorra importación
+Interconnections,492,Capacidad de intercambio (NTC) con Francia exportación
+Interconnections,493,Capacidad de intercambio (NTC) con Portugal exportación
+Interconnections,494,Capacidad de intercambio (NTC) con Marruecos exportación
+Interconnections,495,Capacidad de intercambio (NTC) con Andorra exportación
+Interconnections,496,Capacidad de intercambio autorizada con Francia importación
+Interconnections,497,Capacidad de intercambio autorizada con Francia exportación
+Interconnections,498,Capacidad de intercambio prevista (NTC) con Francia horizonte semanal importación
+Interconnections,499,Capacidad de intercambio prevista (NTC) con Portugal horizonte semanal importación
+Interconnections,500,Capacidad de intercambio prevista (NTC) con Marruecos horizonte semanal importación
+Interconnections,501,Capacidad de intercambio prevista (NTC) con Andorra horizonte semanal importación
+Interconnections,502,Capacidad de intercambio prevista (NTC) con Francia horizonte semanal exportación
+Interconnections,503,Capacidad de intercambio prevista (NTC) con Portugal horizonte semanal exportación
+Interconnections,504,Capacidad de intercambio prevista (NTC) con Marruecos horizonte semanal exportación
+Interconnections,505,Capacidad de intercambio prevista (NTC) con Andorra horizonte semanal exportación
+Interconnections,506,Capacidad de intercambio disponible (ATC) con Francia horizonte diario importación
+Interconnections,507,Capacidad de intercambio disponible (ATC) con Francia horizonte diario exportación
+Interconnections,510,Capacidad de intercambio prevista (NTC) con Francia horizonte mensual importación
+Interconnections,511,Capacidad de intercambio prevista (NTC) con Portugal horizonte mensual importación
+Interconnections,512,Capacidad de intercambio prevista (NTC) con Marruecos horizonte mensual importación
+Interconnections,513,Capacidad de intercambio prevista (NTC) con Andorra horizonte mensual importación
+Interconnections,514,Capacidad de intercambio prevista (NTC) con Francia horizonte mensual exportación
+Interconnections,515,Capacidad de intercambio prevista (NTC) con Portugal horizonte mensual exportación
+Interconnections,516,Capacidad de intercambio prevista (NTC) con Marruecos horizonte mensual exportación
+Interconnections,517,Capacidad de intercambio prevista (NTC) con Andorra horizonte mensual exportación
+Interconnections,518,Capacidad de intercambio prevista (NTC) con Francia horizonte año móvil importación
+Interconnections,519,Capacidad de intercambio prevista (NTC) con Portugal horizonte año móvil importación
+Interconnections,520,Capacidad de intercambio prevista (NTC) con Marruecos horizonte año móvil importación
+Interconnections,521,Capacidad de intercambio prevista (NTC) con Andorra horizonte año móvil importación
+Interconnections,522,Capacidad de intercambio prevista (NTC) con Francia horizonte año móvil exportación
+Interconnections,523,Capacidad de intercambio prevista (NTC) con Portugal horizonte año móvil exportación
+Interconnections,524,Capacidad de intercambio prevista (NTC) con Marruecos horizonte año móvil exportación
+Interconnections,525,Capacidad de intercambio prevista (NTC) con Andorra horizonte año móvil exportación
+Interconnections,533,Programa comercial en la interconexión con Francia importación
+Interconnections,534,Programa comercial en la interconexión con Francia exportación
+Interconnections,537,Programa comercial en la interconexión con Portugal importación
+Interconnections,538,Programa comercial en la interconexión con Portugal exportación
+Interconnections,553,Generación T.Real intercambios
+Interconnections,556,Saldo horario de interconexión con Francia importación telemedidas
+Interconnections,557,Saldo horario de interconexión con Portugal importación telemedidas
+Interconnections,558,Saldo horario de interconexión con Andorra importación telemedidas
+Interconnections,559,Saldo horario de interconexión con Marruecos importación telemedidas
+Interconnections,560,Saldo horario de interconexión con Francia exportación telemedidas
+Interconnections,561,Saldo horario de interconexión con Portugal exportación telemedidas
+Interconnections,562,Saldo horario de interconexión con Andorra exportación telemedidas
+Interconnections,563,Saldo horario de interconexión con Marruecos exportación telemedidas
+Interconnections,787,Precio medio cuarto horario componente saldo desvíos comercializadores de referencia
+Interconnections,789,Precio medio cuarto horario componente saldo P. O.14. 6 comercializadores de referencia
+Interconnections,800,Precio medio cuarto horario componente saldo desvíos contratación libre
+Interconnections,802,Precio medio cuarto horario componente saldo P.O.14.6. contratación libre
+Interconnections,813,Precio medio cuarto horario componente saldo desvíos
+Interconnections,815,Precio medio cuarto horario componente saldo P.O.14.6.
+Interconnections,865,Precio medio mensual componente saldo de desvíos contratación libre
+Interconnections,867,Precio medio mensual componente saldo P.O.14.6 contratación libre
+Interconnections,878,Precio medio mensual componente saldo de desvíos comercialización de referencia
+Interconnections,880,Precio medio mensual componente saldo P.O.14.6 comercialización de referencia
+Interconnections,891,Precio medio mensual componente saldo de desvíos
+Interconnections,893,Precio medio mensual componente saldo P.O.14.6
+Interconnections,943,Precio medio anual componente saldo de desvíos contratación libre
+Interconnections,945,Precio medio anual componente saldo P.O.14.6 contratación libre
+Interconnections,956,Precio medio anual componente saldo de desvíos comercialización de referencia
+Interconnections,958,Precio medio anual componente saldo P.O.14.6 comercialización de referencia
+Interconnections,969,Precio medio anual componente saldo de desvíos
+Interconnections,971,Precio medio anual componente saldo P.O.14.6
+Interconnections,1844,Capacidad de intercambio prevista (NTC) con Francia horizonte diario importación
+Interconnections,1845,Capacidad de intercambio prevista (NTC) con Portugal horizonte diario importación
+Interconnections,1846,Capacidad de intercambio prevista (NTC) con Marruecos horizonte diario importación
+Interconnections,1848,Capacidad de intercambio prevista (NTC) con Francia horizonte diario exportación
+Interconnections,1849,Capacidad de intercambio prevista (NTC) con Portugal horizonte diario exportación
+Interconnections,1850,Capacidad de intercambio prevista (NTC) con Marruecos horizonte diario exportación
+Interconnections,2043,Generación T.Real intercambios internacionales nacional
+Interconnections,2117,Capacidad de intercambio comercial prevista en la interconexión con Francia horizonte intradiario importación
+Interconnections,2118,Capacidad de intercambio comercial prevista en la interconexión con Francia horizonte intradiario exportación
+Interconnections,2119,Capacidad de intercambio comercial prevista en la interconexión con Portugal horizonte intradiario importación
+Interconnections,2120,Capacidad de intercambio comercial prevista en la interconexión con Portugal horizonte intradiario exportación
+Interconnections,2367,Capacidad de intercambio prevista (NTC) con Francia horizonte anual importación
+Interconnections,2368,Capacidad de intercambio prevista (NTC) con Portugal horizonte anual importación
+Interconnections,2369,Capacidad de intercambio prevista (NTC) con Marruecos horizonte anual importación
+Interconnections,2370,Capacidad de intercambio prevista (NTC) con Andorra horizonte anual importación
+Interconnections,2371,Capacidad de intercambio prevista (NTC) con Francia horizonte anual exportación
+Interconnections,2372,Capacidad de intercambio prevista (NTC) con Portugal horizonte anual exportación
+Interconnections,2373,Capacidad de intercambio prevista (NTC) con Marruecos horizonte anual exportación
+Interconnections,2374,Capacidad de intercambio prevista (NTC) con Andorra horizonte anual exportación
+Interconnections,2390,Precio medio cuarto horario componente intercambios apoyo con precio
+Interconnections,2391,Precio medio cuarto horario componente intercambios apoyo con precio comercializadores de referencia
+Interconnections,2392,Precio medio cuarto horario componente intercambios apoyo con precio contratación libre
+Interconnections,10014,Generación programada P48 Saldo Portugal
+Interconnections,10015,Generación programada P48 Saldo Francia
+Interconnections,10016,Generación programada P48 Saldo Marruecos
+Interconnections,10017,Generación programada P48 Saldo Andorra
+Interconnections,10018,Capacidad de intercambio disponible (ATC) tras la programación con Portugal importación
+Interconnections,10019,Capacidad de intercambio disponible (ATC) tras la programación con Portugal exportación
+Interconnections,10020,Capacidad de intercambio disponible (ATC) tras la programación con Marruecos importación
+Interconnections,10021,Capacidad de intercambio disponible (ATC) tras la programación con Marruecos exportación
+Interconnections,10022,Capacidad de intercambio disponible (ATC) tras la programación con Andorra importación
+Interconnections,10023,Capacidad de intercambio disponible (ATC) tras la programación con Andorra exportación
+Interconnections,10026,Saldo total interconexiones programa p48
+Interconnections,10042,Total Generación + Total Interconexiones programada p48
+Interconnections,10044,Generación medida Saldo Portugal
+Interconnections,10045,Generación medida Saldo Francia
+Interconnections,10046,Generación medida Saldo Marruecos
+Interconnections,10047,Generación medida Saldo Andorra
+Interconnections,10048,Saldo total interconexiones medidas
+Interconnections,10049,Total Generación + Total Interconexiones medidas
+Interconnections,10104,Generación programada PBF Saldo Francia
+Interconnections,10105,Generación programada PVP Saldo Francia
+Interconnections,10106,Generación programada PHF1 Saldo Francia
+Interconnections,10107,Generación programada PHF2 Saldo Francia
+Interconnections,10108,Generación programada PHF3 Saldo Francia
+Interconnections,10109,Generación programada PHF4 Saldo Francia
+Interconnections,10110,Generación programada PHF5 Saldo Francia
+Interconnections,10111,Generación programada PHF6 Saldo Francia
+Interconnections,10112,Generación programada PHF7 Saldo Francia
+Interconnections,10113,Generación programada PBF Saldo Portugal
+Interconnections,10114,Generación programada PVP Saldo Portugal
+Interconnections,10115,Generación programada PHF1 Saldo Portugal
+Interconnections,10116,Generación programada PHF2 Saldo Portugal
+Interconnections,10117,Generación programada PHF3 Saldo Portugal
+Interconnections,10118,Generación programada PHF4 Saldo Portugal
+Interconnections,10119,Generación programada PHF5 Saldo Portugal
+Interconnections,10120,Generación programada PHF6 Saldo Portugal
+Interconnections,10121,Generación programada PHF7 Saldo Portugal
+Interconnections,10122,Generación programada PBF Saldo Marruecos
+Interconnections,10123,Generación programada PVP Saldo Marruecos
+Interconnections,10124,Generación programada PHF1 Saldo Marruecos
+Interconnections,10125,Generación programada PHF2 Saldo Marruecos
+Interconnections,10126,Generación programada PHF3 Saldo Marruecos
+Interconnections,10127,Generación programada PHF4 Saldo Marruecos
+Interconnections,10128,Generación programada PHF5 Saldo Marruecos
+Interconnections,10129,Generación programada PHF6 Saldo Marruecos
+Interconnections,10130,Generación programada PHF7 Saldo Marruecos
+Interconnections,10131,Generación programada PBF Saldo Andorra
+Interconnections,10132,Generación programada PVP Saldo Andorra
+Interconnections,10133,Generación programada PHF1 Saldo Andorra
+Interconnections,10134,Generación programada PHF2 Saldo Andorra
+Interconnections,10136,Generación programada PHF3 Saldo Andorra
+Interconnections,10137,Generación programada PHF4 Saldo Andorra
+Interconnections,10138,Generación programada PHF5 Saldo Andorra
+Interconnections,10139,Generación programada PHF6 Saldo Andorra
+Interconnections,10140,Generación programada PHF7 Saldo Andorra
+Interconnections,10186,Saldo total interconexiones programa PBF
+Interconnections,10187,Saldo total interconexiones programa PVP
+Interconnections,10188,Saldo total interconexiones programa PHF1
+Interconnections,10189,Saldo total interconexiones programa PHF2
+Interconnections,10190,Saldo total interconexiones programa PHF3
+Interconnections,10191,Saldo total interconexiones programa PHF4
+Interconnections,10192,Saldo total interconexiones programa PHF5
+Interconnections,10193,Saldo total interconexiones programa PHF6
+Interconnections,10194,Saldo total interconexiones programa PHF7
+Interconnections,10207,Saldo horario neto de interconexión con Francia telemedidas
+Interconnections,10208,Saldo horario neto de interconexión con Portugal telemedidas
+Interconnections,10209,Saldo horario neto de interconexión con Marruecos telemedidas
+Interconnections,10210,Saldo horario neto de interconexión con Andorra telemedidas
+Interconnections,10241,Capacidad de intercambio disponible (ATC) tras la programación con Francia importación
+Interconnections,10242,Capacidad de intercambio disponible (ATC) tras la programación con Francia exportación
+Interconnections,10275,Generación programada PHFC Saldo Francia
+Interconnections,10276,Generación programada PHFC Saldo Portugal
+Interconnections,10277,Generación programada PHFC Saldo Marruecos
+Interconnections,10278,Generación programada PHFC Saldo Andorra
+Interconnections,10284,Saldo total interconexiones programa PHFC
+Pumping,3,Generación programada PBF Turbinación bombeo
+Pumping,25,Generación programada PBF Consumo bombeo
+Pumping,38,Generación programada PVP Turbinación bombeo
+Pumping,60,Generación programada PVP Consumo bombeo
+Pumping,73,Generación programada P48 Turbinación bombeo
+Pumping,95,Generación programada P48 Consumo bombeo
+Pumping,108,Generación programada PHF1 Turbinación bombeo
+Pumping,130,Generación programada PHF1 Consumo bombeo
+Pumping,143,Generación programada PHF2 Turbinación bombeo
+Pumping,165,Generación programada PHF2 Consumo bombeo
+Pumping,178,Generación programada PHF3 Turbinación bombeo
+Pumping,200,Generación programada PHF3 Consumo bombeo
+Pumping,213,Generación programada PHF4 Turbinación bombeo
+Pumping,235,Generación programada PHF4 Consumo bombeo
+Pumping,248,Generación programada PHF5 Turbinación bombeo
+Pumping,270,Generación programada PHF5 Consumo bombeo
+Pumping,283,Generación programada PHF6 Turbinación bombeo
+Pumping,305,Generación programada PHF6 Consumo bombeo
+Pumping,318,Generación programada PHF7 Turbinación bombeo
+Pumping,340,Generación programada PHF7 Consumo bombeo
+Pumping,423,Programa bilateral PBF Turbinación bombeo
+Pumping,445,Programa bilateral PBF Consumo bombeo
+Pumping,465,Potencia instalada de generación convencional Turbinación bombeo
+Pumping,473,Potencia disponible de generación Turbinación bombeo horizonte horario
+Pumping,481,Potencia disponible de generación Turbinación bombeo horizonte año móvil
+Pumping,1152,Generación medida Turbinación bombeo
+Pumping,1172,Generación medida Consumo bombeo
+Pumping,1402,Generación programada PHFC Turbinación bombeo
+Pumping,1424,Generación programada PHFC Consumo bombeo
+Pumping,1476,Potencia instalada de turbinación de bombeo
+Pumping,2065,Generación T.Real consumo bombeo Nacional
+Pumping,2066,Generación T.Real turbinación bombeo Nacional
+Pumping,2078,Generación T.Real consumo bombeo
+Pumping,2079,Generación T.Real turbinación bombeo
+Pumping,2081,Generación T.Real consumo bombeo para sistemas no peninsulares
+Pumping,2082,Generación T.Real turbinación bombeo para sistemas no peninsulares
