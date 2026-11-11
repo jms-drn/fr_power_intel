@@ -617,3 +617,6 @@ EDF-05470_EDF_T_00338487,4,2026-11-11T12:35Z,17W100P100P0138G,NOGENT 2,1310,PLAN
 EDF-05470_EDF_T_00341039,7,2026-11-11T14:39Z,17W100P100P0129H,GOLFECH 2,1310,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-11T01:40Z,2026-11-11T20:00Z,2026-11-11T01:40Z/2026-11-11T20:00Z/560/750,"Remontée par paliers en cours - prochain palier : 775 MW
  Palier à 560 MW : 8h30 - Montée à 775 MW : 15 min - Palier à 775 MW : 2h - Montée à 992 MW : 15 min - Palier à 992 MW : 2h - Montée à 1280 MW : 15 min
 Les durées indiquées peuvent varier en fonction de l'évolution de paramètres techniques"
+EDF-05470_EDF_T_00341039,8,2026-11-11T16:03Z,17W100P100P0129H,GOLFECH 2,1310,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-11T01:40Z,2026-11-11T20:00Z,2026-11-11T01:40Z/2026-11-11T20:00Z/750/560,"Remontée par paliers en cours - prochain palier : 992 MW
+ Palier à 750 MW : 2h - Montée à 992 MW : 15 min - Palier à 992 MW : 2h - Montée à 1280 MW : 15 min
+Les durées indiquées peuvent varier en fonction de l'évolution de paramètres techniques"
