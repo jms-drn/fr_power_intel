@@ -600,3 +600,6 @@ EDF-05470_EDF_T_00340899,5,2026-11-11T01:23Z,17W100P100P0129H,GOLFECH 2,1310,UNP
 EDF-05470_EDF_T_00341039,2,2026-11-11T01:24Z,17W100P100P0129H,GOLFECH 2,1310,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-11T01:40Z,2026-11-11T19:55Z,2026-11-11T01:40Z/2026-11-11T19:55Z/10/1300,"Remontée par paliers en cours - prochain palier : 126 MW
 Montée à 126 MW : 45 min - Palier à 126 MW : 2h - Montée à 270 MW : 15 min - Palier à 270 MW : 2h - Montée à 559 MW : 30 min - Palier à 559 MW : 8h - Montée à 775 MW : 15 min - Palier à 775 MW : 2h - Montée à 992 MW : 15 min - Palier à 992 MW : 2h - Montée à 1280 MW : 15 min
 Les durées indiquées peuvent varier en fonction de l'évolution de paramètres techniques"
+EDF-05470_EDF_T_00341039,3,2026-11-11T01:59Z,17W100P100P0129H,GOLFECH 2,1310,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-11T01:40Z,2026-11-11T19:55Z,2026-11-11T01:40Z/2026-11-11T19:55Z/126/1184,"Remontée par paliers en cours - prochain palier : 270 MW
+Palier à 126 MW : 2h - Montée à 270 MW : 15 min - Palier à 270 MW : 2h - Montée à 559 MW : 30 min - Palier à 559 MW : 8h - Montée à 775 MW : 15 min - Palier à 775 MW : 2h - Montée à 992 MW : 15 min - Palier à 992 MW : 2h - Montée à 1280 MW : 15 min
+Les durées indiquées peuvent varier en fonction de l'évolution de paramètres techniques"
