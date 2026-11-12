@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-12T22:46Z",
+ "generated_utc": "2026-11-12T23:01Z",
  "alerts": [
   {
    "id": "fr_base-low-since-2026-11-13",
@@ -16,6 +16,14 @@
    "title": "Lowest single French day-ahead price since 1 Nov 2026",
    "detail": "\u20ac133.75/MWh on 13 Nov 2026.",
    "link": "prices/explorer?subject=FR&measure=min"
+  },
+  {
+   "id": "nuclear_out-high-since-2026-11-12",
+   "date": "2026-11-12",
+   "level": "since",
+   "title": "Highest nuclear output (daily average) since 28 Jul 2026",
+   "detail": "42.9 GW on 12 Nov 2026.",
+   "link": "generation/explorer?subject=nuclear"
   },
   {
    "id": "nuc-new-EDF-05470_EDF_T_00341454",
