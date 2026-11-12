@@ -637,3 +637,7 @@ EDF-05470_EDF_T_00340777,2,2026-11-12T10:06Z,17W100P100P0146H,ST ALBAN 2,1335,PL
 EDF-05470_EDF_T_00341014,2,2026-11-12T12:14Z,17W100P100P0116Q,CRUAS 2,915,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-18T19:30Z,2026-11-25T01:30Z,2026-11-18T19:30Z/2026-11-25T01:30Z/0/915,"En fonction d'analyses techniques, cette intervention pourra être annulée ou reportée.
 ------------------------------
 Depending on technical assessments, this intervention may be cancelled or rescheduled."
+EDF-05470_EDF_T_00341015,2,2026-11-12T12:15Z,17W100P100P0118M,CRUAS 3,915,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-25T19:30Z,2026-12-02T01:30Z,2026-11-25T19:30Z/2026-12-02T01:30Z/0/915,"En fonction d'analyses techniques, cette intervention pourra être annulée ou reportée.
+------------------------------
+Depending on technical assessments, this intervention may be cancelled or rescheduled."
+EDF-05470_EDF_T_00341238,2,2026-11-12T12:20Z,17W100P100P0146H,ST ALBAN 2,1335,PLANNED,FORESEEN_MAINTENANCE,INACTIVE,2026-11-12T01:00Z,2026-11-12T12:19Z,2026-11-12T01:00Z/2026-11-12T12:19Z/1235/100,-
