@@ -1,9 +1,9 @@
 {
- "flows_fetched_utc": "2026-11-12T08:01Z",
- "mix_fetched_utc": "2026-11-12T08:46Z",
- "notices_fetched_to_utc": "2026-11-12T08:45Z",
- "output_fetched_utc": "2026-11-12T08:00Z",
- "prices_fetched_utc": "2026-11-12T08:01Z",
+ "flows_fetched_utc": "2026-11-12T09:01Z",
+ "mix_fetched_utc": "2026-11-12T09:01Z",
+ "notices_fetched_to_utc": "2026-11-12T09:00Z",
+ "output_fetched_utc": "2026-11-12T09:00Z",
+ "prices_fetched_utc": "2026-11-12T09:01Z",
  "reserves_fetched_utc": "2026-11-11T21:30Z",
- "units_fetched_utc": "2026-11-12T08:00Z"
+ "units_fetched_utc": "2026-11-12T09:00Z"
 }
