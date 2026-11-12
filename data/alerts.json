@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-12T23:16Z",
+ "generated_utc": "2026-11-12T23:31Z",
  "alerts": [
   {
    "id": "fr_base-low-since-2026-11-13",
@@ -22,7 +22,7 @@
    "date": "2026-11-12",
    "level": "since",
    "title": "Highest nuclear output (daily average) since 28 Jul 2026",
-   "detail": "42.9 GW on 12 Nov 2026.",
+   "detail": "43.0 GW on 12 Nov 2026.",
    "link": "generation/explorer?subject=nuclear"
   },
   {
