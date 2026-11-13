@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-13T20:31Z",
+ "generated_utc": "2026-11-13T20:46Z",
  "alerts": [
   {
    "id": "nuc-delay-EDF-05470_EDF_T_00340024-4",
@@ -16,14 +16,6 @@
    "title": "Highest nuclear output (daily average) since 28 Jul 2026",
    "detail": "43.0 GW on 12 Nov 2026.",
    "link": "generation/explorer?subject=nuclear"
-  },
-  {
-   "id": "nuc-new-EDF-05470_EDF_T_00341454",
-   "date": "2026-11-12",
-   "level": "event",
-   "title": "New unplanned outage: Flamanville 2",
-   "detail": "1,150 MW off from 2026-11-12 20:35 UTC to 2026-11-12 21:35 UTC.",
-   "link": "nuclear/today"
   }
  ]
 }
