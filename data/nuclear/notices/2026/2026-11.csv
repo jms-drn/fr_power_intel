@@ -681,3 +681,10 @@ La remontée durera au moins 48h.
 --------
 After its restart, the plant will gradually return by various load threshold to full power.
 The ramp-up period will take at least 48 hours."
+EC-EDF-05470-EDF-T-00077027,47,2026-11-13T16:46Z,17W100P100P0105V,CATTENOM 4,1300,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-01-30T23:00Z,2026-11-14T22:00Z,2026-01-30T23:00Z/2026-11-14T22:00Z/0/1300,"Après son recouplage, la tranche remontera progressivement par palier de charge à sa pleine puissance.
+La remontée durera au moins 48h.
+Premier palier à atteindre : 273 MW
+-------------------------------------
+After its restart, the plant will gradually return by various load thresholds to full power.
+The ramp-up period will take at least 48 hours.
+First threshold after restart : 273 MW"
