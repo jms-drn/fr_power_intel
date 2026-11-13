@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-13T10:46Z",
+ "generated_utc": "2026-11-13T11:01Z",
  "alerts": [
   {
    "id": "fr_base-low-since-2026-11-13",
@@ -16,6 +16,14 @@
    "title": "Lowest single French day-ahead price since 1 Nov 2026",
    "detail": "\u20ac133.75/MWh on 13 Nov 2026.",
    "link": "prices/explorer?subject=FR&measure=min"
+  },
+  {
+   "id": "nuc-delay-EDF-05470_EDF_T_00340024-4",
+   "date": "2026-11-13",
+   "level": "event",
+   "title": "Return pushed back 9 days: Cattenom 1",
+   "detail": "Now due back 2026-11-25 (was 2026-11-16).",
+   "link": "nuclear/today"
   },
   {
    "id": "nuclear_out-high-since-2026-11-12",
