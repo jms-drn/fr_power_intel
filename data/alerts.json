@@ -1,6 +1,14 @@
 {
- "generated_utc": "2026-11-13T22:46Z",
+ "generated_utc": "2026-11-13T23:01Z",
  "alerts": [
+  {
+   "id": "nuclear_out-high-since-2026-11-13",
+   "date": "2026-11-13",
+   "level": "since",
+   "title": "Highest nuclear output (daily average) since 8 Jul 2026",
+   "detail": "44.4 GW on 13 Nov 2026.",
+   "link": "generation/explorer?subject=nuclear"
+  },
   {
    "id": "nuc-delay-EDF-05470_EDF_T_00340024-4",
    "date": "2026-11-13",
@@ -8,14 +16,6 @@
    "title": "Return pushed back 9 days: Cattenom 1",
    "detail": "Now due back 2026-11-25 (was 2026-11-16).",
    "link": "nuclear/today"
-  },
-  {
-   "id": "nuclear_out-high-since-2026-11-12",
-   "date": "2026-11-12",
-   "level": "since",
-   "title": "Highest nuclear output (daily average) since 28 Jul 2026",
-   "detail": "43.0 GW on 12 Nov 2026.",
-   "link": "generation/explorer?subject=nuclear"
   }
  ]
 }
