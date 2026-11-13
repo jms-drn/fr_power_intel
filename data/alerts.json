@@ -1,22 +1,6 @@
 {
- "generated_utc": "2026-11-13T12:31Z",
+ "generated_utc": "2026-11-13T12:46Z",
  "alerts": [
-  {
-   "id": "fr_base-low-since-2026-11-13",
-   "date": "2026-11-13",
-   "level": "since",
-   "title": "Lowest French day-ahead baseload since 27 Oct 2026",
-   "detail": "\u20ac197.25/MWh on 13 Nov 2026.",
-   "link": "prices/explorer?subject=FR&measure=base"
-  },
-  {
-   "id": "fr_min-low-since-2026-11-13",
-   "date": "2026-11-13",
-   "level": "since",
-   "title": "Lowest single French day-ahead price since 1 Nov 2026",
-   "detail": "\u20ac133.75/MWh on 13 Nov 2026.",
-   "link": "prices/explorer?subject=FR&measure=min"
-  },
   {
    "id": "nuc-delay-EDF-05470_EDF_T_00340024-4",
    "date": "2026-11-13",
