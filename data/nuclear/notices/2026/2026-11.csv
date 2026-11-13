@@ -659,3 +659,10 @@ EDF-05470_EDF_T_00341634,1,2026-11-13T07:53Z,17W100P100P0131U,GRAVELINES 2,910,P
 EDF-05470_EDF_T_00340024,4,2026-11-13T10:45Z,17W100P100P01012,CATTENOM 1,1300,UNPLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-06T05:23Z,2026-11-25T22:00Z,2026-11-06T05:23Z/2026-11-25T22:00Z/0/1300,"Arrêt susceptible d'être prolongé.
 --------
 Stop likely to be extended."
+EC-EDF-05470-EDF-T-00099844,9,2026-11-13T11:12Z,17W100P100P0090I,BELLEVILLE 1,1310,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-08-07T22:00Z,2026-11-16T22:00Z,2026-08-07T22:00Z/2026-11-16T22:00Z/0/1310,"Après son recouplage, la tranche remontera progressivement par palier de charge à sa pleine puissance.
+La remontée durera au moins 48h.
+Retour anticipé d'arrêt programmé, sous réserve d'accord du gestionnaire de réseau de transport.
+--------
+After its restart, the plant will gradually return by various load threshold to full power.
+The ramp-up period will take at least 48 hours.
+Early restart, subject to TSO agreement."
