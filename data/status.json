@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-13T14:16Z",
+ "generated_utc": "2026-11-13T14:32Z",
  "series": {
   "realised": {
    "months": [
@@ -173,7 +173,7 @@
     "2026-11"
    ],
    "first_utc": "2012-12-16T23:00Z",
-   "last_utc": "2026-11-13T13:45Z"
+   "last_utc": "2026-11-13T14:00Z"
   },
   "d1": {
    "months": [
@@ -698,17 +698,15 @@
    "last_utc": "2026-11-22T22:30Z"
   }
  },
- "last_live_update_utc": "2026-11-13T14:16Z",
+ "last_live_update_utc": "2026-11-13T14:31Z",
  "last_backfill_utc": "2026-10-26T15:47Z",
  "last_errors": [],
  "power": {
-  "updated_utc": "2026-11-13T14:15Z",
-  "errors": [
-   "notices: HTTP 403 for generation_unavailabilities {'fuel_type': 'NUCLEAR', 'date_type': 'PUBLICATION_DATE', 'start_date': '2026-11-13T09:23:00Z', 'end_date': '2026-11-13T14:14:55Z'}: "
-  ]
+  "updated_utc": "2026-11-13T14:30Z",
+  "errors": []
  },
  "market": {
-  "updated_utc": "2026-11-13T14:16Z",
+  "updated_utc": "2026-11-13T14:31Z",
   "errors": []
  }
 }
