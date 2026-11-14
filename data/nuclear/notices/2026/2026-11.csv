@@ -698,3 +698,9 @@ EDF-05470_EDF_T_00341411,3,2026-11-14T06:30Z,17W100P100P0146H,ST ALBAN 2,1335,PL
 EDF-05470_EDF_T_00341786,1,2026-11-14T06:47Z,17W100P100P0139E,PALUEL 1,1330,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-16T14:30Z,2026-11-16T15:00Z,2026-11-16T14:30Z/2026-11-16T15:00Z/600/730,"Essai programmé.
 --------
 Planned test."
+EDF-05470_EDF_T_00341799,1,2026-11-14T07:07Z,17W100P100P0141R,PALUEL 3,1330,PLANNED,FORESEEN_MAINTENANCE,ACTIVE,2026-11-14T23:30Z,2026-11-15T01:00Z,2026-11-14T23:30Z/2026-11-15T01:00Z/1229/101,-
+EDF-05470_EDF_T_00341808,1,2026-11-14T07:13Z,17W100P100P0139E,PALUEL 1,1330,PLANNED,COMPLEMENTARY_INFORMATION,ACTIVE,2026-11-14T07:45Z,2026-11-15T07:45Z,2026-11-14T07:45Z/2026-11-15T07:45Z/0/1330,"La durée indiquée de l'indisponibilité correspond à une durée forfaitaire de 24h, évaluée sur la base du retour d'expérience sur le parc nucléaire.
+Une nouvelle version sera publiée en fonction des diagnostics et des analyses qui seront réalisés.
+--------
+The duration of the unavailability is a pre-defined 24 hours period, assessed on the basis of the nuclear fleet feedback
+A new version will be published according to diagnostic and technical instruction."
